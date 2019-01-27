@@ -27,7 +27,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "SDK_EVAL_SPI.h"
-#include "LSM6DS3.h"
+#include "lsm6ds3.h"
    
    
 #ifdef __cplusplus

@@ -40,16 +40,16 @@
 									<listOptionValue builtIn="false" value="USER_BUTTON=BUTTON_1"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.directories.select.1198493692" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" valueType="includePath">
-									<listOptionValue builtIn="false" value="..\..\..\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\hal\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\CMSIS\Include"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\Bluetooth_LE\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\BLE_Application\layers_inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\BLE_Application\Utils\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\BLE_Application\OTA\inc"/>
-									<listOptionValue builtIn="false" value="..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc"/>
+									<listOptionValue builtIn="false" value="../../../inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/hal/inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/BlueNRG1_Periph_Driver/inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/CMSIS/Device/ST/BlueNRG1/Include"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/Bluetooth_LE/inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/BLE_Application/layers_inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/BLE_Application/Utils/inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/BLE_Application/OTA/inc"/>
+									<listOptionValue builtIn="false" value="../../../../../../Library/SDK_Eval_BlueNRG1/inc"/>
 								</option>
 								<option id="com.atollic.truestudio.exe.release.toolchain.gcc.optimization.level.273367394" name="Optimization Level" superClass="com.atollic.truestudio.exe.release.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.0s" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.491928174" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" value="BlueNRG-132" valueType="enumerated"/>
@@ -66,7 +66,7 @@
 								<inputType id="com.atollic.truestudio.gcc.input.1538794137" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.ld.1727420444" name="C Linker" superClass="com.atollic.truestudio.exe.release.toolchain.ld">
-								<option id="com.atollic.truestudio.ld.general.scriptfile.149711131" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="..\BlueNRG1.ld" valueType="string"/>
+								<option id="com.atollic.truestudio.ld.general.scriptfile.149711131" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="../BlueNRG1.ld" valueType="string"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.634538741" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" value="BlueNRG-132" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.endianess.1616595493" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess" value="com.atollic.truestudio.common_options.target.endianess.little" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpucore.2127981286" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="None" valueType="enumerated"/>

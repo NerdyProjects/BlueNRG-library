@@ -108,7 +108,7 @@
 **/
 
 #include "BlueNRG_x_device.h"
-#include "BluenRG1_flash.h"
+#include "BlueNRG1_flash.h"
 #include "misc.h"
 #include "miscutil.h"
 #include "hal_types.h"
