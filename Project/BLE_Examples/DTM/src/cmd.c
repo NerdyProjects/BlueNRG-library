@@ -1,5 +1,5 @@
 
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "cmd.h"
 #include "hci_parser.h"
 #include "hw_config.h"

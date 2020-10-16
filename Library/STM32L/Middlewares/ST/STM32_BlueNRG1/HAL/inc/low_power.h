@@ -35,11 +35,11 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef SYSCLK_MSI 
+#if (SYSCLK_MSI == 1) 
 uint8_t App_SleepMode_Check(void);
 void User_Timer_Enter_Sleep(void);
 void User_Timer_Exit_Sleep(void);
-
+void RCC_HCLKConfig(uint32_t RCC_SYSCLK);
 void SystemPower_Config(void);
 void Enter_Sleep_Mode(void);
 void Enter_LP_Sleep_Mode(void);

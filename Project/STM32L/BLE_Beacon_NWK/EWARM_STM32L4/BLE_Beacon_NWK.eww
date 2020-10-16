@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\BLE_Beacon_NWK.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>BUILD_ALL</name>
+            <member>
+                <project>BLE_Beacon_NWK</project>
+                <configuration>BLE_Beacon_NWK_SPI</configuration>
+            </member>
+            <member>
+                <project>BLE_Beacon_NWK</project>
+                <configuration>BLE_Beacon_NWK_SPI_LowPower</configuration>
+            </member>
+            <member>
+                <project>BLE_Beacon_NWK</project>
+                <configuration>BLE_Beacon_NWK_UART</configuration>
+            </member>
+            <member>
+                <project>BLE_Beacon_NWK</project>
+                <configuration>BLE_Beacon_NWK_UART_HWFlowCtrl</configuration>
+            </member>
+            <member>
+                <project>BLE_Beacon_NWK</project>
+                <configuration>BLE_Beacon_NWK_UART_LowPower</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

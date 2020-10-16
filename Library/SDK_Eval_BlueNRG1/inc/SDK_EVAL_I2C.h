@@ -25,7 +25,7 @@
 #define __SDK_EVAL_I2C_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
    

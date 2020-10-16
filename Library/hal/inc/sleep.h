@@ -117,7 +117,7 @@
 
              void GPIO_Handler(void)
              {
-                if ((GPIO_GetITPendingBit(GPIO_Pin_12) == SET) || ((wakeupFromSleepFlag) && (BlueNRG_WakeupSource() == WAKEUP_IO12)))
+                if ((GPIO_GetITPendingBit(GPIO_Pin_12) == SET) || ((wakeupFromSleepFlag) && (BlueNRG_WakeupSource() & WAKEUP_IO12)))
                 {
                     GPIO_ClearITPendingBit(GPIO_Pin_12);
 
@@ -130,7 +130,7 @@
 #ifndef __SLEEP_H__
 #define __SLEEP_H__
 
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /** @brief Enumerations for the possible microcontroller sleep modes.
  * - SLEEPMODE_RUNNING
@@ -154,40 +154,40 @@ typedef enum {
 } SleepModes; 
 
 /** @brief Wakeup source IO9 Mask */
-#define WAKEUP_IO9   0x01
+#define WAKEUP_IO9   0x0001
 
 /** @brief Wakeup source IO10 Mask */
-#define WAKEUP_IO10  0x02
+#define WAKEUP_IO10  0x0002
 
 /** @brief Wakeup source IO11 Mask */
-#define WAKEUP_IO11  0x04
+#define WAKEUP_IO11  0x0004
 
 /** @brief Wakeup source IO12 Mask */
-#define WAKEUP_IO12  0x08
+#define WAKEUP_IO12  0x0008
 
 /** @brief Wakeup source IO13 Mask */
-#define WAKEUP_IO13  0x10
+#define WAKEUP_IO13  0x0010
 
 /** @brief Wakeup source Blue block Sleep Timer 1 */
-#define WAKEUP_SLEEP_TIMER1  0x20
+#define WAKEUP_SLEEP_TIMER1  0x0020
 
 /** @brief Wakeup source Blue block Sleep Timer 2 */
-#define WAKEUP_SLEEP_TIMER2  0x40
+#define WAKEUP_SLEEP_TIMER2  0x0040
 
 /** @brief The Reset reason is not caused from a wakeup source but from a BOR reset */
-#define WAKEUP_BOR 0xF0
+#define WAKEUP_BOR 0x0080
 
 /** @brief The Reset reason is not caused from a wakeup source but from a POR reset */
-#define WAKEUP_POR 0xF1
+#define WAKEUP_POR 0x0100
 
 /** @brief The Reset reason is not caused from a wakeup source but from a System reset request */
-#define WAKEUP_SYS_RESET_REQ 0xF2
+#define WAKEUP_SYS_RESET_REQ 0x0200
 
 /** @brief The Reset reason is not caused from a wakeup source but from a watchdog timer reset */
-#define WAKEUP_RESET_WDG 0xF3
+#define WAKEUP_RESET_WDG 0x0400
 
 /** @brief The Reset reason is not caused from a known wakeup source */
-#define NO_WAKEUP_RESET 0xFF
+#define NO_WAKEUP_RESET 0x0000
 
 /** @brief The system wakes up when IOx level is low */
 #define WAKEUP_IOx_LOW 0x00
@@ -262,7 +262,7 @@ SleepModes App_SleepMode_Check(SleepModes sleepMode);
 
 
 /**
- * @brief Return the wakeup source from reset. Possible value are:
+ * @brief Return the wakeup source from reset. Possible value can be a combination of the :
  * - WAKEUP_IO9
  * - WAKEUP_IO10
  * - WAKEUP_IO11
@@ -276,6 +276,6 @@ SleepModes App_SleepMode_Check(SleepModes sleepMode);
  * - WAKEUP_RESET_WDG
  * - NO_WAKEUP_RESET
  */ 
-uint8_t BlueNRG_WakeupSource(void);
+uint16_t BlueNRG_WakeupSource(void);
 
 #endif

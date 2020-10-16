@@ -34,6 +34,7 @@
 #include "main_common.h"
 #include "ymodem.h"
 #include "clock.h"
+#include "vtimer.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -146,6 +147,7 @@ int main(void)
   PRINTF("\r\nBlueNRG-1 OTA Manager SERVER (version: %s)\r\n", OTA_MANAGER_VERSION_STRING);
   
   while(1) {
+    HAL_VTIMER_Tick();
     OTA_ymodem_tick();
     
     OTA_Tick();
@@ -378,11 +380,11 @@ uint8_t OTA_SendDataCallback(ActionPacket* p, ActionPacket* next)
 */
 uint8_t OTA_Init(void)
 {
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Set the Network ID */
   HAL_RADIO_SetNetworkID(OTA_ACCESS_ADDRESS);

@@ -278,7 +278,7 @@ void do_notifications()
       {
         time2 = Clock_Time();
         tClockTime diff = time2-time;
-        PRINTF("%d TX packets. Elapsed time: %d ms. App throughput: %.1f kbps.\n", NUM_PACKETS, (int)diff, (float)NUM_PACKETS*update_len*8/diff);
+        PRINTF("%d TX packets. Elapsed time: %d ms. App throughput: %d kbps.\n", NUM_PACKETS, (int)diff, NUM_PACKETS*update_len*8/diff);
         time = Clock_Time();
         
       }

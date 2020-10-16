@@ -19,10 +19,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
-
+#include "main_common.h"
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
   * @{
@@ -134,6 +134,7 @@ uint8_t dataRoutine(ActionPacket* p,  ActionPacket* next)
   */
 int main(void)
 { 
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   /* System Init */
   SystemInit();
   
@@ -141,12 +142,10 @@ int main(void)
   SdkEvalIdentification();
   SdkEvalComUartInit(UART_BAUDRATE);
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Build packet 1 */
   sendData1[0] = 0x0;  /* First byte */
@@ -204,7 +203,7 @@ int main(void)
   RADIO_SetChannel(STATE_MACHINE_0, FREQUENCY_CHANNEL, 0);
 
   /* Sets of the NetworkID and the CRC. The last parameter SCA is not used */
-  RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV1, 0x555555, 0);
+  RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV1, 0x555555);
   
   /* Configures the transmit power level */
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER);
@@ -219,17 +218,16 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */    
-    RADIO_CrystalCheck();  
+    HAL_VTIMER_Tick(); 
     
     if(pkt_counter_test[comm_token-1] > (MAX_PKT_TEST-1)) {
-      printf("PER = %.1f%%  PCKT sent %d, ACK received %d Retry %d\r\n",((float)(pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
+      printf("PER = %d%%  PCKT sent %d, ACK received %d Retry %d\r\n",((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
       ack_counter_test[comm_token-1] = 0;
       pkt_counter_test[comm_token-1] = 0;
       retry_counter_test_max[comm_token-1] = 0;
     }
     if(pkt_counter_test[comm_token-1] > (MAX_PKT_TEST-1)) {
-      printf("PER = %.1f%%  PCKT sent %d, ACK received %d Retry %d\r\n",((float)(pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
+      printf("PER = %d%%  PCKT sent %d, ACK received %d Retry %d\r\n",((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
       ack_counter_test[comm_token-1] = 0;
       pkt_counter_test[comm_token-1] = 0;
       retry_counter_test_max[comm_token-1] = 0;
@@ -240,11 +238,11 @@ int main(void)
       
       /* Check the communication token */
       if(comm_token == COMM_DEVICE_1) {
-        RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV2, 0x555555, 0);
+        RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV2, 0x555555);
         comm_token = COMM_DEVICE_2;
       }
       else if(comm_token == COMM_DEVICE_2) {
-        RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV1, 0x555555, 0);
+        RADIO_SetTxAttributes(STATE_MACHINE_0, ADDRESS_DEV1, 0x555555);
         comm_token = COMM_DEVICE_1;
       }
       repeat_flag = SCHEDEULE_RETRY;

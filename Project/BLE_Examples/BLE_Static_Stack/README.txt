@@ -16,7 +16,7 @@ How to compile application
   the start of a page.
 - Define MEMORY_RAM_APP_OFFSET for linker with the offset in RAM equal to the first available
   address in RAM. E.g. 0x404, aligned to a 32-bit word. See MEMORY_RAM_APP_OFFSET  used inside 
-  BLE_SensorDemo_Fixed_Stack project to know which RAM offset must be used by your application
+  BLE_SensorDemo_Static_Stack project to know which RAM offset must be used by your application
   when using the Static Stack included insided the BlueNRG-1 DK.
 
 ----------------------------
@@ -48,6 +48,6 @@ Build steps
   MEMORY_FLASH_APP_OFFSET.
 - Use create_sym_lib.exe utility to generate the required library with symbols to be referenced by the
   application. See post-build step used in BLE Static Stack project.
-- Take a note of the first available address in RAM (excluding CSTACK) from map file. (e.g. 0x20000404).
+- Take a note of the first available address in RAM (excluding CSTACK) from map file. (e.g. 0x20000408).
   It has to be used when defining MEMORY_RAM_APP_OFFSET inside application project.
    

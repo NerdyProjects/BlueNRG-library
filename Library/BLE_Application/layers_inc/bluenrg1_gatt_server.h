@@ -76,14 +76,14 @@
  * @name Characteristic properties.
  * @{
  */
-#define CHAR_PROP_BROADCAST 			        (0x01)
-#define CHAR_PROP_READ					(0x02)
-#define CHAR_PROP_WRITE_WITHOUT_RESP			(0x04)
-#define CHAR_PROP_WRITE			                (0x08)
-#define CHAR_PROP_NOTIFY			        (0x10)
-#define CHAR_PROP_INDICATE			        (0x20)
-#define CHAR_PROP_SIGNED_WRITE                          (0x40)
-#define CHAR_PROP_EXT           	                (0x80)
+#define CHAR_PROP_BROADCAST                         (0x01)
+#define CHAR_PROP_READ                              (0x02)
+#define CHAR_PROP_WRITE_WITHOUT_RESP                (0x04)
+#define CHAR_PROP_WRITE                             (0x08)
+#define CHAR_PROP_NOTIFY                            (0x10)
+#define CHAR_PROP_INDICATE                          (0x20)
+#define CHAR_PROP_SIGNED_WRITE                      (0x40)
+#define CHAR_PROP_EXT                               (0x80)
 /**
  * @}
  */

@@ -334,7 +334,6 @@ tBleStatus hci_le_set_host_channel_classification_api(uint8_t LE_Channel_Map[5])
 
 /* Internal core function prototypes */
 void GAP_DiscProcTimeoutcb(void);
-void GAP_LimDiscTimeoutcb(void);
 uint32_t cancel_connect_master(uint8_t slaveno);
 void isr_event_handler_scan_data(void *params);
 void Reclassify_All_Channels(uint8_t slot_no);
@@ -632,10 +631,6 @@ void GAP_DiscProcTimeoutcb_ucfg(void)
     GAP_DiscProcTimeoutcb();
 }
 
-void GAP_LimDiscTimeoutcb_ucfg(void)
-{
-    GAP_LimDiscTimeoutcb();
-}
 
 uint32_t cancel_connect_master_ucfg(uint8_t slaveno)
 {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>2</fileVersion>
+  <fileVersion>3</fileVersion>
 <configuration>
     <name>TX</name>
   <toolchain>
@@ -12,7 +12,7 @@
       <name>General</name>
     <archiveVersion>3</archiveVersion>
     <data>
-        <version>24</version>
+        <version>31</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -32,22 +32,12 @@
         <state>0</state>
         </option>
       <option>
-          <name>Input variant</name>
-        <version>3</version>
-        <state>0</state>
-        </option>
-      <option>
           <name>Input description</name>
-        <state>Automatic choice of formatter.</state>
-        </option>
-      <option>
-          <name>Output variant</name>
-        <version>2</version>
-        <state>0</state>
+        <state>Automatic choice of formatter, without multibyte support.</state>
         </option>
       <option>
           <name>Output description</name>
-        <state>Automatic choice of formatter.</state>
+        <state>Automatic choice of formatter, without multibyte support.</state>
         </option>
       <option>
           <name>GOutputBinary</name>
@@ -77,7 +67,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -123,11 +113,11 @@
         </option>
       <option>
           <name>RTConfigPath2</name>
-        <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+        <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
         </option>
       <option>
           <name>GBECoreSlave</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -144,7 +134,7 @@
         </option>
       <option>
           <name>CoreVariant</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -167,8 +157,58 @@
         </option>
       <option>
           <name>GFPUCoreSlave2</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
+        </option>
+      <option>
+          <name>OGCMSISPackSelectDevice</name>
+        </option>
+      <option>
+          <name>OgLibHeap</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGLibAdditionalLocale</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>GenLocaleTags</name>
+        <state></state>
+        </option>
+      <option>
+          <name>GenLocaleDisplayOnly</name>
+        <state></state>
+        </option>
+      <option>
+          <name>DSPExtension</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZone</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZoneModes</name>
+        <version>0</version>
+        <state>0</state>
         </option>
       </data>
     </settings>
@@ -176,7 +216,7 @@
       <name>ICCARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>31</version>
+        <version>35</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -185,6 +225,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>USE_FULL_ASSERT</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -249,7 +291,7 @@
       <option>
           <name>CCAllowList</name>
         <version>1</version>
-        <state>11111110</state>
+        <state>00000000</state>
         </option>
       <option>
           <name>CCDebugInfo</name>
@@ -281,10 +323,6 @@
         </option>
       <option>
           <name>CCRequirePrototypes</name>
-        <state>0</state>
-        </option>
-      <option>
-          <name>CCMultibyteSupport</name>
         <state>0</state>
         </option>
       <option>
@@ -333,16 +371,12 @@
         <state>.text</state>
         </option>
       <option>
-          <name>IInterwork2</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>IProcessorMode2</name>
         <state>1</state>
         </option>
       <option>
           <name>CCOptLevel</name>
-        <state>3</state>
+        <state>0</state>
         </option>
       <option>
           <name>CCOptStrategy</name>
@@ -351,7 +385,7 @@
         </option>
       <option>
           <name>CCOptLevelSlave</name>
-        <state>3</state>
+        <state>0</state>
         </option>
       <option>
           <name>CompilerMisraRules98</name>
@@ -388,18 +422,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>IccCppDialect</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccExceptions</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccRTTI</name>
-        <state>1</state>
-        </option>
-      <option>
           <name>IccStaticDestr</name>
         <state>1</state>
         </option>
@@ -428,13 +450,41 @@
           <name>CCGuardCalls</name>
         <state>1</state>
         </option>
+      <option>
+          <name>CCEncSource</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>CCEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccExceptions2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccRTTI2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OICompilerExtraOption</name>
+        <state>1</state>
+        </option>
       </data>
     </settings>
   <settings>
       <name>AARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>9</version>
+        <version>10</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -563,10 +613,6 @@
         <state>$FILE_BNAME$.o</state>
         </option>
       <option>
-          <name>AMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>ALimitErrorsCheck</name>
         <state>0</state>
         </option>
@@ -652,7 +698,7 @@
       <name>ILINK</name>
     <archiveVersion>0</archiveVersion>
     <data>
-        <version>17</version>
+        <version>23</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -923,7 +969,7 @@
         </option>
       <option>
           <name>CrcAlgorithm</name>
-        <version>0</version>
+        <version>1</version>
         <state>1</state>
         </option>
       <option>
@@ -938,6 +984,54 @@
       <option>
           <name>IlinkLogCallGraph</name>
         <state>0</state>
+        </option>
+      <option>
+          <name>IlinkIcfFile_AltDefault</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkHeapSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkLocaleSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkTrustzoneImportLibraryOut</name>
+        <state>RADIO_TxRx_import_lib.o</state>
+        </option>
+      <option>
+          <name>OILinkExtraOption</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryFile2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySymbol2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySegment2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryAlign2</name>
+        <state></state>
         </option>
       </data>
     </settings>
@@ -983,7 +1077,7 @@
       <name>General</name>
     <archiveVersion>3</archiveVersion>
     <data>
-        <version>24</version>
+        <version>31</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -1003,18 +1097,8 @@
         <state>0</state>
         </option>
       <option>
-          <name>Input variant</name>
-        <version>3</version>
-        <state>0</state>
-        </option>
-      <option>
           <name>Input description</name>
         <state>Automatic choice of formatter.</state>
-        </option>
-      <option>
-          <name>Output variant</name>
-        <version>2</version>
-        <state>0</state>
         </option>
       <option>
           <name>Output description</name>
@@ -1048,7 +1132,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -1098,7 +1182,7 @@
         </option>
       <option>
           <name>GBECoreSlave</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -1115,7 +1199,7 @@
         </option>
       <option>
           <name>CoreVariant</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -1138,8 +1222,58 @@
         </option>
       <option>
           <name>GFPUCoreSlave2</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
+        </option>
+      <option>
+          <name>OGCMSISPackSelectDevice</name>
+        </option>
+      <option>
+          <name>OgLibHeap</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGLibAdditionalLocale</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>GenLocaleTags</name>
+        <state></state>
+        </option>
+      <option>
+          <name>GenLocaleDisplayOnly</name>
+        <state></state>
+        </option>
+      <option>
+          <name>DSPExtension</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZone</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZoneModes</name>
+        <version>0</version>
+        <state>0</state>
         </option>
       </data>
     </settings>
@@ -1147,7 +1281,7 @@
       <name>ICCARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>31</version>
+        <version>35</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -1156,6 +1290,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>USE_FULL_ASSERT</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -1255,10 +1391,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>CCMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>CCDiagWarnAreErr</name>
         <state>0</state>
         </option>
@@ -1302,10 +1434,6 @@
       <option>
           <name>CCCodeSection</name>
         <state>.text</state>
-        </option>
-      <option>
-          <name>IInterwork2</name>
-        <state>0</state>
         </option>
       <option>
           <name>IProcessorMode2</name>
@@ -1359,18 +1487,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>IccCppDialect</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccExceptions</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccRTTI</name>
-        <state>1</state>
-        </option>
-      <option>
           <name>IccStaticDestr</name>
         <state>1</state>
         </option>
@@ -1399,13 +1515,41 @@
           <name>CCGuardCalls</name>
         <state>1</state>
         </option>
+      <option>
+          <name>CCEncSource</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>CCEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccExceptions2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccRTTI2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OICompilerExtraOption</name>
+        <state>1</state>
+        </option>
       </data>
     </settings>
   <settings>
       <name>AARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>9</version>
+        <version>10</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -1534,10 +1678,6 @@
         <state>$FILE_BNAME$.o</state>
         </option>
       <option>
-          <name>AMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>ALimitErrorsCheck</name>
         <state>0</state>
         </option>
@@ -1623,7 +1763,7 @@
       <name>ILINK</name>
     <archiveVersion>0</archiveVersion>
     <data>
-        <version>17</version>
+        <version>23</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -1894,7 +2034,7 @@
         </option>
       <option>
           <name>CrcAlgorithm</name>
-        <version>0</version>
+        <version>1</version>
         <state>1</state>
         </option>
       <option>
@@ -1909,6 +2049,54 @@
       <option>
           <name>IlinkLogCallGraph</name>
         <state>0</state>
+        </option>
+      <option>
+          <name>IlinkIcfFile_AltDefault</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkHeapSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkLocaleSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkTrustzoneImportLibraryOut</name>
+        <state>###Unitialized###</state>
+        </option>
+      <option>
+          <name>OILinkExtraOption</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryFile2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySymbol2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySegment2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryAlign2</name>
+        <state></state>
         </option>
       </data>
     </settings>
@@ -1954,7 +2142,7 @@
       <name>General</name>
     <archiveVersion>3</archiveVersion>
     <data>
-        <version>24</version>
+        <version>31</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -1974,22 +2162,12 @@
         <state>0</state>
         </option>
       <option>
-          <name>Input variant</name>
-        <version>3</version>
-        <state>0</state>
-        </option>
-      <option>
           <name>Input description</name>
-        <state>Automatic choice of formatter.</state>
-        </option>
-      <option>
-          <name>Output variant</name>
-        <version>2</version>
-        <state>0</state>
+        <state>Automatic choice of formatter, without multibyte support.</state>
         </option>
       <option>
           <name>Output description</name>
-        <state>Automatic choice of formatter.</state>
+        <state>Automatic choice of formatter, without multibyte support.</state>
         </option>
       <option>
           <name>GOutputBinary</name>
@@ -2019,7 +2197,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -2065,11 +2243,11 @@
         </option>
       <option>
           <name>RTConfigPath2</name>
-        <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+        <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
         </option>
       <option>
           <name>GBECoreSlave</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -2086,7 +2264,7 @@
         </option>
       <option>
           <name>CoreVariant</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -2109,8 +2287,58 @@
         </option>
       <option>
           <name>GFPUCoreSlave2</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
+        </option>
+      <option>
+          <name>OGCMSISPackSelectDevice</name>
+        </option>
+      <option>
+          <name>OgLibHeap</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGLibAdditionalLocale</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>GenLocaleTags</name>
+        <state></state>
+        </option>
+      <option>
+          <name>GenLocaleDisplayOnly</name>
+        <state></state>
+        </option>
+      <option>
+          <name>DSPExtension</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZone</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZoneModes</name>
+        <version>0</version>
+        <state>0</state>
         </option>
       </data>
     </settings>
@@ -2118,7 +2346,7 @@
       <name>ICCARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>31</version>
+        <version>35</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -2127,6 +2355,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>ST_USE_OTA_RESET_MANAGER</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -2226,10 +2456,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>CCMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>CCDiagWarnAreErr</name>
         <state>0</state>
         </option>
@@ -2273,10 +2499,6 @@
       <option>
           <name>CCCodeSection</name>
         <state>.text</state>
-        </option>
-      <option>
-          <name>IInterwork2</name>
-        <state>0</state>
         </option>
       <option>
           <name>IProcessorMode2</name>
@@ -2330,18 +2552,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>IccCppDialect</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccExceptions</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccRTTI</name>
-        <state>1</state>
-        </option>
-      <option>
           <name>IccStaticDestr</name>
         <state>1</state>
         </option>
@@ -2370,13 +2580,41 @@
           <name>CCGuardCalls</name>
         <state>1</state>
         </option>
+      <option>
+          <name>CCEncSource</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>CCEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccExceptions2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccRTTI2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OICompilerExtraOption</name>
+        <state>1</state>
+        </option>
       </data>
     </settings>
   <settings>
       <name>AARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>9</version>
+        <version>10</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -2503,10 +2741,6 @@
       <option>
           <name>AOutputFile</name>
         <state>$FILE_BNAME$.o</state>
-        </option>
-      <option>
-          <name>AMultibyteSupport</name>
-        <state>0</state>
         </option>
       <option>
           <name>ALimitErrorsCheck</name>
@@ -2594,7 +2828,7 @@
       <name>ILINK</name>
     <archiveVersion>0</archiveVersion>
     <data>
-        <version>17</version>
+        <version>23</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -2643,7 +2877,7 @@
         </option>
       <option>
           <name>IlinkConfigDefines</name>
-        <state>MEMORY_FLASH_APP_OFFSET=0x2000</state>
+        <state>MEMORY_FLASH_APP_OFFSET=0x2800</state>
         </option>
       <option>
           <name>IlinkMapFile</name>
@@ -2866,7 +3100,7 @@
         </option>
       <option>
           <name>CrcAlgorithm</name>
-        <version>0</version>
+        <version>1</version>
         <state>1</state>
         </option>
       <option>
@@ -2881,6 +3115,54 @@
       <option>
           <name>IlinkLogCallGraph</name>
         <state>0</state>
+        </option>
+      <option>
+          <name>IlinkIcfFile_AltDefault</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkHeapSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkLocaleSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkTrustzoneImportLibraryOut</name>
+        <state>RADIO_TxRx_import_lib.o</state>
+        </option>
+      <option>
+          <name>OILinkExtraOption</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryFile2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySymbol2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySegment2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryAlign2</name>
+        <state></state>
         </option>
       </data>
     </settings>
@@ -2926,7 +3208,7 @@
       <name>General</name>
     <archiveVersion>3</archiveVersion>
     <data>
-        <version>24</version>
+        <version>31</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -2946,18 +3228,8 @@
         <state>0</state>
         </option>
       <option>
-          <name>Input variant</name>
-        <version>3</version>
-        <state>0</state>
-        </option>
-      <option>
           <name>Input description</name>
         <state>Automatic choice of formatter.</state>
-        </option>
-      <option>
-          <name>Output variant</name>
-        <version>2</version>
-        <state>0</state>
         </option>
       <option>
           <name>Output description</name>
@@ -2991,7 +3263,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -3037,11 +3309,11 @@
         </option>
       <option>
           <name>RTConfigPath2</name>
-        <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+        <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
         </option>
       <option>
           <name>GBECoreSlave</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -3058,7 +3330,7 @@
         </option>
       <option>
           <name>CoreVariant</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
         </option>
       <option>
@@ -3081,8 +3353,58 @@
         </option>
       <option>
           <name>GFPUCoreSlave2</name>
-        <version>24</version>
+        <version>27</version>
         <state>34</state>
+        </option>
+      <option>
+          <name>OGCMSISPackSelectDevice</name>
+        </option>
+      <option>
+          <name>OgLibHeap</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGLibAdditionalLocale</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGPrintfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfVariant</name>
+        <version>0</version>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OGScanfMultibyteSupport</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>GenLocaleTags</name>
+        <state></state>
+        </option>
+      <option>
+          <name>GenLocaleDisplayOnly</name>
+        <state></state>
+        </option>
+      <option>
+          <name>DSPExtension</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZone</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>TrustZoneModes</name>
+        <version>0</version>
+        <state>0</state>
         </option>
       </data>
     </settings>
@@ -3090,7 +3412,7 @@
       <name>ICCARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>31</version>
+        <version>35</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -3099,6 +3421,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>ST_USE_OTA_RESET_MANAGER</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -3198,10 +3522,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>CCMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>CCDiagWarnAreErr</name>
         <state>0</state>
         </option>
@@ -3245,10 +3565,6 @@
       <option>
           <name>CCCodeSection</name>
         <state>.text</state>
-        </option>
-      <option>
-          <name>IInterwork2</name>
-        <state>0</state>
         </option>
       <option>
           <name>IProcessorMode2</name>
@@ -3302,18 +3618,6 @@
         <state>0</state>
         </option>
       <option>
-          <name>IccCppDialect</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccExceptions</name>
-        <state>1</state>
-        </option>
-      <option>
-          <name>IccRTTI</name>
-        <state>1</state>
-        </option>
-      <option>
           <name>IccStaticDestr</name>
         <state>1</state>
         </option>
@@ -3342,13 +3646,41 @@
           <name>CCGuardCalls</name>
         <state>1</state>
         </option>
+      <option>
+          <name>CCEncSource</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>CCEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>CCEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccExceptions2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IccRTTI2</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>OICompilerExtraOption</name>
+        <state>1</state>
+        </option>
       </data>
     </settings>
   <settings>
       <name>AARM</name>
     <archiveVersion>2</archiveVersion>
     <data>
-        <version>9</version>
+        <version>10</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -3477,10 +3809,6 @@
         <state>$FILE_BNAME$.o</state>
         </option>
       <option>
-          <name>AMultibyteSupport</name>
-        <state>0</state>
-        </option>
-      <option>
           <name>ALimitErrorsCheck</name>
         <state>0</state>
         </option>
@@ -3566,7 +3894,7 @@
       <name>ILINK</name>
     <archiveVersion>0</archiveVersion>
     <data>
-        <version>17</version>
+        <version>23</version>
       <wantNonLocal>1</wantNonLocal>
       <debug>1</debug>
       <option>
@@ -3615,7 +3943,7 @@
         </option>
       <option>
           <name>IlinkConfigDefines</name>
-        <state>MEMORY_FLASH_APP_OFFSET=0x2000</state>
+        <state>MEMORY_FLASH_APP_OFFSET=0x2800</state>
         </option>
       <option>
           <name>IlinkMapFile</name>
@@ -3838,7 +4166,7 @@
         </option>
       <option>
           <name>CrcAlgorithm</name>
-        <version>0</version>
+        <version>1</version>
         <state>1</state>
         </option>
       <option>
@@ -3853,6 +4181,54 @@
       <option>
           <name>IlinkLogCallGraph</name>
         <state>0</state>
+        </option>
+      <option>
+          <name>IlinkIcfFile_AltDefault</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkEncInput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutput</name>
+        <state>0</state>
+        </option>
+      <option>
+          <name>IlinkEncOutputBom</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkHeapSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkLocaleSelect</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkTrustzoneImportLibraryOut</name>
+        <state>RADIO_TxRx_import_lib.o</state>
+        </option>
+      <option>
+          <name>OILinkExtraOption</name>
+        <state>1</state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryFile2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySymbol2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinarySegment2</name>
+        <state></state>
+        </option>
+      <option>
+          <name>IlinkRawBinaryAlign2</name>
+        <state></state>
         </option>
       </data>
     </settings>
@@ -3905,6 +4281,9 @@
   <file>
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\hal\src\osal.c</name>
     </file>
+  <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\hal\src\vtimer.c</name>
+    </file>
   </group>
 <group>
     <name>Library</name>
@@ -3940,6 +4319,9 @@
     </file>
   <file>
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_sysCtrl.c</name>
+    </file>
+  <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_timer.c</name>
     </file>
   <file>
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_uart.c</name>

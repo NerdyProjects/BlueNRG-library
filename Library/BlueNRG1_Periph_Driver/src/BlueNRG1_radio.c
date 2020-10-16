@@ -2,8 +2,7 @@
 ******************************************************************************
 * @file    BlueNRG1_radio.c
 * @author  RF Application Team
-* @version V1.2.0
-* @date    3-April-2018
+* @date    Jan-2020
 * @brief   This file provides all the BlueNRG-1,2 Radio Driver APIs.
 *          This driver is based on undocumented hardware features and 
 *          it is strongly recommend to do not change it.
@@ -17,13 +16,13 @@
 * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
 * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *
-* <h2><center>&copy; COPYRIGHT 2017 STMicroelectronics</center></h2>
+* <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
 ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/
 #include "BlueNRG1_radio.h"
-
+#include "vtimer.h"
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
 * @{
 */
@@ -57,55 +56,13 @@
 #define RX_DELAY     0x05
 #define RX_DELAY1    0x05
 
-#define ANALOG_OFFSET 0x00
 /**
 * @}
 */
-
-#define LS_CRYSTAL_PERIOD   (0X00190000) // Default period for 32768 Hz Crystal
-#define LS_CRYSTAL_FREQ     (0x0028F5C2) // Default frequency for 32768 Hz Crystal
-
-/* timeout register offsets and masks */
-#define OFF_R_DESTINATION    (24)
-#define OFF_R_SLEEP          (28)
-#define MASK_R_TIMEOUT       (0X00ffffff)
-
-/*#define Blue_BIT_PLLTRIG 1
-#define Blue_BIT_NEXT_TX_MODE 2
-#define Blue_BIT_SLEEP (1<<2)
-#define Blue_BIT_NS_EN (1<<3)
-#define Blue_BIT_INC_CHAN (1<<4)
-#define Blue_SHIFT_NEXT_MAS (5)*/
-
-#define Blue_INT_DONE (1)
-#define Blue_INT_RCV_OK (2)
-#define Blue_INT_CRC_ERR (1<<2)
-#define Blue_INT_RCV_TRIG (1<<3)
-#define Blue_INT_CMD (1<<4)
-#define Blue_INT_RCVMD (1<<5)
-#define Blue_INT_TIMEOUT (1<<6)
-#define Blue_INT_TX_OK (1<<7)
-
-#define WAKEUP_TIMER_TRIGGER     0x1000000 
-#define TIMER1_TIMER_TRIGGER     0x2000000 
-#define TIMER2_TIMER_TRIGGER     0x3000000
-
-#define WAKEUP_TIMER_MASK     0x1
-#define TIMER1_TIMER_MASK     0x2
-#define TIMER2_TIMER_MASK     0x3
-
-#define BLUE_SLEEP_ENABLE        0x10000000
-#define BLUE_STANDBY_ENABLE      0x30000000
-#define TIMER_OFF 0
-#define SLEEP_TIME_MIN   (250)
-#define NO_DEEP_SLEEP                       (0x97)
-
-
-#define IRQSPI                  (SPI_IRQn)
 #define IRQBLUE                 (BLUE_CTRL_IRQn)
-#define IRQNVM                  (NVM_IRQn)
 
-#define BLE_STATUS_SUCCESS            		    (0x00)
+#define TIMER_OFF                 (0)
+#define OFF_R_SLEEP               (28)
 
 /**
 * @}
@@ -122,12 +79,6 @@
 #define IS_STATE_VALID(STATEMACHINE_NO) (STATEMACHINE_NO < STATEMACHINE_COUNT)
 #define IS_POWERLEVEL_VALID(POWER) (POWER < 16)
 #define IS_RFCHANNEL_VALID(RF_CHANNEL) (RF_CHANNEL <40)
-#define GET_CUR_TIME            (MASK_R_TIMEOUT & BLUE_CTRL->CURRENT_TIME)
-#define IFR (&(globalParameters.hardware_config) )
-
-#define IS_DELAY_VALID(TIME) ( ((us_time_translate(TIME) - (IFR->hs_startup_time + (IFR->hs_startup_time>>2)-(IFR->hs_startup_time>>4)) - ANALOG_HW_OFFSET)>10) && \
-                            ((us_time_translate(TIME) - (IFR->hs_startup_time + (IFR->hs_startup_time>>2)-(IFR->hs_startup_time>>4)) - ANALOG_HW_OFFSET)<(1<<24)))
-
   
 #define MASK_INTERRUPTS() __disable_irq(); 
 #define UNMASK_INTERRUPTS()  __enable_irq();
@@ -144,14 +95,8 @@
 static volatile BlueGlob* const blueglob = &__blue_RAM.BlueGlobVar; // (BlueGlob*) BLUEGLOB_BASE;
 static volatile BlueGlobPerMaster* const bluedata = __blue_RAM.BlueGlobPerMasterVar;// (BlueGlobPerMaster*) (BLUEGLOB_BASE+12);
 
-/* volatile uint8_t *testP;*/
-
 /* glabal variables */
 RadioGlobalParameters_t globalParameters;
-
-/*ActionPacket dummy_action_packet;
-uint8_t dummy_data[50];*/
-
 
 /**
 * @}
@@ -169,105 +114,7 @@ uint8_t dummy_data[50];*/
 * @param  void
 * @retval void
 */
-WEAK_FUNCTION(void RADIO_TimerOverrunCallback(void));;
-
-/**
-* @brief  Weak definition of RADIO_HostTimerCallback
-* @param  void
-* @retval void
-*/
-WEAK_FUNCTION(void RADIO_HostTimerCallback(void));
-
-/**
-* @brief  This function translates the incoming time in system time units to machine time units.
-* @param  time: Time in system time units (625/256 us).
-* @retval int32_t: time in machine time units (period slow clock/16).
-*/
-static int32_t machine_time_translate(int32_t time)
-{
-  int32_t freq_global = globalParameters.freq_global_debug ;
-  int32_t time1 = (time >> 15) ;
-  int32_t time2 = time & 0x7fff ;
-  int32_t freq1 = freq_global >> 7 ;
-  int32_t result = freq_global*time1 + ((time2 * freq1) >> 8) ;
-  
-  return((result + 32) >> 6) ;
-}
-
-
-/**
-* @brief  This function translates the incoming time in 512 kHz time units to us.
-* @param  time: Time in system in 512 kHz unit.
-* @retval uint32_t: time in micro second.
-*/
-static uint32_t us_time_translate(int32_t time)
-{
-  
-    //0.68DB8BAC710CB29
-  uint32_t t1 = time * 0x68;
-  uint32_t t2 = time * 0xDB;
-
-  return machine_time_translate( (t1 >> 8) + (t2 >> 16) );//(time*256)/625);
-}
-
-
-/**
-* @brief  This function gets frequency and period and sets approprite registers of BLE.
-* @param  a: frequency.
-*         b: period.
-* @retval None
-*/
-static void set_freq(int32_t a, int32_t b)
-{
-  int32_t freq_global;
-  int32_t period_global;
-  
-  if(IFR->ls_source != 0) {
-    int32_t mult = 0x753 ;
-    int32_t a1 = a >> 6 ;
-    int32_t a2 = a1 * mult ;
-    
-    int32_t mul1 = 0x8BCF6 ;
-    int32_t b1 = b >> 8 ;
-    int32_t b2 = b & 0xff ;
-    period_global = ((mul1 * b1) + ((b2 * mul1)>>8) + 16 )>>5 ;
-    
-    freq_global = (a2 + 128) >> 8 ;      
-    
-    globalParameters.period_slow_patch = ((b * 1365) >> 16); /* Divide by 48 */
-  }
-  else {
-    freq_global = LS_CRYSTAL_FREQ ;
-    period_global = LS_CRYSTAL_PERIOD;
-    /* [EM:] Fix bug #1343
-    *  save the period_slow value to restore in the ISR
-    */
-    globalParameters.period_slow_patch = ((LS_CRYSTAL_PERIOD>>6)*1250) >> 16;
-  }
-  
-  blueglob->period_slow = globalParameters.period_slow_patch;    
-  globalParameters.freq_global_debug = freq_global;   
-  globalParameters.period_global_debug = period_global; /* not used in current implementation */ 
-  int32_t time1 = machine_time_translate(IFR->hs_startup_time) ;
-  if(time1 >= 1024)
-    time1 = 1023 ;
-  if (time1 < 8)
-    time1 = 8;
-  blueglob->wakeup_time_offset = time1 >> 3 ;
-}
-
-
-/**
-* @brief  BlueNRG Start Crystal Measurement.
-* @param  None
-* @retval None
-*/
-static void BlueNRG_Start_Crystal_Measurement(void)
-{
-  CKGEN_BLE->CLK32K_PERIOD = 0;
-  globalParameters.Clk32Context.calibr.started_flag = 1;    
-}
-
+WEAK_FUNCTION(void RADIO_TimerOverrunCallback(void));
 
 /**
 * @brief  Read RSSI
@@ -306,34 +153,6 @@ static int32_t read_RSSI(void)
   return rsi_dbm ;
 }
 
-
-
-
-#if 0
-/**
-* @brief  Select which timer should be employed.
-*         If wakeupTime is less than 1.2 ms Timer1 will be employed,
-*         otherwise wakeupTime will be employed.
-* @param  wakeupTime
-* @retval uint8_t: BLE_STATUS_SUCCESS or NO_DEEP_SLEEP
-*/
-static uint8_t timerSelect(uint32_t wakeupTime)
-{
-  int32_t time2 = BLUE_CTRL->CURRENT_TIME ;
-  int32_t timediff = (wakeupTime - time2) & 0xffffff ;
-  
-  /* more than 1.2 ms in the future */
-  if(timediff > (blueglob->wakeup_time_offset << 3) + machine_time_translate(SLEEP_TIME_MIN) && timediff < 0x800000) {
-    return BLE_STATUS_SUCCESS;
-  }
-  else {
-    return NO_DEEP_SLEEP;
-  }
-}
-#endif
-
-
-
 /**
 * @brief  write_radio_config.
 * @param  ptr
@@ -370,21 +189,19 @@ static void write_radio_config(char *ptr)
 */
 void RADIO_IRQHandler(void)
 {
+  uint32_t time;
   uint32_t int_value = BLUE_CTRL->INTERRUPT;
   
   if ( (int_value & IRQ_DONE) != 0) {
     /* Indicates that there is no scheduling for wakeup Timer */
-    globalParameters.wakeupTime = 0;
-    
+    TIMER_updatePeriodSlow();
     /* Restore period_slow since it is rewritten by hardware */
-    blueglob->period_slow = globalParameters.period_slow_patch;
     
     /* if (!Is_Flash_Write_On_Going())
     {
       BLUE_CTRL->RADIO_CONFIG = ((int)GVAR(rssi_level) & 0xffff) | 0x10000;
     } */
     BLUE_CTRL->RADIO_CONFIG = ((int)(globalParameters.rssiLevel) & 0xffff) | 0x10000;
-    
     
     ActionPacket* next, *actionPacketBackup;
     BlueTransStruct *p;
@@ -411,7 +228,7 @@ void RADIO_IRQHandler(void)
       (bluedata + next->StateMachineNo)->txpoint  = BLUE_STRUCT_PTR_CAST(p);
       (bluedata + next->StateMachineNo)->rcvpoint  = BLUE_STRUCT_PTR_CAST(p);
       
-#ifdef BLUENRG2_DEVICE
+#if defined(BLUENRG2_DEVICE)
     (bluedata + next->StateMachineNo)->remap_chan = (bluedata+next->StateMachineNo)->remap_chan | 0x80;
 #endif
 
@@ -422,26 +239,13 @@ void RADIO_IRQHandler(void)
         
         /* program timer at next->wakeuptime */
         if((next->ActionTag & RELATIVE ) !=0) {
-          globalParameters.wakeupTime = BLUE_CTRL->CURRENT_TIME;
-          globalParameters.wakeupTime = globalParameters.wakeupTime + us_time_translate(next->WakeupTime);
-          /* Adding the correction factor 1.1875*HS_STARTUP_TIME + HW_OFFSET for all packet except first packet for XC oscillator */
-          globalParameters.wakeupTime = globalParameters.wakeupTime -((IFR->hs_startup_time) + (IFR->hs_startup_time>>2) - (IFR->hs_startup_time>>4)) - ANALOG_HW_OFFSET - TIMING_ERROR_CORRECTION;
-
-          globalParameters.wakeupTime =(globalParameters.wakeupTime & 0x00FFFFFF);
+          time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(next->WakeupTime);
+          HAL_VTimer_SetRadioTimerValue(time,(next->ActionTag & TXRX), (next->ActionTag & PLL_TRIG));
         }
         else {
-          globalParameters.wakeupTime = next->WakeupTime;
-          globalParameters.wakeupTime =(globalParameters.wakeupTime & 0x00FFFFFF);
+          HAL_VTimer_SetRadioTimerValue(next->WakeupTime,(next->ActionTag & TXRX), (next->ActionTag & PLL_TRIG));
         }
         
-        BLUE_CTRL->TIMEOUT = (globalParameters.wakeupTime | WAKEUP_TIMER_TRIGGER | BLUE_SLEEP_ENABLE);
-        
-     /*   if(timerSelect(next->WakeupTime) == BLE_STATUS_SUCCESS) {
-          blue->Timeout = (globalParameters.wakeupTime | WAKEUP_TIMER_TRIGGER | BLUE_SLEEP_ENABLE);
-        }
-        else {
-          blue->Timeout = globalParameters.wakeupTime | TIMER1_TIMER_TRIGGER;
-        }*/
       }
       /* back to back */
       else {
@@ -457,7 +261,7 @@ void RADIO_IRQHandler(void)
       bluedata->config = bluedata->config & 0x7F ;  //reset NESN bit */
       
       /* read time stamp */
-      globalParameters.current_action_packet->timestamp_receive = BLUE_CTRL->TIMER_CAPTURE;
+      globalParameters.current_action_packet->timestamp_receive = TIMER_GetAnchorPoint();
     }
     
     actionPacketBackup = globalParameters.current_action_packet;
@@ -466,7 +270,7 @@ void RADIO_IRQHandler(void)
   }
   
   if ( (int_value & IRQ_WAKEUP_2) != 0) {
-    RADIO_HostTimerCallback();
+    HAL_VTIMER_TimeoutCallback(); 
   }
   if (int_value & BIT_TIME_OVERRUN) {
     // Timer overrun!!!
@@ -487,14 +291,13 @@ void RADIO_IRQHandler(void)
 */
 uint8_t RADIO_StopActivity(void)
 {
+  uint8_t retVal;
   MASK_INTERRUPTS();
   blueglob->Config = 0; 
-  BLUE_CTRL->TIMEOUT = TIMER_OFF | BLUE_SLEEP_ENABLE;
-  globalParameters.current_action_packet = 0;
+  retVal = HAL_VTimer_ClearRadioTimerValue();
   globalParameters.forceRadiotoStop = TRUE;
-  
   UNMASK_INTERRUPTS();
-  return TRUE;     
+  return retVal;     
 }
 
 
@@ -633,7 +436,7 @@ void RADIO_SetChannel(uint8_t StateMachineNo, uint8_t channel, uint8_t channel_i
 *         Note: not used here. This value should be set automatically in RADIO_CrystalCheck routine. 
 * @retval None
 */
-void RADIO_SetTxAttributes(uint8_t StateMachineNo, uint32_t NetworkID, uint32_t crc_init, uint32_t sca)
+void RADIO_SetTxAttributes(uint8_t StateMachineNo, uint32_t NetworkID, uint32_t crc_init)
 {
   /* Check the parameters */
   assert_param(IS_STATE_VALID(StateMachineNo)); 
@@ -641,7 +444,6 @@ void RADIO_SetTxAttributes(uint8_t StateMachineNo, uint32_t NetworkID, uint32_t 
   (bluedata + StateMachineNo)->access_address = NetworkID;
   (bluedata + StateMachineNo)->crc_init = crc_init;      
   
-  /* blueglob->period_slow = sca; */
   return; 
 }
 
@@ -736,9 +538,11 @@ void RADIO_SetReservedArea(ActionPacket *p)
   //p->WakeupTime = (uint32_t) (p->WakeupTime * 0.525); /* convert us to appropriated value.  1000 * 1/512000 = 1953.125 */
   
   /* Check the parameters */
-  assert_param(IS_DELAY_VALID(p->WakeupTime));
+//  assert_param(IS_DELAY_VALID(p->WakeupTime));
    
   p->trans_packet.datptr = BLUE_DATA_PTR_CAST(p->data);
+  
+  p->trans_packet.next = BLUE_STRUCT_PTR_CAST(&(p->trans_packet));
   
   /* rcvlen[17:0] */
   if(p->ReceiveWindowLength < 0x40000) {
@@ -823,7 +627,7 @@ void RADIO_SetReservedArea(ActionPacket *p)
 uint8_t RADIO_MakeActionPacketPending(ActionPacket *p)
 {
   uint8_t returnValue = SUCCESS_0;
-  uint32_t dummyTime ;
+  uint32_t time,dummyTime;
   
   if(RADIO_GetStatus(&dummyTime) == BLUE_IDLE_0)
   {
@@ -855,7 +659,7 @@ uint8_t RADIO_MakeActionPacketPending(ActionPacket *p)
     (bluedata+statemachineNo)->txpoint =  BLUE_STRUCT_PTR_CAST(p1);
     (bluedata+statemachineNo)->rcvpoint = BLUE_STRUCT_PTR_CAST(p1);
     
-#ifdef BLUENRG2_DEVICE
+#if defined(BLUENRG2_DEVICE)
     (bluedata+statemachineNo)->remap_chan = (bluedata+statemachineNo)->remap_chan | 0x80;
 #endif
 
@@ -865,16 +669,12 @@ uint8_t RADIO_MakeActionPacketPending(ActionPacket *p)
     /* program timer at next->wakeuptime */
     MASK_INTERRUPTS();
     if((p->ActionTag & RELATIVE ) !=0) {
-      globalParameters.wakeupTime = BLUE_CTRL->CURRENT_TIME;
-      /* Adding the correction factor 1.1875*HS_STARTUP_TIME + ANALOG_HW_OFFSET for the first packet */
-      globalParameters.wakeupTime = globalParameters.wakeupTime + us_time_translate(p->WakeupTime) - (IFR->hs_startup_time + (IFR->hs_startup_time>>2)-(IFR->hs_startup_time>>4)) - ANALOG_HW_OFFSET;
-      globalParameters.wakeupTime =(globalParameters.wakeupTime & 0x00FFFFFF);
+      time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(p->WakeupTime);
+      returnValue = HAL_VTimer_SetRadioTimerValue(time,(p->ActionTag & TXRX), (p->ActionTag & PLL_TRIG));
     }
     else {
-      globalParameters.wakeupTime = p->WakeupTime;
-      globalParameters.wakeupTime =(globalParameters.wakeupTime & 0x00FFFFFF);
-    }
-    BLUE_CTRL->TIMEOUT = (globalParameters.wakeupTime | WAKEUP_TIMER_TRIGGER | BLUE_SLEEP_ENABLE);    
+      returnValue = HAL_VTimer_SetRadioTimerValue(p->WakeupTime,(p->ActionTag & TXRX), (p->ActionTag & PLL_TRIG));
+    }   
     UNMASK_INTERRUPTS();
   }
   else {
@@ -886,68 +686,6 @@ uint8_t RADIO_MakeActionPacketPending(ActionPacket *p)
 
 
 /**
-* @brief  This function performs the automatic calibration procedure on the BLE period_slow hardware register when
-*         the value of hardware_config.ls_source variable is non-zero. In this case, also
-*         the internal BLE stack timing reference is tuned accordingly.
-*         When the hardware_config.ls_source is zero, the period_slow register value is set on the
-*         basis of the LS_CRYSTAL_PERIOD macro. In this case, the internal BLE stack timing reference is
-*         set according to the LS_CRYSTAL_FREQ and LS_CRYSTAL_PERIOD macros.
-*         In any cases, the resulting internal BLE stack timing reference is used to set the BLE wakeup_time_offset
-*         hardware register according to the hardware_config.hs_startup_time content.
-* @param  None
-* @retval None
-*/
-void RADIO_CrystalCheck(void)
-{
-  Clk32Context_t *Clk32Context_p = &(globalParameters.Clk32Context);
-  BOOL new_computation_flag = Clk32Context_p->period == -1;    
-  if(IFR->ls_source != 0) /* using internal RO */
-  {
-    if (new_computation_flag)
-    {
-      int32_t freq1 = 0 ;
-      int32_t var1 = 0;
-      int32_t freq2;
-      do{
-        freq2 = freq1 ;
-        freq1 = CKGEN_BLE->CLK32K_FREQ; /*reading frequency from hardware */
-        var1++;
-      }while((freq1 != freq2 || freq1 == 0) && var1 < 5000); /* repeat until two consecutive reading are equal */
-      Clk32Context_p->freq = freq1;
-      Clk32Context_p->period = CKGEN_BLE->CLK32K_PERIOD;
-      Clk32Context_p->calibr.Time_mT = GET_CUR_TIME;
-      BlueNRG_Start_Crystal_Measurement();
-    }
-    else{
-      uint32_t current_time_mT = GET_CUR_TIME;
-      if ((Clk32Context_p->calibr.started_flag != 0) && (CKGEN_BLE->CLK32K_IT != 0) )
-      {
-        Clk32Context_p->freq = CKGEN_BLE->CLK32K_FREQ;
-        Clk32Context_p->period = CKGEN_BLE->CLK32K_PERIOD;
-        Clk32Context_p->calibr.started_flag = 0;
-        Clk32Context_p->calibr.Time_mT = current_time_mT;
-        new_computation_flag = TRUE;
-      }
-      else{
-        if ((Clk32Context_p->calibr.started_flag == 0) && (((uint32_t)TIME24_DIFF(current_time_mT, Clk32Context_p->calibr.Time_mT)) > (1000<<9)))/* [RG:] about 1sec +/-20% */
-        {
-          BlueNRG_Start_Crystal_Measurement();
-        }
-      }
-    }
-  }
-  else {  /* using external Crystal */    
-    Clk32Context_p->period = 0; 
-  }
-  
-  if (new_computation_flag == TRUE )
-  {
-    set_freq(Clk32Context_p->freq,Clk32Context_p->period) ;
-  }
-  
-}
-
-/**
 * @brief  Initializes the radio.
 * @param  hs_startup_time: start up time of the high speed (16 or 32 MHz) crystal oscillator in units of 625/256 us (~2.44 us).
 * @param  low_speed_osc: source for the 32 kHz slow speed clock: 1: internal RO; 0: external crystal.
@@ -956,7 +694,7 @@ void RADIO_CrystalCheck(void)
 *         This parameter can be: ENABLE or DISABLE.
 * @retval None
 */
-void RADIO_Init(uint16_t hs_startup_time, uint8_t low_speed_osc, uint32_t* hot_table, FunctionalState whitening)
+void RADIO_Init(uint32_t* hot_table, FunctionalState whitening)
 {     
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(whitening));
@@ -978,8 +716,6 @@ void RADIO_Init(uint16_t hs_startup_time, uint8_t low_speed_osc, uint32_t* hot_t
     blueglob->RcvDelay1 |= 0x80; 
   }
   
-  globalParameters.hardware_config.hs_startup_time = hs_startup_time;
-  globalParameters.hardware_config.ls_source = low_speed_osc;
   globalParameters.hardware_config.hot_ana_config_table = hot_table;
   
   blueglob->Config = 0;
@@ -987,33 +723,15 @@ void RADIO_Init(uint16_t hs_startup_time, uint8_t low_speed_osc, uint32_t* hot_t
   BLUE_CTRL->HOST_WKUP_TIMER = TIMER_OFF  | (1<<OFF_R_SLEEP);
   int int_value = BLUE_CTRL->INTERRUPT ;
   BLUE_CTRL->INTERRUPT = int_value ; 
-  
-  blueglob->period_slow = SCA_DEFAULTVALUE;
-  
-#if BLUENRG_START_CRYSTAL_MEASUREMENT_CALLED_EXTERNALLY != 0   
-  if (Clk32Context.calibr.started_flag != 1){ 
-    CKGEN_BLE->CLK32K_IT = 1;    
-    BlueNRG_Start_Crystal_Measurement();
-  }
-#else    
-  CKGEN_BLE->CLK32K_COUNT = 23 ;  
-#endif
-  
-  globalParameters.back2backTime = 150; /* 150 micro second */
+    
+  globalParameters.back2backTime = 71; /* 150 micro second */
   globalParameters.forceRadiotoStop = FALSE;
-  globalParameters.powerUpfirstPacket = 1;
-  globalParameters.Clk32Context.period = -1;
-  
-  RADIO_CrystalCheck();
   
   RADIO_SetTxPower(11);
   RADIO_SetEncryptFlags(0, DISABLE, DISABLE);
   
-  //blueglob->wakeup_time_offset= 0x07;  /* 30.51us */
-  
   ENABLE_INTERRUPT(IRQBLUE);
-  ENABLE_INTERRUPT(IRQNVM);
-  
+
   return;
 }
 
@@ -1033,29 +751,11 @@ void RADIO_Init(uint16_t hs_startup_time, uint8_t low_speed_osc, uint32_t* hot_t
 */
 uint8_t RADIO_GetStatus(uint32_t *time)
 {
-  uint8_t retValue =  BLUE_IDLE_0; 
-  uint32_t timeOut;
+  uint8_t retValue = BLUE_IDLE_0;
   if((blueglob->Config & 0x8) != 0)
-  {
-    timeOut = BLUE_CTRL->TIMEOUT;
-    *time = timeOut;
-    timeOut = (timeOut >> 24) & 0x07;
-    if(timeOut == TIMER2_TIMER_MASK)
-    {
-      retValue =  BLUE_BUSY_NOWAKEUP_T2;
-    }
-    else if(timeOut == TIMER1_TIMER_MASK)
-    {
-      retValue =  BLUE_BUSY_NOWAKEUP_T1;
-    }
-    else if(timeOut == WAKEUP_TIMER_MASK)
-    {
-      retValue =  BLUE_BUSY_WAKEUP;
-    }
-    
-    /* *time =globalParameters.wakeupTime; */     
-  }       
-  
+  {   
+    retValue = TIMER_GetRadioTimerValue(time);
+  }
   return retValue;
 }
 

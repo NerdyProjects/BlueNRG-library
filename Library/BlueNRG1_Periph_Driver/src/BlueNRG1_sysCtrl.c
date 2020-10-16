@@ -148,60 +148,64 @@ void SysCtrl_PeripheralClockCmd(uint32_t PeriphClock, FunctionalState NewState)
   * @param  None
   * @retval RESET_REASON_Type: wakeup reason @ref RESET_REASON_Type
   */
-RESET_REASON_Type SysCtrl_GetWakeupResetReason(void)
+uint16_t SysCtrl_GetWakeupResetReason(void)
 {
   uint32_t tmpSoc, tmpBle;
+  uint16_t wakeup_src;
   
   tmpSoc = CKGEN_SOC->REASON_RST;
   tmpBle = CKGEN_BLE->REASON_RST;
 
+  wakeup_src = RESET_NONE;
+
   if ((tmpSoc == 0) &&
-      (tmpBle >= BLE_REASON_FROM_IO9) && 
-      (tmpBle <= BLE_REASON_FROM_IO13)) {
-    if ((tmpBle & BLE_REASON_FROM_IO9) == BLE_REASON_FROM_IO9) {
-      return RESET_BLE_WAKEUP_FROM_IO9;
-    }
-    if ((tmpBle & BLE_REASON_FROM_IO10) == BLE_REASON_FROM_IO10) {
-      return RESET_BLE_WAKEUP_FROM_IO10;
-    }
-    if ((tmpBle & BLE_REASON_FROM_IO11) == BLE_REASON_FROM_IO11) {
-      return RESET_BLE_WAKEUP_FROM_IO11;
-    }
-    if ((tmpBle & BLE_REASON_FROM_IO12) == BLE_REASON_FROM_IO12) {
-      return RESET_BLE_WAKEUP_FROM_IO12;
-    }
-    if ((tmpBle & BLE_REASON_FROM_IO13) == BLE_REASON_FROM_IO13) {
-      return RESET_BLE_WAKEUP_FROM_IO13;
-    }
+      ((tmpBle & BLE_REASON_FROM_IO9) == BLE_REASON_FROM_IO9)) {
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_IO9;
+  }
+  if ((tmpSoc == 0) &&
+      ((tmpBle & BLE_REASON_FROM_IO10) == BLE_REASON_FROM_IO10)) {
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_IO10;
+  }
+  if ((tmpSoc == 0) &&
+      ((tmpBle & BLE_REASON_FROM_IO11) == BLE_REASON_FROM_IO11)) {
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_IO11;
+  }
+  if ((tmpSoc == 0) &&
+      ((tmpBle & BLE_REASON_FROM_IO12) == BLE_REASON_FROM_IO12)) {
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_IO12;
+  }
+  if ((tmpSoc == 0) &&
+      ((tmpBle & BLE_REASON_FROM_IO13) == BLE_REASON_FROM_IO13)) {
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_IO13;
   }
 
   if ((tmpSoc == 0) &&
       ((tmpBle & BLE_REASON_FROM_TIMER1) == BLE_REASON_FROM_TIMER1)) {
-    return RESET_BLE_WAKEUP_FROM_TIMER1;
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_TIMER1;
   }
   if ((tmpSoc == 0) &&
       ((tmpBle & BLE_REASON_FROM_TIMER2) == BLE_REASON_FROM_TIMER2)) {
-    return RESET_BLE_WAKEUP_FROM_TIMER2;
+    wakeup_src |= RESET_BLE_WAKEUP_FROM_TIMER2;
   }
   if ((tmpSoc == 0) &&
       ((tmpBle & BLE_REASON_POR_RST) == BLE_REASON_POR_RST)) {
-    return RESET_BLE_POR;
+    wakeup_src |= RESET_BLE_POR;
   }
   if ((tmpSoc == 0) &&
       ((tmpBle & BLE_REASON_BOR_RST) == BLE_REASON_BOR_RST)) {
-    return RESET_BLE_BOR;
+    wakeup_src |= RESET_BLE_BOR;
   }
   if (tmpSoc == SOC_REASON_SYSREQ) {
-    return RESET_SYSREQ;
+    wakeup_src |= RESET_SYSREQ;
   }
   if (tmpSoc == SOC_REASON_WDG) {
-    return RESET_WDG;
+    wakeup_src |= RESET_WDG;
   }
   if((tmpSoc == SOC_REASON_LOCKUP)) {
-    return RESET_LOCKUP;
+    wakeup_src |= RESET_LOCKUP;
   }
 
-  return RESET_NONE;
+  return wakeup_src;
 }
 
 

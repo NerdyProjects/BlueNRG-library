@@ -21,7 +21,7 @@
   ******************************************************************************
   */
     
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
 #include "BlueNRG1_api.h"
@@ -30,6 +30,7 @@
 #include "cmd.h"
 #include "transport_layer.h"
 #include "stack_user_cfg.h"
+#include "DTM_burst.h"
 
 #ifdef WATCHDOG
 #include "BlueNRG1_wdg.h"
@@ -73,6 +74,8 @@ tBleStatus aci_hal_updater_start(void)
    return BLE_STATUS_SUCCESS;
 }
 
+volatile extern uint8_t DTM_INTERFACE;
+const uint8_t DTM_VARIANT[] = {1, 2, 1};
 tBleStatus aci_hal_get_firmware_details(uint8_t *DTM_version_major,
                                         uint8_t *DTM_version_minor,
                                         uint8_t *DTM_version_patch,
@@ -99,7 +102,7 @@ tBleStatus aci_hal_get_firmware_details(uint8_t *DTM_version_major,
     *DTM_version_major  = DTM_FW_VERSION_MAJOR;
     *DTM_version_minor  = DTM_FW_VERSION_MINOR;
     *DTM_version_patch  = DTM_FW_VERSION_PATCH;
-    *DTM_variant = DTM_VARIANT;
+    *DTM_variant = DTM_VARIANT[DTM_INTERFACE];
     *DTM_Build_Number = 0;
     *BTLE_Stack_version_major = HCI_Revision&0x0F;
     *BTLE_Stack_version_minor = (LMP_PAL_Subversion>>4)&0x0F;
@@ -167,4 +170,43 @@ tBleStatus aci_hal_transmitter_test_packets(uint8_t TX_Frequency,
 }
 
 
+/* Throughput test commands */
 
+tBleStatus aci_test_tx_notification_start(uint16_t Connection_Handle, uint16_t Service_Handle, uint16_t Char_Handle, uint16_t Value_Length)
+{
+  return BURST_TXNotificationStart(Connection_Handle, Service_Handle, Char_Handle, Value_Length);
+}
+
+tBleStatus aci_test_tx_write_command_start(uint16_t Connection_Handle, uint16_t Attr_Handle, uint16_t Value_Length)
+{
+  return BURST_TXWriteCommandStart(Connection_Handle, Attr_Handle, Value_Length);
+}
+
+tBleStatus aci_test_rx_start(uint16_t Connection_Handle, uint16_t Attribute_Handle, uint8_t Notifications_WriteCmds)
+{   
+  return BURST_RXStart(Connection_Handle, Attribute_Handle, Notifications_WriteCmds);
+}
+
+tBleStatus aci_test_stop(uint8_t TX_RX)
+{
+  switch(TX_RX){
+  case 0:
+    BURST_TXStop();
+    break;
+  case 1:
+    BURST_RXStop();
+    break;
+  default:
+    return BLE_ERROR_INVALID_HCI_CMD_PARAMS;
+  }
+  
+  return BLE_STATUS_SUCCESS;
+}
+
+tBleStatus aci_test_report(uint32_t *TX_Packets, uint32_t *RX_Packets, uint16_t *RX_Data_Length, uint32_t *RX_Sequence_Errors)
+{
+  *TX_Packets = BURST_TXReport();
+  *RX_Packets = BURST_RXReport(RX_Data_Length, RX_Sequence_Errors);
+  
+  return BLE_STATUS_SUCCESS;
+}

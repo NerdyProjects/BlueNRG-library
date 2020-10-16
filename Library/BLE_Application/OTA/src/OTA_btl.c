@@ -178,7 +178,7 @@ static void OTA_Write_Data(void);
 static uint16_t conn_handle; 
 
 /* Actual OTA mtu size agreed with OTA client: default is OTA_ATT_MTU_SIZE
-   if OTA CLient doesn;t support extended data lenght */
+   if OTA CLient doesn't support extended data lenght */
 static uint16_t ota_att_mtu_size =  OTA_ATT_MTU_SIZE; 
 
 /* Flag for register if OTA Client has performed DLE and ATT_MTU exchange config */
@@ -778,7 +778,7 @@ void aci_att_exchange_mtu_resp_event(uint16_t Connection_Handle,
   
   /* If OTA CLient performs an ATT_MTU exchange in order to increase ATT_MTU: 
      set actual ota_att_mtu_size used for OTA transfer and register this event */
-  ota_att_mtu_size = Att_MTU;
+  ota_att_mtu_size = Att_MTU -3; 
   
   client_DLE_ATT_MTU |= ATT_MTU_DONE;
 }

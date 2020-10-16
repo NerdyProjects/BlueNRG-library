@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\BLE_StackDevConfigUpdater_NWK.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>BUILD_ALL</name>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>Stack_Updater_UART</configuration>
+            </member>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>Stack_Updater_SPI</configuration>
+            </member>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>Stack_Updater_Ymodem_SPI</configuration>
+            </member>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>Stack_Updater_Ymodem_UART</configuration>
+            </member>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>DevConfig_Updater_SPI</configuration>
+            </member>
+            <member>
+                <project>BLE_StackDevConfigUpdater_NWK</project>
+                <configuration>DevConfig_Updater_UART</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

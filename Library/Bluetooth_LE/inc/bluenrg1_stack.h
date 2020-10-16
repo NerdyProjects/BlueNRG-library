@@ -109,8 +109,19 @@
  *   and which value is explicited by the following macro;
  * - a part, that may be considered "fixed", i.e. independent from the above
  *   mentioned parameters.
+ * - v.2.1a: 6456 Bytes
+ * - v.2.1b: 6480 Bytes (added 24 Bytes)
 */
-#define FIXED_BUFFER_SIZE_BYTES ((4948+1492+32+4+4-36-8+16)+4)
+#define FIXED_BUFFER_SIZE_BYTES                 (6480)
+
+
+/**
+ * A part of the RAM is dinamically depending on the number of links.
+ * - v.2.1a: 332 Bytes
+ * - v.2.1b: 336 Bytes (added 4 Bytes for new remDev structure type)
+*/
+#define VARIABLE_BUFFER_SIZE_PER_LINK_BYTES     (336)
+
 
 /**
  * D_LEN_EXT_SIZE: amount of memory needed to support Data Length Extension
@@ -133,7 +144,7 @@
 #define TOTAL_BUFFER_SIZE(NUM_LINKS,NUM_GATT_ATTRIBUTES,NUM_GATT_SERVICES,ATT_VALUE_ARRAY_SIZE,MBLOCKS_COUNT,D_LEN_EXT_EN) (\
   FIXED_BUFFER_SIZE_BYTES +                                                     \
   ((((ATT_VALUE_ARRAY_SIZE) - 1) | 3) + 1) +                                    \
-  (332 * (NUM_LINKS)) +                                                         \
+  (VARIABLE_BUFFER_SIZE_PER_LINK_BYTES * (NUM_LINKS)) +                         \
   (40 * (NUM_GATT_ATTRIBUTES)) +                                                \
   (48 * (NUM_GATT_SERVICES)) +                                                  \
   ((MEM_BLOCK_SIZE + 12) * (MBLOCKS_COUNT)) +                                   \
@@ -383,38 +394,6 @@ int HAL_VTimerStart_sysT32(uint8_t timerNum, uint32_t time);
  * @return 0 if the timerNum virtual timer is running.
  */
 int HAL_VTimerExpiry_sysT32(uint8_t timerNum, uint32_t *sysTime);
-
-/**
- * @brief This callback is called by the stack library to indicate the arrival of an ACL Data Packet.
- *
- * @note The API name and parameters are subject to change in future releases.
- *
- * @param[in]  connHandle       Connection handle for which the command is given. Range: 0x0000-0x0EFF (0x0F00 - 0x0FFF Reserved for future use)
- * @param[in]  pb_flag          Packet boundary flag
- * @param[in]  bc_flag          Broadcast flag
- * @param[in]  dataLen          Length of PDU data in octets.
- * @param[in] pduData          PDU data pointer
- *
- * @return void
- */
-
-tBleStatus hci_rx_acl_data_event(uint16_t connHandle, uint8_t  pb_flag, uint8_t  bc_flag, uint16_t  dataLen, uint8_t*  pduData);
-
-/**
- * @brief API used to send HCI ACL Data Packets to exchange data between the Host and Controller.
- *
- * @note The API name is only available in link layer only mode.
- *
- * @param[in]  connHandle       Connection handle for which the command is given. Range: 0x0000-0x0EFF (0x0F00 - 0x0FFF Reserved for future use)
- * @param[in]  pb_flag          Packet boundary flag
- * @param[in]  bc_flag          Broadcast flag
- * @param[in]  dataLen          Length of PDU data in octets.
- * @param[in] pduData          PDU data pointer
- *
- * @return  Error code
- */
-
-tBleStatus hci_tx_acl_data(uint16_t connHandle, uint8_t  pb_flag, uint8_t  bc_flag, uint16_t  dataLen, uint8_t*  pduData);
 
 
 #endif // defined( BLUENRG1_STACK_H )

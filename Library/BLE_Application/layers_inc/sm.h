@@ -184,6 +184,18 @@
  */
 
 /**
+ * @anchor secure_connections_support
+ * @name Maximum numbe rof bonded devices
+ * Maximum number of devices returned by @ref aci_gap_get_bonded_devices
+ * @{
+ */
+#define MAX_NUM_BONDED_DEVICES    (12)
+
+/**
+ * @}
+ */
+
+/**
  * @}
  */
 

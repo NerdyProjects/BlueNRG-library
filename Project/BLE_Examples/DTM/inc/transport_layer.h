@@ -26,10 +26,21 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "crash_handler.h"
+#include "fifo.h"
 
 /* Exported types ------------------------------------------------------------*/
+typedef void (*DTM_InterfaceHandler_Type)(void);
+
 /* Exported constants --------------------------------------------------------*/
 #define BLUE_FLAG_RAM_RESET             0x01010101
+
+/* DTM Communication Interfaces */
+#define DTM_INTERFACE_UART      (0)
+#define DTM_INTERFACE_SPI       (1)
+#define DTM_INTERFACE_UARTSLEEP (2)
+#define DTM_INTERFACE_UNDEF     (3)
+
+#define FIFO_ALIGNMENT       4
 
 extern uint32_t __blueflag_RAM;
 extern uint8_t dma_state;
@@ -129,7 +140,7 @@ extern void transport_layer_tick (void);
 extern void send_command(uint8_t *cmd, uint16_t len);
 extern void send_event_isr(uint8_t *buffer_out, uint16_t buffer_out_length, int8_t overflow_index);
 extern void send_event(uint8_t *buffer_out, uint16_t buffer_out_length, int8_t overflow_index);
-extern void advance_dma(void);
-extern void advance_spi_dma(uint16_t rx_buffer_len);
-
+void transport_layer_uart_send_data(uint8_t *data, uint16_t data_length);
+void transport_layer_uartsleep_send_data(uint8_t *data, uint16_t data_length);
+void advance_spi_dma(uint16_t rx_buffer_len);
 #endif /* TRANSPORT_LAYER_H */

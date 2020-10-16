@@ -29,7 +29,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
   * @{
@@ -46,25 +46,21 @@
 
 /** 
   * @brief System Reset and Wakeup Sources
-  */ 
-typedef enum
-{
-  RESET_NONE,
-  RESET_SYSREQ,
-  RESET_WDG,
-  RESET_LOCKUP,
-  RESET_BLE_BOR,
-  RESET_BLE_POR,
-  RESET_BLE_WAKEUP_FROM_IO9,
-  RESET_BLE_WAKEUP_FROM_IO10,
-  RESET_BLE_WAKEUP_FROM_IO11,
-  RESET_BLE_WAKEUP_FROM_IO12,
-  RESET_BLE_WAKEUP_FROM_IO13,
-  RESET_BLE_WAKEUP_FROM_TIMER1,
-  RESET_BLE_WAKEUP_FROM_TIMER2,
-} RESET_REASON_Type;
-
-
+  */
+#define RESET_NONE                   0x0000
+#define RESET_SYSREQ                 0x0001
+#define RESET_WDG                    0x0002
+#define RESET_LOCKUP                 0x0004
+#define RESET_BLE_BOR                0x0008
+#define RESET_BLE_POR                0x0010
+#define RESET_BLE_WAKEUP_FROM_IO9    0x0020
+#define RESET_BLE_WAKEUP_FROM_IO10   0x0040
+#define RESET_BLE_WAKEUP_FROM_IO11   0x0080
+#define RESET_BLE_WAKEUP_FROM_IO12   0x0100
+#define RESET_BLE_WAKEUP_FROM_IO13   0x0200
+#define RESET_BLE_WAKEUP_FROM_TIMER1 0x0400
+#define RESET_BLE_WAKEUP_FROM_TIMER2 0x0800
+   
 /**
   * @}
   */
@@ -163,7 +159,7 @@ typedef enum
 
 void SysCtrl_DeInit(void);
 void SysCtrl_PeripheralClockCmd(uint32_t PeriphClock, FunctionalState NewState);
-RESET_REASON_Type SysCtrl_GetWakeupResetReason(void);
+uint16_t SysCtrl_GetWakeupResetReason(void);
 
 void SysCtrl_WakeupFromIo(uint8_t IO, uint8_t LevelState, FunctionalState NewState);
 void SysCtrl_SelectXO(uint8_t XOFreq);

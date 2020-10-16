@@ -372,7 +372,7 @@
             <ScatterFile>.\BlueNRG1.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0404"</Misc>
+            <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0460"</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1032,7 +1032,7 @@
             <ScatterFile>.\BlueNRG1.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DST_OTA_LOWER_APPLICATION=1 -DRESET_MANAGER_SIZE=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0458"</Misc>
+            <Misc>--predefine="-DST_OTA_LOWER_APPLICATION=1 -DRESET_MANAGER_SIZE=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0460"</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1285,7 +1285,7 @@
         <TargetCommonOption>
           <Device>BlueNRG-2</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STBlueNRG-2_DFP.1.0.0</PackID>
+          <PackID>Keil.STBlueNRG-2_DFP.1.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x10040000,0x40000) IRAM(0x20000000,0x6000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -1641,7 +1641,7 @@
             <ScatterFile>.\BlueNRG1.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DST_OTA_HIGHER_APPLICATION=1 -DRESET_MANAGER_SIZE=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0458"</Misc>
+            <Misc>--predefine="-DST_OTA_HIGHER_APPLICATION=1 -DRESET_MANAGER_SIZE=0x1A800 -DMEMORY_RAM_APP_OFFSET=0x0460"</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>

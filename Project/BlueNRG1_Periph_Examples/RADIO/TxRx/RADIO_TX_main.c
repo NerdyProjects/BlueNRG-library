@@ -18,12 +18,13 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
+#include "main_common.h"
+#include "vtimer.h"
 #if ST_USE_OTA_RESET_MANAGER
 #include "radio_ota.h"
 #endif
@@ -106,6 +107,7 @@ uint8_t TxCallback(ActionPacket* p, ActionPacket* next)
 */
 int main(void)
 {  
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   uint8_t ret;
   
   /* System Init */
@@ -132,12 +134,10 @@ int main(void)
   /* Configure SysTick to generate interrupt */
   SysTick_Config(SYST_CLOCK/1000 - 1);  
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
     
   /* Build packet */
   sendData[0] = 0x02;
@@ -156,8 +156,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */    
-    RADIO_CrystalCheck();  
+    HAL_VTIMER_Tick();  
     
     if(sendNewPacket == TRUE) {
       sendNewPacket = FALSE;
@@ -170,7 +169,7 @@ int main(void)
     }
     
     if(packet_counter == MAX_NUM_PACKET) {
-      printf("Channel = %d,Timeout errors = %d,CRC errors = %d,PER = %.2f %%\r\n",channel, timeout_error_counter, crc_error_counter, ((float)(timeout_error_counter + crc_error_counter))/packet_counter*100.0);
+      printf("Channel = %d,Timeout errors = %d,CRC errors = %d,PER = %d %%\r\n",channel, timeout_error_counter, crc_error_counter, (int)(((float)(timeout_error_counter + crc_error_counter)/packet_counter)*100));
       packet_counter = 0;
       timeout_error_counter = 0;
       crc_error_counter = 0;

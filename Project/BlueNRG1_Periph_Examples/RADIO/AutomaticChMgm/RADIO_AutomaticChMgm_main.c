@@ -20,6 +20,7 @@
 #include <string.h>
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
 * @{
@@ -35,6 +36,28 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define BLE_ADV_ACCESS_ADDRESS  (uint32_t)(0x8E89BED6)
 #define STARTING_CHANNEL        (uint8_t)(24)    // RF channel 22
 #define HS_STARTUP_TIME         (uint16_t)(1)  /* High Speed start up time min value */
@@ -78,18 +101,17 @@ uint8_t dataRoutine(ActionPacket* p,  ActionPacket* next)
 */
 int main(void)
 { 
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   /* System Init */
   SystemInit();
   
   /* Identify BlueNRG-1 platform */
   SdkEvalIdentification();
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Build packet */
   sendData[0] = 0x02; 
@@ -131,9 +153,8 @@ int main(void)
   /* Setting of the channel and the channel increment */
   RADIO_SetChannel(STATE_MACHINE_0, STARTING_CHANNEL, 2);
   
-  /* Sets of the NetworkID and the CRC.
-   * The last parameter SCA is not used */
-  RADIO_SetTxAttributes(STATE_MACHINE_0, BLE_ADV_ACCESS_ADDRESS, 0x555555, 0);
+  /* Sets of the NetworkID and the CRC. */
+  RADIO_SetTxAttributes(STATE_MACHINE_0, BLE_ADV_ACCESS_ADDRESS, 0x555555);
   
   /* Configures the transmit power level */
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER); 
@@ -146,8 +167,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
   }     
 }
 

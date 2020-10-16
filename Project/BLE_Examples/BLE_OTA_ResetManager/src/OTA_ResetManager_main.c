@@ -25,8 +25,8 @@
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
   -# Open the KEIL uVision 5 for ARM and select Project->Open Project menu. 
   -# Open the KEIL project
-     <tt> ...\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\MDK-ARM\\BlueNRG-1\\BLE_OTA_ResetManager.uvprojx </tt>
-     <tt> ...\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\MDK-ARM\\BlueNRG-2\\BLE_OTA_ResetManager.uvprojx </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\MDK-ARM\\BlueNRG-1\\BLE_OTA_ResetManager.uvprojx </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\MDK-ARM\\BlueNRG-2\\BLE_OTA_ResetManager.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -37,8 +37,8 @@
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
   -# Open the Embedded Workbench for ARM and select File->Open->Workspace menu. 
   -# Open the IAR project
-     <tt> ...\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\EWARM\\BlueNRG-1\\BLE_OTA_ResetManager.eww </tt>
-     <tt> ...\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\EWARM\\BlueNRG-2\\BLE_OTA_ResetManager.eww </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\EWARM\\BlueNRG-1\\BLE_OTA_ResetManager.eww </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\EWARM\\BlueNRG-2\\BLE_OTA_ResetManager.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -53,6 +53,7 @@
 - \c STEVAL-IDB007V1
 - \c STEVAL-IDB007V2
 - \c STEVAL-IDB008V1
+- \c STEVAL-IDB008V1M
 - \c STEVAL-IDB008V2
 - \c STEVAL-IDB009V1
 
@@ -92,35 +93,38 @@
 
 * \section Pin_settings Pin settings
 @table
-|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-----------------------------------------------------------------------------------------------------------------------------
-|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     GND    |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|   RESETN   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    VBLUE   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
 
 @endtable 
 
@@ -136,23 +140,23 @@
 
 * \section LEDs_description LEDs description
 @table
-|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-----------------------------------------------------------------------------------------------------------------------------
-|     DL1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+|     DL1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
 
 @endtable
 
 
 * \section Buttons_description Buttons description
 @table
-|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
---------------------------------------------------------------------------------------------------------------------------------
-|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |
+|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |
 
 @endtable
 
@@ -233,7 +237,21 @@ static void OTA_Erase_Storage_Area(uint16_t startPageNumber, uint16_t endPageNum
   
   for(k=startPageNumber;k<=endPageNumber;k++)
   { 
-    FLASH_ErasePage(k); 
+    //FLASH_ErasePage(k);
+    /* Lock word to avoid undesired FLASH operation */
+    if (flash_sw_lock != FLASH_UNLOCK_WORD)
+      return;
+		
+    /* Clear IRQ */
+    FLASH->IRQSTAT = 0x3F;
+		
+    /* Write the page address */
+    FLASH->ADDRESS = (k * N_BYTES_PAGE)>>2;;
+		
+    /* Write the ERASE command */
+    FLASH->COMMAND = FLASH_ERASE;
+		
+    FLASH_WaitCmdDone();
   }
 }
 
@@ -290,10 +308,10 @@ static uint32_t OTA_Check_Application_Tags_Value(void)
       
     }
   }
-  else if ((TAG_VALUE(APP_LOWER_ADDRESS) == OTA_IN_PROGRESS_TAG) && (TAG_VALUE(APP_HIGHER_ADDRESS) == OTA_IN_PROGRESS_TAG))   /* 5 */
-  {
+  //else if ((TAG_VALUE(APP_LOWER_ADDRESS) == OTA_IN_PROGRESS_TAG) && (TAG_VALUE(APP_HIGHER_ADDRESS) == OTA_IN_PROGRESS_TAG))   /* 5 */
+  //{
     /* 5: Is it possible? No. What to do?*/
-  }
+  //}
   return appAddress;
 }
 

@@ -25,7 +25,7 @@
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include "main_common.h"
-
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
   * @{
@@ -151,6 +151,7 @@ uint8_t dataRoutine(ActionPacket* p,  ActionPacket* next)
   */
 int main(void)
 { 
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   /* System Init */
   SystemInit();
   
@@ -159,8 +160,10 @@ int main(void)
   SdkEvalLedInit(LED1);
   SdkEvalComUartInit(UART_BAUDRATE);
   
-  /* Radio configuration - HS_STARTUP_TIME 642 us, external LS clock, NULL, whitening enabled */
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Configures the transmit power level */
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER);
@@ -185,8 +188,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
   }   
 }
 
@@ -233,7 +235,7 @@ void InitializationActionPackets(void)
   RADIO_SetChannel(STATE_MACHINE_0, APP_CHANNEL, 0);
 
   /* Sets of the NetworkID and the CRC */
-  RADIO_SetTxAttributes(STATE_MACHINE_0, BLE_NETWORK_ID, 0x555555, 0);
+  RADIO_SetTxAttributes(STATE_MACHINE_0, BLE_NETWORK_ID, 0x555555);
     
   /* Call these functions before execute the action packets */
   RADIO_SetReservedArea(&waitRequestAction);

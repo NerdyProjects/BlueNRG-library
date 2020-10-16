@@ -16,7 +16,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 
@@ -104,7 +104,7 @@ void GPIO_Configuration(void)
   SysCtrl_PeripheralClockCmd(CLOCK_PERIPH_GPIO, ENABLE);
 
   /* Configure PWM pin */
-  GPIO_InitStructure.GPIO_Pin = MFT_PWM0_PIN;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
   GPIO_InitStructure.GPIO_Mode = Serial1_Mode;
   GPIO_InitStructure.GPIO_Pull = DISABLE;
   GPIO_InitStructure.GPIO_HighPwr = DISABLE;

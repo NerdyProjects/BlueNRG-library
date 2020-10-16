@@ -112,20 +112,6 @@
 #define HS_SPEED_XTAL HS_SPEED_XTAL_16MHZ
 #endif
 
-/**
- * @brief  Low Speed Crystal default source 
- */
-#ifndef LS_SOURCE
-#define LS_SOURCE LS_SOURCE_EXTERNAL_32KHZ
-#endif
-
-/** 
- * @brief SMPS default configuration 
- */
-#ifndef SMPS_INDUCTOR
-#define SMPS_INDUCTOR SMPS_INDUCTOR_10uH
-#endif
-   
 /** 
  * @brief BOR default configuration 
  */

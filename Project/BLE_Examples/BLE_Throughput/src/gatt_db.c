@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "ble_const.h" 
 #include "bluenrg1_stack.h"
 #include "osal.h"
@@ -120,7 +121,7 @@ void Attribute_Modified_CB(uint16_t handle, uint8_t data_length, uint8_t *att_da
     if(packets != 0 && packets%NUM_PACKETS == 0){
       time2 = Clock_Time();
       tClockTime diff = time2-time;
-      printf("%d RX packets. Elapsed time: %d ms. App throughput: %.1f kbps.\n", NUM_PACKETS, (int)diff, (float)NUM_PACKETS*20*8/diff);
+      printf("%d RX packets. Elapsed time: %d ms. App throughput: %d kbps.\n", NUM_PACKETS, (int)diff, NUM_PACKETS*20*8/diff);
       if(lost_packets){
         printf("%d lost packet(s) (%d)\n", (int)lost_packets, (int)lost2);
       }

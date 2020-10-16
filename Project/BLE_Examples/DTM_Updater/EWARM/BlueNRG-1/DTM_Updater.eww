@@ -1,26 +1,27 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <workspace>
-  <project>
-    <path>$WS_DIR$\DTM_Updater.ewp</path>
-  </project>
-  <batchBuild>
-    <batchDefinition>
-      <name>BUILD_ALL</name>
-      <member>
-        <project>DTM_Updater</project>
-        <configuration>Release_SPI</configuration>
-      </member>
-      <member>
-        <project>DTM_Updater</project>
-        <configuration>Release_UART_16MHz</configuration>
-      </member>
-      <member>
-        <project>DTM_Updater</project>
-        <configuration>Release_UART_32MHz</configuration>
-      </member>
-    </batchDefinition>
-  </batchBuild>
+    <project>
+        <path>$WS_DIR$\DTM_Updater.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>BUILD_ALL</name>
+            <member>
+                <project>DTM_Updater</project>
+                <configuration>Release_SPI</configuration>
+            </member>
+            <member>
+                <project>DTM_Updater</project>
+                <configuration>Release_UART_16MHz</configuration>
+            </member>
+            <member>
+                <project>DTM_Updater</project>
+                <configuration>Release_UART_32MHz</configuration>
+            </member>
+            <member>
+                <project>DTM_Updater</project>
+                <configuration>Release_RT</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
 </workspace>
-
-

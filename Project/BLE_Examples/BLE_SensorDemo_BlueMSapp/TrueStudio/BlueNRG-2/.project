@@ -36,6 +36,11 @@
     <locationURI>virtual:/virtual</locationURI>
     </link>
   <link>
+      <name>OTA</name>
+    <type>2</type>
+    <locationURI>virtual:/virtual</locationURI>
+    </link>
+  <link>
       <name>Platform_Layers</name>
     <type>2</type>
     <locationURI>virtual:/virtual</locationURI>
@@ -144,6 +149,11 @@
       <name>Library/misc.c</name>
     <type>1</type>
     <locationURI>PARENT-5-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/misc.c</locationURI>
+    </link>
+  <link>
+      <name>OTA/OTA_btl.c</name>
+    <type>1</type>
+    <locationURI>PARENT-5-PROJECT_LOC/Library/BLE_Application/OTA/src/OTA_btl.c</locationURI>
     </link>
   <link>
       <name>Platform_Layers/LPS25HB.c</name>

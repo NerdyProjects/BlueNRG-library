@@ -19,10 +19,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
-
+#include "main_common.h"
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
   * @{
@@ -103,6 +103,7 @@ uint8_t dataRoutine(ActionPacket* p,  ActionPacket* next)
   */
 int main(void)
 { 
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   /* System Init */
   SystemInit();
   
@@ -113,12 +114,10 @@ int main(void)
   sendData3[0] = 0xAE;
   sendData3[1] = 0;
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Build Action Packets */
   actPacket[0].StateMachineNo = STATE_MACHINE_0;
@@ -159,7 +158,7 @@ int main(void)
   RADIO_SetChannel(STATE_MACHINE_0, FREQUENCY_CHANNEL, 0);
 
   /* Sets of the NetworkID and the CRC. The last parameter SCA is not used */
-  RADIO_SetTxAttributes(STATE_MACHINE_0, ACCESS_ADDRESS, 0x555555, 0);
+  RADIO_SetTxAttributes(STATE_MACHINE_0, ACCESS_ADDRESS, 0x555555);
   
   /* Configures the transmit power level */
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER);
@@ -175,8 +174,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck(); 
+    HAL_VTIMER_Tick();
 
     if(pckt_counter_test == 2) {
       pckt_counter_test = 0;

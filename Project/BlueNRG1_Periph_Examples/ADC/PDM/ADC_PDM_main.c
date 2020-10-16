@@ -16,7 +16,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include <stdio.h>
@@ -234,8 +234,8 @@ void TC_IT_Callback(void)
       nPCMs++;
     }
     /* Send the PDM data through UART */
-    UART_SendData( ((uint8_t *)PCM_Buffer)[nBytes + (FS/1000)*2]); /* FS/1000 PCM samples(16 bit) -> (FS/1000)*2 in Bytes */
     while (UART_GetFlagStatus(UART_FLAG_TXFE) == RESET);
+    UART_SendData( ((uint8_t *)PCM_Buffer)[nBytes + (FS/1000)*2]); /* FS/1000 PCM samples(16 bit) -> (FS/1000)*2 in Bytes */
   }
     
 }
@@ -259,8 +259,8 @@ void HT_IT_Callback(void)
       nPCMs++;
     }
     /* Send the PDM data through UART */
-    UART_SendData(((uint8_t *)PCM_Buffer)[nBytes]); /* FS/1000 PCM samples(16 bit) -> (FS/1000)*2 in Bytes */
     while (UART_GetFlagStatus(UART_FLAG_TXFE) == RESET);
+    UART_SendData(((uint8_t *)PCM_Buffer)[nBytes]); /* FS/1000 PCM samples(16 bit) -> (FS/1000)*2 in Bytes */
   }
   
 }

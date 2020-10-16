@@ -92,7 +92,7 @@ tBleStatus Add_HWServW2ST_Service(void)
   /* ********************************* Add_HWServW2ST_Service */
   COPY_HW_SENS_W2ST_SERVICE_UUID(uuid);  
   Osal_MemCpy(&service_uuid.Service_UUID_128, uuid, 16);
-  ret = aci_gatt_add_service(UUID_TYPE_128, &service_uuid, PRIMARY_SERVICE, 1+3*4, &HWServW2STHandle); 
+  ret = aci_gatt_add_service(UUID_TYPE_128, &service_uuid, PRIMARY_SERVICE, 1+6, &HWServW2STHandle); 
   if (ret != BLE_STATUS_SUCCESS) 
     return BLE_STATUS_ERROR;    
   

@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "ble_const.h"
 #include "bluenrg1_stack.h"
 #include "osal.h"

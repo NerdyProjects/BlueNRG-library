@@ -16,7 +16,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include <stdio.h>
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
@@ -36,6 +36,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 volatile uint32_t lSystickCounter=0;
@@ -92,7 +94,7 @@ int main(void)
       /* Get pressure and temperature data */
       xLPS25HBDrv->GetPressure(&pressure);
       xLPS25HBDrv->GetTemperature(&temperature);
-      printf("PRESSURE: %.3f mbar TEMP: %.2f 'C\r\n", pressure, temperature);
+      printf("PRESSURE: %d.%02d mbar TEMP: %d.%02d 'C\r\n", PRINT_INT(pressure),PRINT_FLOAT(pressure),PRINT_INT(temperature),PRINT_FLOAT(temperature));
       SdkEvalLedToggle(LED1);
     }
     SdkDelayMs(200);

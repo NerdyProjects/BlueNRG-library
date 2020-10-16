@@ -2,8 +2,8 @@
 /******************** (C) COPYRIGHT 2015 STMicroelectronics ********************
 * File Name          : ADC/Polling/main.c 
 * Author             : RF Application Team
-* Version            : V1.1.0
-* Date               : September-2015
+* Version            : V1.2.0
+* Date               : January-2019
 * Description        : Code demostrating the ADC functionality
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -16,7 +16,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include <stdio.h>
@@ -36,6 +36,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
 /* Private macro -------------------------------------------------------------*/
 
 #define ADC_CONVERSION    (ADC_ConversionMode_Single)
@@ -64,7 +68,7 @@ void ADC_NVIC_Configuration(void);
   */
 int main(void)
 {
-  float adc_value;
+  float adc_value = 0.0;
   
   /* System initialization function */
   SystemInit();
@@ -79,8 +83,11 @@ int main(void)
   SdkEvalComUartInit(UART_BAUDRATE);
   
   /* SysTick initialization 1ms */  
-  SysTick_Config(SYST_CLOCK/1000 - 1);  
-
+  SysTick_Config(SYST_CLOCK/1000 - 1);
+  
+  if(ADC_SwCalibration())
+    printf("No calibration points found. SW compensation cannot be done.\r\n");
+   
   /* ADC Initialization */
   ADC_CONFIGURATION();
   
@@ -98,15 +105,15 @@ int main(void)
       
       /* Print the ADC value converted */
       if(xADC_InitType.ADC_Input == ADC_Input_TempSensor) {
-        printf("ADC value: %.1f 'C\r\n", adc_value);
+        printf("ADC value: %d.%02d %cC\r\n", PRINT_INT(adc_value),PRINT_FLOAT(adc_value), 248);
       }
       else {
-        printf("ADC value: %.0f mV\r\n", adc_value*1000.0);
+        printf("ADC value: %d.%03d mV\r\n", PRINT_INT(ADC_CompensateOutputValue(adc_value)*1000.0), PRINT_FLOAT(ADC_CompensateOutputValue(adc_value)*1000.0));
       }
       SdkEvalLedToggle(LED1);
       
       /* Application delay before next one shot measurement */
-//      SdkDelayMs(100);
+      SdkDelayMs(100);
       
       /* Start new conversion */
       ADC_ENABLE();

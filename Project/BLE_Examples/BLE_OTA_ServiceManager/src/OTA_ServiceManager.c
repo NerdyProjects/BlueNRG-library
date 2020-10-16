@@ -32,6 +32,10 @@
 #else
 #define PRINTF(...)
 #endif
+
+#define  ADV_INTERVAL_MIN_MS  200
+#define  ADV_INTERVAL_MAX_MS  300
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static volatile uint8_t set_connectable = 1;
@@ -51,7 +55,7 @@ static void setConnectable(void)
   /* Add OTA service UUID to scan response */
   hci_le_set_scan_response_data(18,BTLServiceUUID4Scan); 
   
-  aci_gap_set_discoverable(ADV_IND, 0, 0, RANDOM_ADDR, NO_WHITE_LIST_USE,
+  aci_gap_set_discoverable(ADV_IND, (ADV_INTERVAL_MIN_MS*1000)/625,(ADV_INTERVAL_MAX_MS*1000)/625, RANDOM_ADDR, NO_WHITE_LIST_USE,
                            14, local_name, 0, NULL, 0, 0);    
 }
 

@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2019 STMicroelectronics ********************
  * File Name          : throughput.c
  * Author             : AMS - RF  Application team
- * Version            : V2.0.0
- * Date               : 09-February-2018
+ * Version            : V2.1.0
+ * Date               : 07-January-2019
  * Description        : This file handles bytes received from USB and the init
  *                      function.
  ********************************************************************************
@@ -47,6 +47,8 @@
 #define CMD_TABLE_SIZE              (sizeof(command_table) / sizeof(command_table[0]))
 
 #define TX_OCTETS_TO_TIME(OCTET)    ((OCTET + 14) * 8)
+
+#define LOCAL_NAME 'B','l','u','e','N','R','G','2'
 
 enum {
     CMD_DATA_LEN_UPDATE_REQ_LOW = 0,
@@ -316,12 +318,10 @@ void print_throughput()
     }
     rx_app_context.avg_val = (rx_app_context.avg_val > 0) ? ((0.95 * rx_app_context.avg_val) + (0.05 * rx_thr)) : rx_thr;
 
-    //printf("%-6d sec: TX = %-4.1f kbps. RX = %-4.1f kbps. Corrupted = %-2d Lost = %-2d\n", 
-    //printf("%d sec: TX = %.1f kbps. RX = %.1f kbps. Corrupted = %d Lost = %d miss=%d\n",
-    printf("%d sec: TX = %.1f kbps, RX = %.1f kbps, CRPT=%d, LOST=%d, DUP=%d\r\n", // MISS=%d\n",
+    printf("%d sec: TX = %d kbps, RX = %d kbps, CRPT=%d, LOST=%d, DUP=%d\r\n", // MISS=%d\n",
                                     (int)(time_now / 1000),
-                                    (float)tx_thr,
-                                    (float)rx_thr,
+	                            (int)tx_thr,
+	                            (int)rx_thr,
                                     (int)rx_app_context.corrupted_pckts,
                                     (int)rx_app_context.lost_pckts,
 				    (int)rx_app_context.duplicated_pckts);
@@ -509,23 +509,51 @@ tBleStatus Make_Connection(void)
         return ret;
     }
 #else
-    uint8_t local_name[] = {AD_TYPE_COMPLETE_LOCAL_NAME,'B','l','u','e','N','R','G','2'};
+    
+    /* NOTE: Updated original Server advertising data in order to be also recognized by “BLE Sensor” app Client */
+    tBDAddr bdaddr = {SERVER_ADDRESS};
 
-    /* disable scan response */
+    uint8_t manuf_data[27] = { 
+      2,                      /* Length of AD type Transmission Power */
+      0x0A, 0x00,             /* Transmission Power = 0 dBm */ 
+      9,                      /* Length of AD type Complete Local Name */
+      0x09,                   /* AD type Complete Local Name */ 
+      LOCAL_NAME,             /* Local Name */            
+      13,                     /* Length of AD type Manufacturer info */
+      0xFF,                   /* AD type Manufacturer info */
+      0x01,                   /* Protocol version */
+      0x05,		      /* Device ID: 0x05 = STEVAL-BCN002V1 Board */
+      0x00,                   /* Feature Mask byte#1 */
+      0x00,                   /* Feature Mask byte#2 */
+      0x00,                   /* Feature Mask byte#3 */
+      0x00,                   /* Feature Mask byte#4 */
+      0x00,                   /* BLE MAC start */
+      0x00, 
+      0x00, 
+      0x00, 
+      0x00, 
+      0x00                    /* BLE MAC stop */
+    };
+    
+    
+    for (int var = 0; var < 6; ++var) {
+      manuf_data[26 - var] = bdaddr[var];
+    }
+    
+    uint8_t local_name[] = { AD_TYPE_COMPLETE_LOCAL_NAME, LOCAL_NAME };
+
     hci_le_set_scan_response_data(0, NULL);
-    ret = aci_gap_set_discoverable(ADV_IND,
-                                   ADV_INTERVAL_MIN,
-                                   ADV_INTERVAL_MAX,
-                                   PUBLIC_ADDR,
-                                   NO_WHITE_LIST_USE,
-                                   sizeof(local_name),
-                                   local_name, 0, NULL, 0, 0);
+
+    ret = aci_gap_set_discoverable(ADV_IND, ADV_INTERVAL_MIN, ADV_INTERVAL_MAX, PUBLIC_ADDR, NO_WHITE_LIST_USE, sizeof(local_name), local_name, 0, NULL, 0, 0);  
     if(ret != BLE_STATUS_SUCCESS)
     {
-        printf ("%s Error in aci_gap_set_discoverable(): 0x%02x\r\n", DEVICE_NAME, ret);
-
+        printf ("Error in aci_gap_set_discoverable(): 0x%02x\r\n", ret);
         return ret;
     }
+    
+    /* Update Advertising data with manuf_data */
+    aci_gap_update_adv_data(27, manuf_data);
+    
 #endif
 
     return BLE_STATUS_SUCCESS;

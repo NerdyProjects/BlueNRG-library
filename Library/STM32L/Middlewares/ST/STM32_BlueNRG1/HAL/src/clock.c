@@ -37,9 +37,16 @@
   
 /* Includes ------------------------------------------------------------------*/
 #include "clock.h"
-#include "cube_hal.h"
+
+#ifdef STM32L476xx
+#include "stm32l4xx_ll_utils.h"
+#endif
+#ifdef STM32L152xE
+#include "stm32l1xx_ll_utils.h"
+#endif
 
 const uint32_t CLOCK_SECOND = 1000;
+static uint32_t clock_tick = 0;
 
 /**
  * @brief  Clock_Init
@@ -48,8 +55,7 @@ const uint32_t CLOCK_SECOND = 1000;
  */
 void Clock_Init(void)
 {
-  // FIXME: as long as Cube HAL is initialized this is OK
-  // Cube HAL default is one clock each 1 ms
+  
 }
 
 /**
@@ -57,9 +63,9 @@ void Clock_Init(void)
  * @param  None
  * @retval tClockTime
  */
-tClockTime Clock_Time(void)
+uint32_t Clock_Time(void)
 {
-  return HAL_GetTick();
+  return clock_tick;
 }
 
 /**
@@ -69,7 +75,13 @@ tClockTime Clock_Time(void)
  */
 void Clock_Wait(uint32_t i)
 {
-  HAL_Delay(i);
+  LL_mDelay(i);
+}
+
+
+void Clock_Inc_Tick(void)
+{
+  clock_tick++;
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

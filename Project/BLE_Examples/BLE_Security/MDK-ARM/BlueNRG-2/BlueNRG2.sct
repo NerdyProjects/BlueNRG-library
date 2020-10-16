@@ -204,8 +204,8 @@ LR_IROM2 (_MEMORY_FLASH_BEGIN_) MEMORY_FLASH_APP_OFFSET  {    ; load region size
   }
 }
 
-LR_IROM1 (_MEMORY_FLASH_BEGIN_+MEMORY_FLASH_APP_OFFSET) _MEMORY_FLASH_SIZE_  {    ; load region size_region
-  REGION_FLASH (_MEMORY_FLASH_BEGIN_ + MEMORY_FLASH_APP_OFFSET) (MEMORY_FLASH_APP_SIZE)  {  ; load address = execution address
+LR_IROM1 (_MEMORY_FLASH_BEGIN_+MEMORY_FLASH_APP_OFFSET) MEMORY_FLASH_APP_SIZE  {    ; load region size_region
+  REGION_FLASH (_MEMORY_FLASH_BEGIN_ + MEMORY_FLASH_APP_OFFSET) {  ; load address = execution address
    *.o (.intvec, +First)
    *(InRoot$$Sections)
    .ANY (+RO)
@@ -231,6 +231,9 @@ LR_IROM1 (_MEMORY_FLASH_BEGIN_+MEMORY_FLASH_APP_OFFSET) _MEMORY_FLASH_SIZE_  {  
   }
   rfTimeout_block 0x20000018 4 {
    *.o (.rfTimeout)
+  }
+  BOR_config_block 0x2000001C 8 {
+   *.o (.BOR_config)
   }
   Blue_Flag_Ram_block 0x20000030 4 {
    *.o (.__blueflag_RAM)

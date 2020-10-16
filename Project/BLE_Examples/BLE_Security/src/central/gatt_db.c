@@ -531,7 +531,7 @@ void extractCharacInfo(void)
 *******************************************************************************/
 void Master_DeviceDiscovery_CB(uint8_t *status, uint8_t *addr_type, uint8_t *addr, 
 			       uint8_t *data_length, uint8_t *data,
-			       uint8_t *RSSI)
+			       int8_t *RSSI)
 {
 
   if (*status == DEVICE_DISCOVERED) {

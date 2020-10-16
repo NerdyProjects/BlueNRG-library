@@ -23,16 +23,12 @@
 
 #include "hal_types.h"
 #include "link_layer.h"
-#include <list.h>
+#include "list.h"
+#include "hci_const.h"
 
 
-#define HCI_READ_PACKET_SIZE				        128 //71
+#define HCI_READ_PACKET_SIZE            256
 
-/**
- * Maximum payload of HCI commands that can be sent. Change this value if needed.
- * This value can be up to 255.
- */
-#define HCI_MAX_PAYLOAD_SIZE 128
 
 /*** Data types ***/
 
@@ -90,7 +86,6 @@ BOOL HCI_Queue_Empty(void);
  * BlueNRG interrupt line.
  */
 void HCI_Isr(void);
-void HCI_Isr_Uart(void);
 int HCI_verify(const tHciDataPacket * hciReadPacket);
 int hci_send_req(struct hci_request *r, BOOL async);
 

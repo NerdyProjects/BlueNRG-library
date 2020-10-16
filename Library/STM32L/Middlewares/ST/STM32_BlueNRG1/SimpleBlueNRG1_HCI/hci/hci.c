@@ -28,21 +28,11 @@
 #endif 
 
 
-#ifdef UART_INTERFACE
-#define Disable_IRQ()      Disable_UART_IRQ()
-#define Enable_IRQ()       Enable_UART_IRQ()
-#else
-#define Disable_IRQ()      Disable_SPI_IRQ()
-#define Enable_IRQ()       Enable_SPI_IRQ()
-#endif
-
-#if BLE_CONFIG_DBG_ENABLE
+#if DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...)
 #endif
-
-#define HCI_LOG_ON 0
 
 #define HCI_READ_PACKET_NUM_MAX 		 (5)
 
@@ -68,6 +58,9 @@ uint8_t BlueNRG_Stack_Initialization(void)
   {
     list_insert_tail(&hciReadPktPool, (tListNode *)&hciReadPacketBuffer[index]);
   }
+  
+  /* Enable the Select Pin for the communication interface, if supported */
+  BlueNRG_Activate_Select_Pin();
   
   /* Reset BlueNRG-1 */
   BlueNRG_RST(); 
@@ -98,7 +91,7 @@ int HCI_verify(const tHciDataPacket * hciReadPacket)
 }
 
 
-#ifdef BLUENRG1_NWK_COPROC
+#ifdef BTLE_NWK_COPROC
 
 void BTLE_StackTick(void)
 {
@@ -124,6 +117,7 @@ void BTLE_StackTick(void)
         for (i = 0; i < (sizeof(hci_le_meta_events_table)/sizeof(hci_le_meta_events_table_type)); i++) {
           if (evt->subevent == hci_le_meta_events_table[i].evt_code) {
             hci_le_meta_events_table[i].process((void *)evt->data);
+            break;
           }
         }
       }
@@ -133,6 +127,7 @@ void BTLE_StackTick(void)
         for (i = 0; i < (sizeof(hci_vendor_specific_events_table)/sizeof(hci_vendor_specific_events_table_type)); i++) {
           if (blue_evt->ecode == hci_vendor_specific_events_table[i].evt_code) {
             hci_vendor_specific_events_table[i].process((void *)blue_evt->data);
+            break;
           }
         }
       }
@@ -140,6 +135,7 @@ void BTLE_StackTick(void)
         for (i = 0; i < (sizeof(hci_events_table)/sizeof(hci_events_table_type)); i++) {
           if (event_pckt->evt == hci_events_table[i].evt_code) {
             hci_events_table[i].process((void *)event_pckt->data);
+            break;
           }
         }
       }
@@ -160,37 +156,42 @@ void BTLE_StackTick(void)
 
 #else
 
-volatile uint8_t command_fifo[264];
+volatile uint8_t command_fifo[265];
 volatile uint16_t command_fifo_size = 0;
 
 #ifdef DTM_SPI
 volatile uint8_t spi_irq_flag = FALSE;
-
+extern uint8_t sdk_buffer[SDK_BUFFER_SIZE];
 void BTLE_StackTick(void)
 {
   if(spi_irq_flag == TRUE) {
     spi_irq_flag = FALSE;
-    BlueNRG_SPI_Read_Bridge();
+    //BlueNRG_SPI_Read_Bridge();
+    BlueNRG_SPI_Read(sdk_buffer, SDK_BUFFER_SIZE);
   }
   
   if ((command_fifo_size > 0)) {
     /* Run a WRITE request */
 //    HAL_NVIC_DisableIRQ(UART_IRQ);
-  __disable_irq();
-    while(BlueNRG_SPI_Write_Bridge((uint8_t *)command_fifo, command_fifo_size)<0);
+  //__disable_irq();
+  //  while(BlueNRG_SPI_Write_Bridge((uint8_t *)command_fifo, command_fifo_size)<0);
+
+    BlueNRG_SPI_Write((uint8_t *)command_fifo, command_fifo_size);
     command_fifo_size = 0;
 //    HAL_NVIC_EnableIRQ(UART_IRQ);
-  __enable_irq();
+ // __enable_irq();
   }
 }
 #else
 #ifdef DTM_UART
-extern UART_HandleTypeDef DTM_UartHandle;
 
-#ifndef DTM_UART_HW_FLOW_CTRL
-uint8_t DTM_write_data[250];
-uint8_t DTM_write_cnt = 0;
-#endif
+#define UART_ARRAY_SIZE 1024
+uint8_t DTM_write_data[UART_ARRAY_SIZE];
+uint16_t DTM_write_data_head = 0;
+uint16_t DTM_write_data_tail = 0;
+uint16_t DTM_write_data_size = 0;
+
+uint8_t restart_rx = 0;
 
 void BTLE_StackTick(void)
 {
@@ -200,29 +201,56 @@ void BTLE_StackTick(void)
     DTM_UART_RTS_OUTPUT_LOW();
 #endif
     
-    if(HAL_UART_Transmit(&DTM_UartHandle, (uint8_t*)command_fifo, command_fifo_size, 1000)!= HAL_OK) {
-      while(1);   
+    for(uint16_t i=0; i<command_fifo_size; i++) {
+      LL_USART_TransmitData8(DTM_USART, command_fifo[i]);
+      while(LL_USART_IsActiveFlag_TXE(DTM_USART) == 0);
     }
+    while(LL_USART_IsActiveFlag_TC(DTM_USART) == 0);
+    
     command_fifo_size = 0;
 #ifdef DTM_UART_HW_FLOW_CTRL
     DTM_UART_RTS_OUTPUT_HIGH();
     DTM_UART_CTS_Input();
-    while((HAL_GPIO_ReadPin(DTM_USART_CTS_GPIO_PORT, DTM_USART_CTS_PIN) == GPIO_PIN_RESET));
-    DTM_Config_GPIO_InputIrq_CTS();
+    
+    while(LL_GPIO_IsInputPinSet(DTM_USART_CTS_GPIO_PORT, DTM_USART_CTS_PIN) == 0);
+//    for(volatile uint8_t i=0;i<0xFF;i++);
+    
+    NVIC_EnableIRQ(DTM_USART_EXTI_IRQn);
 #endif
   }
   
-#ifndef DTM_UART_HW_FLOW_CTRL
-  if(DTM_write_cnt != 0) {
-//    __disable_irq(); // col disable irq ho gli stessi errori di quanto era dentro la callback dell'irq...
-    for(uint8_t i = 0; i< DTM_write_cnt; i++) {
-      putchar(DTM_write_data[i]);
+  if(LL_USART_IsActiveFlag_TXE(USART2)) {
+    
+    if(DTM_write_data_size != 0) {
+      __disable_irq();
+      volatile uint16_t temp_head = DTM_write_data_head;
+      __enable_irq();
+      if(temp_head > DTM_write_data_tail) {
+        
+        for(uint16_t i=0; i<(temp_head - DTM_write_data_tail); i++) {
+          while(LL_USART_IsActiveFlag_TXE(USART2) == 0);
+          LL_USART_TransmitData8(USART2, DTM_write_data[DTM_write_data_tail+i]);
+        }
+        
+        __disable_irq();
+        DTM_write_data_size -= (temp_head - DTM_write_data_tail);
+        __enable_irq();
+        DTM_write_data_tail = temp_head;
+      }
+      else {
+        for(uint16_t i=0; i<(UART_ARRAY_SIZE - DTM_write_data_tail); i++) {
+          while(LL_USART_IsActiveFlag_TXE(USART2) == 0);
+          LL_USART_TransmitData8(USART2, DTM_write_data[DTM_write_data_tail+i]);
+        }
+        __disable_irq();
+        DTM_write_data_size -= (UART_ARRAY_SIZE - DTM_write_data_tail);
+        __enable_irq();
+        DTM_write_data_tail = 0;
+      }
+      
     }
-    DTM_write_cnt = 0;
-//    __enable_irq();
   }
-#endif
-
+  
 }
 #endif
 #endif
@@ -239,15 +267,15 @@ void HCI_Isr(void)
   tHciDataPacket * hciReadPacket = NULL;
   uint8_t data_len;
   
-  Clear_SPI_EXTI_Flag();
-  if(SdkEvalSPI_Irq_Pin()){
+  LL_EXTI_ClearFlag_0_31(DTM_SPI_IRQ_EXTI_LINE);
+  if(LL_GPIO_IsInputPinSet(DTM_SPI_IRQ_PORT, DTM_SPI_IRQ_PIN)){
     if (list_is_empty (&hciReadPktPool) == FALSE){
       
       /* enqueueing a packet for read */
       list_remove_head (&hciReadPktPool, (tListNode **)&hciReadPacket);
       
-      data_len = BlueNRG_SPI_Read_All(hciReadPacket->dataBuff, HCI_READ_PACKET_SIZE);
-      if(data_len > 0){                    
+      data_len = BlueNRG_SPI_Read(hciReadPacket->dataBuff, HCI_READ_PACKET_SIZE);
+      if(data_len > 0){
         hciReadPacket->data_len = data_len;
         if(HCI_verify(hciReadPacket) == 0)
           list_insert_tail(&hciReadPktRxQueue, (tListNode *)hciReadPacket);
@@ -264,7 +292,7 @@ void HCI_Isr(void)
 }
 
 void hci_write(const void* data1, const void* data2, uint8_t n_bytes1, uint8_t n_bytes2){
-#if  HCI_LOG_ON
+#ifdef  HCI_LOG_ON
   PRINTF("HCI <- ");
   for(int i=0; i < n_bytes1; i++)
     PRINTF("%02X ", *((uint8_t*)data1 + i));
@@ -333,7 +361,9 @@ int hci_send_req(struct hci_request *r, BOOL async)
   
   free_event_list();
   
+//  Disable_IRQ();
   hci_send_cmd(r->ogf, r->ocf, r->clen, r->cparam);
+//  Enable_IRQ();
   
   if(async){
     return 0;
@@ -351,30 +381,17 @@ int hci_send_req(struct hci_request *r, BOOL async)
     evt_le_meta_event *me;
     int len;
     
-#if ENABLE_MICRO_SLEEP /* only STM32L1xx STD library */   
     while(1){
-      ATOMIC_SECTION_BEGIN();
       if(Timer_Expired(&t)){
-        ATOMIC_SECTION_END();
         goto failed;
       }
       if(!HCI_Queue_Empty()){
-        ATOMIC_SECTION_END();
         break;
       }
+#if ENABLE_MICRO_SLEEP /* only STM32L1xx STD library */
       Enter_Sleep_Mode();
-      ATOMIC_SECTION_END();
-    }
-#else
-    while(1){
-      if(Timer_Expired(&t)){
-        goto failed;
-      }
-      if(!HCI_Queue_Empty()){
-        break;
-      }
-    }
 #endif
+    }
     
     /* Extract packet from HCI event queue. */
     Disable_IRQ();
@@ -480,15 +497,3 @@ done:
 }
 
 
-void HCI_Isr_Uart(void)
-{
-#ifdef DTM_UART_HW_FLOW_CTRL
-  if(HAL_GPIO_ReadPin(DTM_USART_CTS_GPIO_PORT, DTM_USART_CTS_PIN) == GPIO_PIN_RESET) {
-    DTM_Config_UART_RTS();
-  }
-  else {
-    DTM_Config_GPIO_Output_RTS();
-  }
-#endif
-  
-}

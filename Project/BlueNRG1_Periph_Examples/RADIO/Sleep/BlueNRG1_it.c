@@ -25,7 +25,9 @@
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Com.h"
-
+#ifdef RX_VIRTUAL_TIMER 
+#include "vtimer.h"
+#endif 
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
 * @{
@@ -120,8 +122,8 @@ void UART_Handler(void)
 
 void Blue_Handler(void)
 {
-  /* RAL_Isr();*/
-  RADIO_IRQHandler();
+   /* RAL_Isr();*/
+   RADIO_IRQHandler();
 }
 
 /**

@@ -330,7 +330,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ SMPS_INDUCTOR=SMPS_INDUCTOR_10uH BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\hal\inc;..\..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\..\Library\BLE_Application\layers_inc</IncludePath>
@@ -397,6 +397,11 @@
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/hal/src/sleep.c</FilePath>
             </File>
+          <File>
+              <FileName>vtimer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/hal/src/vtimer.c</FilePath>
+            </File>
           </Files>
         </Group>
       <Group>
@@ -458,6 +463,11 @@
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
             </File>
           <File>
+              <FileName>BlueNRG1_timer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</FilePath>
+            </File>
+          <File>
               <FileName>BlueNRG1_uart.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_uart.c</FilePath>
@@ -496,26 +506,6 @@
               <FileName>SDK_EVAL_Led.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/SDK_Eval_BlueNRG1/src/SDK_EVAL_Led.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-      <Group>
-          <GroupName>Stack</GroupName>
-        <Files>
-            <File>
-              <FileName>libbluenrg1_stack.a</FileName>
-            <FileType>4</FileType>
-            <FilePath>../../../../../../Library/Bluetooth_LE/library/libbluenrg1_stack.a</FilePath>
-            </File>
-          <File>
-              <FileName>libcrypto.a</FileName>
-            <FileType>4</FileType>
-            <FilePath>../../../../../../Library/cryptolib/libcrypto.a</FilePath>
-            </File>
-          <File>
-              <FileName>stack_user_cfg.c</FileName>
-            <FileType>1</FileType>
-            <FilePath>../../../../../../Library/Bluetooth_LE/src/stack_user_cfg.c</FilePath>
             </File>
           </Files>
         </Group>

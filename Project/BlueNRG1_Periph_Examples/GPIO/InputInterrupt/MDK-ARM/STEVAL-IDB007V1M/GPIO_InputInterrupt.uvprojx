@@ -330,8 +330,8 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
-            <Define>USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
+              <MiscControls>--wchar32</MiscControls>
+            <Define>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\hal\inc</IncludePath>
             </VariousControls>

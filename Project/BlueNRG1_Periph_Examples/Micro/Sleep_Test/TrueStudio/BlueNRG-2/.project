@@ -41,11 +41,6 @@
     <locationURI>virtual:/virtual</locationURI>
     </link>
   <link>
-      <name>Stack</name>
-    <type>2</type>
-    <locationURI>virtual:/virtual</locationURI>
-    </link>
-  <link>
       <name>Startup</name>
     <type>2</type>
     <locationURI>virtual:/virtual</locationURI>
@@ -74,6 +69,11 @@
       <name>Hal/sleep.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/sleep.c</locationURI>
+    </link>
+  <link>
+      <name>Hal/vtimer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/vtimer.c</locationURI>
     </link>
   <link>
       <name>Library/BlueNRG1_adc.c</name>
@@ -131,6 +131,11 @@
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</locationURI>
     </link>
   <link>
+      <name>Library/BlueNRG1_timer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</locationURI>
+    </link>
+  <link>
       <name>Library/BlueNRG1_uart.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_uart.c</locationURI>
@@ -164,21 +169,6 @@
       <name>Platforms_Layers/SDK_EVAL_Led.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/SDK_Eval_BlueNRG1/src/SDK_EVAL_Led.c</locationURI>
-    </link>
-  <link>
-      <name>Stack/libbluenrg1_stack.a</name>
-    <type>1</type>
-    <locationURI>PARENT-6-PROJECT_LOC/Library/Bluetooth_LE/library/libbluenrg1_stack.a</locationURI>
-    </link>
-  <link>
-      <name>Stack/libcrypto.a</name>
-    <type>1</type>
-    <locationURI>PARENT-6-PROJECT_LOC/Library/cryptolib/libcrypto.a</locationURI>
-    </link>
-  <link>
-      <name>Stack/stack_user_cfg.c</name>
-    <type>1</type>
-    <locationURI>PARENT-6-PROJECT_LOC/Library/Bluetooth_LE/src/stack_user_cfg.c</locationURI>
     </link>
   <link>
       <name>Startup/system_bluenrg1.c</name>

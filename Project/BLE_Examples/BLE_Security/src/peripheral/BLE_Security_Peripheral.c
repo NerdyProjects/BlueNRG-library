@@ -42,8 +42,6 @@
 #define PRINTF(...)
 #endif
 
-#define MAX_NUM_BONDED_DEVICES 3
-
 /* Private variables ---------------------------------------------------------*/
 
 uint8_t Connected_Address_Type;

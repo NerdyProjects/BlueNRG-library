@@ -29,6 +29,28 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define NSLAVES        2
 
 #define SLAVE_DEV1              (uint32_t)(0x8888A1A1)

@@ -21,13 +21,15 @@
 #include "bluenrg1_stack.h"
 #include "DTM_config.h"
 #include "miscutil.h"
+#include "transport_layer.h"
+#include "hw_config.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef  PACKED(struct) devConfigS  {
   uint8_t  HS_crystal;
   uint8_t  LS_source;
   uint8_t  SMPS_management;
-  uint8_t  Reserved;
+  uint8_t  PA_rampup_time;
   uint16_t HS_startup_time;
   uint16_t SlaveSCA;
   uint8_t  MasterSCA;
@@ -192,14 +194,30 @@ typedef  PACKED(struct) devConfigS  {
 }
 
 /* Device Configuration value for struct deviceConfigS */
+/* NOTE: the device configuration is loaded on DTM_SystemInit()
+   from the device Flash memory (first 256 bytes, stacklib_stored_device_id_data).  
+   If these bytes are not programmed (0xFF), the associated
+   default device configuration (related to 0xFF values) is as follow:
+   HS_CRYSTAL_16MHZ 0xFF  (16MHz High Speed crystal: 
+                           this value could be modified by the DTM_SystemInit() 
+                           in order to match the actual PCB High Speed
+                           crystal). 
+   LS_SOURCE_RO     0xFF  (Internal RO)
+   SMPS_10uH        0xFF  (SMPS 10uH)
+   USER_MODE        0xFF  (user mode).
+   
+   The device configuration settings (LS_SOURCE, SMPS, user or test mode)
+   can be modified  by using the BlueNRG GUI, Tools, BlueNRG IFR/Device Configuration ....
+ */
+
 #define HS_CRYSTAL_16MHZ 0xFF
 #define HS_CRYSTAL_32MHZ 0x00
 
 #define LS_SOURCE_RO    0xFF
 #define LS_SOURCE_32KHZ 0x00
 
-#define SMSP_10uH     0xFF
-#define SMSPS_4_7uH   0x00
+#define SMPS_10uH     0xFF
+#define SMPS_4_7uH   0x00
 #define SMPS_IND_OFF  0x01
 
 #define USER_MODE               0xFF
@@ -234,11 +252,38 @@ typedef  PACKED(struct) devConfigS  {
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+#if defined(UART_INTERFACE) && defined(UART_SLEEP)
+volatile uint8_t DTM_INTERFACE = DTM_INTERFACE_UARTSLEEP;
+
+#else
+#if defined(UART_INTERFACE)
+volatile uint8_t DTM_INTERFACE = DTM_INTERFACE_UART;
+
+#else
+#if defined(SPI_INTERFACE)
+volatile uint8_t DTM_INTERFACE = DTM_INTERFACE_SPI;
+
+#else
+volatile uint8_t DTM_INTERFACE = DTM_INTERFACE_UNDEF;
+#endif
+#endif
+#endif
 
 devConfig_t deviceConfig;
 volatile uint8_t cold_start_config[] = COLD_START_CONFIGURATION;
 
 /* Private function prototypes -----------------------------------------------*/
+static void DTM_InterfaceInit(void);
+void HSCrystalFix_SPI(void);
+void HSCrystalFix_UART(void);
+
+/* HSCrystalFix function */
+const DTM_InterfaceHandler_Type HSCrystalFix[] = {
+        HSCrystalFix_UART, 
+        HSCrystalFix_SPI,
+        HSCrystalFix_UART};
+
+
 /* Private functions ---------------------------------------------------------*/
 
 static void coldStartConfiguration(void)
@@ -267,7 +312,7 @@ static void coldStartConfiguration(void)
   
   /* SMPS configuration */
   switch (deviceConfig.SMPS_management) {
-  case SMSPS_4_7uH:
+  case SMPS_4_7uH:
     {
       cold_start_config[11] = SMPS_ON;
       cold_start_config[8]  = SMPS_4_7uH_RM1;
@@ -362,54 +407,80 @@ static void coldStartConfiguration(void)
 
 }
 
+
+
 #define FLASH_ADDRESS_STACK_DEV_ID_DATA   (FLASH_END - N_BYTES_PAGE + 1)
 void DTM_SystemInit(void)
 {
   uint32_t current_time;
   uint8_t *dev_config_addr;
   PartInfoType Device_partInfo;
-
+  
   /* Remap the vector table */
   FLASH->CONFIG = FLASH_PREMAP_MAIN;
-
+  
+  /* DTM Interface Initialization */
+  DTM_InterfaceInit();
+  
   /* Load device configuration from FLASH memory */
   /* The first 256 bytes are for stacklib_stored_device_id_data */
   dev_config_addr = (uint8_t *) (FLASH_ADDRESS_STACK_DEV_ID_DATA + 0x100);
   memcpy(&deviceConfig, dev_config_addr, sizeof(deviceConfig));
-
-#ifdef UART_INTERFACE
-#if (HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ)
-  if(deviceConfig.HS_crystal == HS_CRYSTAL_32MHZ) {
-    deviceConfig.HS_crystal = 0xFF; // Set HS_CRYSTAL_16MHZ
-    FLASH_ErasePage((FLASH_ADDRESS_STACK_DEV_ID_DATA-FLASH_START)/N_BYTES_PAGE);
-    uint32_t tmp32[4] = {0,0,0,0};
-    tmp32[0] = (((uint32_t)deviceConfig.Reserved)<<24) | (((uint32_t)deviceConfig.SMPS_management)<<16) | (((uint32_t)deviceConfig.LS_source)<<8) |  (((uint32_t)0xFF)<<0);
-    tmp32[1] = (((uint32_t)deviceConfig.SlaveSCA)<<16) | (((uint32_t)deviceConfig.HS_startup_time)<<0);
-    tmp32[2] = ((((uint32_t)deviceConfig.max_conn_event_length)&0x00FFFFFF)<<8) | (((uint32_t)deviceConfig.MasterSCA)<<0);
-    tmp32[3] = (((uint32_t)0xFF)<<24) | (((uint32_t)0xFF)<<16) | (((uint32_t)deviceConfig.Test_mode)<<8) | ((((uint32_t)deviceConfig.max_conn_event_length)&0xFF000000)>>24);    
-    FLASH_ProgramWordBurst(FLASH_ADDRESS_STACK_DEV_ID_DATA + 0x100, tmp32);
-  }
-#elif (HS_SPEED_XTAL==HS_SPEED_XTAL_32MHZ)
-  if(deviceConfig.HS_crystal == HS_CRYSTAL_16MHZ) {
-    uint32_t tmp32 = (((uint32_t)deviceConfig.Reserved)<<24) | (((uint32_t)deviceConfig.SMPS_management)<<16) | (((uint32_t)deviceConfig.LS_source)<<8) |  (((uint32_t)0x00)<<0);
-    deviceConfig.HS_crystal = 0x00; // Set HS_CRYSTAL_32MHZ
-    FLASH_ProgramWord(FLASH_ADDRESS_STACK_DEV_ID_DATA + 0x100, tmp32);
-  }
-#endif
-#else
-#if (HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ)
-  if(deviceConfig.HS_crystal == HS_CRYSTAL_32MHZ) {
-    deviceConfig.HS_crystal = 0xFF; // Set HS_CRYSTAL_16MHZ
-  }
-#elif (HS_SPEED_XTAL==HS_SPEED_XTAL_32MHZ)
-  if(deviceConfig.HS_crystal == HS_CRYSTAL_16MHZ) {
-    deviceConfig.HS_crystal = 0x00; // Set HS_CRYSTAL_32MHZ
-  }
+  
+  HSCrystalFix[DTM_INTERFACE]();
+  
+  /* *************** NEW configuration options code  based on preprocessor configuration options *****************************************************
+  If user wants to directly specific a configuration option for low speed crystal (32Khz or internal RO) or
+  SMPS inductor (10 uH, 4.7 uH or none) without using the BlueNRG GUI Device Configuration tool, user can add  
+  one of the below preprocesor options on project configurations: 
+  
+  LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ --> select 32Khz
+  LS_SOURCE=LS_SOURCE_INTERNAL_RO    --> select internal RO
+  
+  SMPS_INDUCTOR=SMPS_INDUCTOR_10uH  --> select SMPS value 10uH
+  SMPS_INDUCTOR=SMPS_INDUCTOR_4_7uH --> select SMPS value 4_7uH
+  SMPS_INDUCTOR=SMPS_INDUCTOR_NONE   --> select no SMPS
+  
+  NOTE: The related configuration stored on Device configuration will not be used. In this contest,
+  the Device configuration values related to low speed crystal, SMPS inductor 
+  are not aligned to the selected values through preprocessor configuration options.
+  */
+  
+  /* Low Speed Crystal configuration options:  
+  LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ
+  LS_SOURCE=LS_SOURCE_INTERNAL_RO
+  */
+#if (LS_SOURCE==LS_SOURCE_EXTERNAL_32KHZ)
+  deviceConfig.LS_source = LS_SOURCE_32KHZ;
+#elif (LS_SOURCE==LS_SOURCE_INTERNAL_RO)
+  deviceConfig.LS_source = LS_SOURCE_RO;
 #endif 
+  
+  /* SMPS configuration options:  
+  SMPS_INDUCTOR=SMPS_INDUCTOR_10uH
+  SMPS_INDUCTOR=SMPS_INDUCTOR_4_7uH
+  SMPS_INDUCTOR=SMPS_INDUCTOR_NONE
+  */
+#if (SMPS_INDUCTOR==SMPS_INDUCTOR_10uH)
+  deviceConfig.SMPS_management = SMPS_10uH;
+#elif (SMPS_INDUCTOR==SMPS_INDUCTOR_4_7uH)
+  deviceConfig.SMPS_management = SMPS_4_7uH;
+#elif (SMPS_INDUCTOR==SMPS_INDUCTOR_NONE)
+  deviceConfig.SMPS_management = SMPS_IND_OFF;
+#endif
+  
+#if (TEST_MODE==LS_CRYSTAL_MEASURE)
+  deviceConfig.Test_mode = LS_CRYSTAL_MEASURE;
+#elif (TEST_MODE==HS_STARTUP_TIME_MEASURE)
+  deviceConfig.Test_mode = HS_STARTUP_TIME_MEASURE;
+#elif (TEST_MODE==TX_RX_START_STOP_MEASURE)
+  deviceConfig.Test_mode = TX_RX_START_STOP_MEASURE;
+#elif (TEST_MODE==USER_MODE)
+  deviceConfig.Test_mode = USER_MODE;
 #endif
   
   coldStartConfiguration();
-
+  
   if (deviceConfig.HS_crystal == HS_CRYSTAL_32MHZ) {
     /* Set 32MHz_SEL bit in the System controller register */
     SYSTEM_CTRL->CTRL_b.MHZ32_SEL = 1;
@@ -418,13 +489,13 @@ void DTM_SystemInit(void)
   /* Cold start configuration device */
   BLUE_CTRL->RADIO_CONFIG = 0x10000U | (uint16_t)((uint32_t)cold_start_config & 0x0000FFFFU);
   while ((BLUE_CTRL->RADIO_CONFIG & 0x10000) != 0);
-
+  
   /* Configure RF FrontEnd */
   HAL_GetPartInfo(&Device_partInfo);
   if (((Device_partInfo.die_major<<4)|(Device_partInfo.die_cut)) >= WA_DEVICE_VERSION) {
     Set_RF_FrontEnd();
   }
-
+  
   /* Wait until HS is ready. The slow clock period 
   * measurement is done automatically each time the
   * device enters in active2 state and the HS is ready.
@@ -434,7 +505,7 @@ void DTM_SystemInit(void)
   CKGEN_BLE->CLK32K_IT = 1;
   CKGEN_BLE->CLK32K_COUNT = 23; //Restore the window length for slow clock measurement.
   CKGEN_BLE->CLK32K_PERIOD = 0;
-
+  
   /* Wait until the RO or 32KHz is ready */
   current_time = *(volatile uint32_t *)0x48000010;
   while(((*(volatile uint32_t *)0x48000010)&0x10) == (current_time&0x10));
@@ -443,7 +514,7 @@ void DTM_SystemInit(void)
     /* AHB up converter command register write*/
     AHBUPCONV->COMMAND = 0x15;
   }
-
+  
   /* Unlock the Flash */
   flash_sw_lock = FLASH_UNLOCK_WORD;
   
@@ -453,6 +524,43 @@ void DTM_SystemInit(void)
   /* Enable the IRQs */
   __enable_irq();
 }
+
+void HSCrystalFix_UART(void)
+{
+#if (HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ)
+    if(deviceConfig.HS_crystal == HS_CRYSTAL_32MHZ) {
+      deviceConfig.HS_crystal = 0xFF; // Set HS_CRYSTAL_16MHZ
+      FLASH_ErasePage((FLASH_ADDRESS_STACK_DEV_ID_DATA-FLASH_START)/N_BYTES_PAGE);
+      uint32_t tmp32[4] = {0,0,0,0};
+      tmp32[0] = (((uint32_t)deviceConfig.PA_rampup_time)<<24) | (((uint32_t)deviceConfig.SMPS_management)<<16) | (((uint32_t)deviceConfig.LS_source)<<8) |  (((uint32_t)0xFF)<<0);
+      tmp32[1] = (((uint32_t)deviceConfig.SlaveSCA)<<16) | (((uint32_t)deviceConfig.HS_startup_time)<<0);
+      tmp32[2] = ((((uint32_t)deviceConfig.max_conn_event_length)&0x00FFFFFF)<<8) | (((uint32_t)deviceConfig.MasterSCA)<<0);
+      tmp32[3] = (((uint32_t)0xFF)<<24) | (((uint32_t)0xFF)<<16) | (((uint32_t)deviceConfig.Test_mode)<<8) | ((((uint32_t)deviceConfig.max_conn_event_length)&0xFF000000)>>24);    
+      FLASH_ProgramWordBurst(FLASH_ADDRESS_STACK_DEV_ID_DATA + 0x100, tmp32);
+    }
+#elif (HS_SPEED_XTAL==HS_SPEED_XTAL_32MHZ)
+    if(deviceConfig.HS_crystal == HS_CRYSTAL_16MHZ) {
+      uint32_t tmp32 = (((uint32_t)deviceConfig.PA_rampup_time)<<24) | (((uint32_t)deviceConfig.SMPS_management)<<16) | (((uint32_t)deviceConfig.LS_source)<<8) |  (((uint32_t)0x00)<<0);
+      deviceConfig.HS_crystal = 0x00; // Set HS_CRYSTAL_32MHZ
+      FLASH_ProgramWord(FLASH_ADDRESS_STACK_DEV_ID_DATA + 0x100, tmp32);
+    }
+#endif
+  }
+
+
+void HSCrystalFix_SPI(void)
+{
+#if (HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ)
+    if(deviceConfig.HS_crystal == HS_CRYSTAL_32MHZ) {
+      deviceConfig.HS_crystal = 0xFF; // Set HS_CRYSTAL_16MHZ
+    }
+#elif (HS_SPEED_XTAL==HS_SPEED_XTAL_32MHZ)
+    if(deviceConfig.HS_crystal == HS_CRYSTAL_16MHZ) {
+      deviceConfig.HS_crystal = 0x00; // Set HS_CRYSTAL_32MHZ
+    }
+#endif 
+}
+
 
 void DTM_StackInit(void)
 {
@@ -486,3 +594,18 @@ void DTM_StackInit(void)
   }
 }
 
+
+static void DTM_InterfaceInit(void)
+{
+  if(DTM_INTERFACE == DTM_INTERFACE_UNDEF) {
+    if((GPIO->DATA & DTM_INTERFACE_GPIO) == DTM_INTERFACE_GPIO) {
+      DTM_INTERFACE = DTM_INTERFACE_UART;
+    }
+    else {
+      DTM_INTERFACE = DTM_INTERFACE_SPI;
+    }
+  }
+}
+
+  
+  

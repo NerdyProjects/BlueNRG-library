@@ -54,6 +54,9 @@ void Clock_Wait(uint32_t i);
  */
 void Clock_Suspend(void);
 
+uint32_t Clock_Get_Tick(void);
+
+void Clock_Inc_Tick(void);
 
 #endif /* __CLOCK_H__ */
 

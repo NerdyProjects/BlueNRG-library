@@ -17,9 +17,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#include "cube_hal.h"
 #include "hal.h"
-#include "user_timer.h"
 #include "SDK_EVAL_Config.h"
 #include "compiler.h"
 
@@ -34,45 +32,71 @@ WEAK_FUNCTION(uint8_t App_SleepMode_Check(void));
   */
 void SystemPower_Config(void)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
-
   /* Enable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-#ifdef STM32L152xE
-  __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
+#ifdef STM32L476xx
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOE);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+  LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
 #endif 
+#ifdef STM32L152xE
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOH);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOE);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOG);
+#endif 
+  
   /* Configure all GPIO port pins in Analog Input mode (floating input trigger OFF) */
-  GPIO_InitStructure.Pin = GPIO_PIN_All;
-  GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure); 
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOC, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOD, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOD, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOH, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOH, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOE, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOE, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  
 #ifdef STM32L152xE
-  HAL_GPIO_Init(GPIOF, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOG, &GPIO_InitStructure);
+  LL_GPIO_SetPinMode(GPIOF, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOF, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
+  LL_GPIO_SetPinMode(GPIOG, LL_GPIO_PIN_ALL, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinPull(GPIOG, LL_GPIO_PIN_ALL, LL_GPIO_PULL_NO);
 #endif
-
+  
   /* Disable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_DISABLE();
-  __HAL_RCC_GPIOB_CLK_DISABLE();
-  __HAL_RCC_GPIOC_CLK_DISABLE();
-  __HAL_RCC_GPIOD_CLK_DISABLE();
-  __HAL_RCC_GPIOH_CLK_DISABLE();
-  __HAL_RCC_GPIOE_CLK_DISABLE();
+#ifdef STM32L476xx
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOE);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
+  LL_AHB2_GRP1_DisableClock(LL_AHB2_GRP1_PERIPH_GPIOG);
+#endif 
 #ifdef STM32L152xE
-  __HAL_RCC_GPIOF_CLK_DISABLE();
-  __HAL_RCC_GPIOG_CLK_DISABLE();
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOH);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOE);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
+  LL_AHB1_GRP1_DisableClock(LL_AHB1_GRP1_PERIPH_GPIOG);
 #endif
+  
 }
 
 /**
@@ -83,9 +107,6 @@ void SystemPower_Config(void)
 void RCC_HCLKConfig(uint32_t RCC_SYSCLK)
 {
   uint32_t tmpreg = 0;
-  
-  /* Check the parameters */
-  assert_param(IS_RCC_HCLK(RCC_SYSCLK));
   
   tmpreg = RCC->CFGR;
   
@@ -108,7 +129,7 @@ void RCC_HCLKConfig(uint32_t RCC_SYSCLK)
 void ChangeMSIClock(uint32_t freq, BOOL div2)
 {     
   /* To configure the MSI frequency */
-  __HAL_RCC_MSI_RANGE_CONFIG(freq);
+  LL_RCC_MSI_SetRange(freq);
   
   if (div2)
   {
@@ -129,8 +150,15 @@ void ChangeMSIClock(uint32_t freq, BOOL div2)
   */
 void Enter_Sleep_Mode(void)
 {    
-  /* Request Wait For Interrupt */    
-  HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+  /* Request Wait For Interrupt */
+//  LL_PWR_SetRegulModeLP(LL_PWR_REGU_LPMODES_LOW_POWER);
+  
+  LL_PWR_SetPowerMode(LL_PWR_MODE_STOP0);
+  
+  /* Clear SLEEPDEEP bit of Cortex System Control Register */
+  CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+  
+  __WFI();
 }
 
 
@@ -142,39 +170,45 @@ void Enter_Sleep_Mode(void)
   */
 void Enter_LP_Sleep_Mode(void)
 {   
-    
+  __disable_irq();
+  
+#ifndef SENSORDEMO_NWK
   /* Enable the power down mode during Sleep mode */
-  __HAL_FLASH_SLEEP_POWERDOWN_ENABLE();
+  LL_FLASH_EnableSleepPowerDown();
+#endif
 
   /* Suspend Tick increment to prevent wakeup by Systick interrupt.         */
-  /* Otherwise the Systick interrupt will wake up the device within 1ms     */
-  /* (HAL time base).                                                       */
-  HAL_SuspendTick();
+  CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk);
   
+#ifndef SENSORDEMO_NWK
   User_Timer_Enter_Sleep();
   
   /* Switch in MSI 65KHz, HCLK 32kHz */
-  ChangeMSIClock(RCC_MSIRANGE_0,TRUE);
+  ChangeMSIClock(LL_RCC_MSIRANGE_0, TRUE);
+#endif
   
   /* Enter Sleep Mode for Interrupt  */
-  HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+  __enable_irq();
+  Enter_Sleep_Mode();
+  __disable_irq();
   
+#ifndef SENSORDEMO_NWK
   /* Switch in MSI 4MHz, HCLK 4MHz */
-  ChangeMSIClock(RCC_MSIRANGE_6,FALSE);
-  
+  ChangeMSIClock(LL_RCC_MSIRANGE_6, FALSE);
+
   User_Timer_Exit_Sleep();
-  
+#endif
+
   /* Resume Tick interrupt if disabled prior to sleep mode entry */
-  HAL_ResumeTick();
-    
+  SET_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk);
+  
+  __enable_irq();
 }
 
 void System_Sleep(void)
 {
-    ATOMIC_SECTION_BEGIN();
-    if(App_SleepMode_Check()) {
-      Enter_LP_Sleep_Mode();
-    }
-    ATOMIC_SECTION_END();
+  if(App_SleepMode_Check()) {
+    Enter_LP_Sleep_Mode();
+  }
 }
 #endif /* SYSCLK_MSI */

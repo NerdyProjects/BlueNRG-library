@@ -22,7 +22,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "crash_handler.h"
 #include "miscutil.h"
 

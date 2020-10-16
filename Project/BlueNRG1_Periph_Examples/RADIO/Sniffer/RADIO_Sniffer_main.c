@@ -24,6 +24,7 @@
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
+#include "vtimer.h"
 
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
@@ -40,6 +41,32 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define BLE_ADV_ACCESS_ADDRESS  (uint32_t)(0x8E89BED6)
 #define HS_STARTUP_TIME         (uint16_t)(1)  /* High Speed start up time min value */
 
@@ -90,10 +117,12 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
     if( (p->status & BIT_TX_MODE) == 0) {
       
       if((p->status & IRQ_RCV_OK) != 0) {
-          fifo_put(&blueRec_fifo, p->data[1]+2, p->data);
+        /* Check if there is enough space in the FIFO to store the incoming data */
+        if(MAX_PACKET_LENGTH*2 - fifo_size(&blueRec_fifo) > (p->data[1]+ 4 + 4 + 4)){
+          fifo_put_var_len_item(&blueRec_fifo, p->data[1]+2, p->data);
           fifo_put(&blueRec_fifo, 4, (uint8_t*)(&p->rssi));
           fifo_put(&blueRec_fifo, 4, (uint8_t*)(&p->timestamp_receive));
-          
+        }
           HAL_RADIO_ReceivePacket(channel, delay, receivedData, timeOut, RxCallback);
       }
       else if((p->status & IRQ_TIMEOUT) != 0) {
@@ -114,7 +143,8 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
 
 int main(void)
 {
-  uint8_t temp[MAX_PACKET_LENGTH+8];
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
+  uint8_t packet[MAX_PACKET_LENGTH];
   uint16_t length;
   
   /* System Init */
@@ -132,12 +162,10 @@ int main(void)
   /* Create the blueRec FIFO */
   fifo_init(&uart_fifo, MAX_PACKET_LENGTH, uart_buffer, 1);
   
-  /* Radio configuration - HS_STARTUP_TIME 642 us, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Set the Network ID */
   HAL_RADIO_SetNetworkID(BLE_ADV_ACCESS_ADDRESS); /* 0x8E89BED6 */
@@ -159,43 +187,30 @@ int main(void)
 
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
     
     /* Print the packets sniffed */
     if(fifo_size(&blueRec_fifo) !=0) {
       
-      /* Get the length field */
-      fifo_get(&blueRec_fifo, HEADER_LENGTH, &temp[0]);
-      length = temp[1];
-      
-      /* Get the packet */
-      fifo_get(&blueRec_fifo, length, &temp[2]);
-      
+      /* Get the length of the packet and the packet itself */
+      fifo_get_var_len_item(&blueRec_fifo, &length, packet);
+
       /* Get the RSSI information */
-      fifo_get(&blueRec_fifo, 4, &temp[length+2]);
-      rssi_val = temp[length+2];
-      rssi_val |= temp[length+2+1]<<8;
-      rssi_val |= temp[length+2+2]<<16;
-      rssi_val |= temp[length+2+3]<<24;
+      fifo_get(&blueRec_fifo, 4, (uint8_t*)&rssi_val);
       
       /* Get the timestamp */
-      fifo_get(&blueRec_fifo, 4, &temp[length+2+4]);
-      timestamp = temp[length+2+4];
-      timestamp |= temp[length+2+4+1]<<8;
-      timestamp |= temp[length+2+4+2]<<16;
-      timestamp |= temp[length+2+4+3]<<24;
+      fifo_get(&blueRec_fifo, 4, (uint8_t*)&timestamp);
       
-      printf("\r\nchannel: %d, RSSI: %.0f dBm\r\n", channel, (float)rssi_val);
-      printf("Timestamp: %.3f ms\r\n", ((float)timestamp)/512.0);
+      printf("\r\nchannel: %d, RSSI: %d dBm\r\n", channel, rssi_val);
+      printf("Timestamp: %d.%02d ms\r\n", PRINT_INT(((float)timestamp)*625/256000.0),PRINT_FLOAT(((float)timestamp)*625/256000.0)) ;
       printf("Frame: ");
-      for(uint16_t i= 0; i<(length+2-MIC_FIELD_LEN); i++) {
-        printf("%02x:", temp[i]);
+      for(uint16_t i= 0; i<(length-MIC_FIELD_LEN); i++) {
+        printf("%02x:", packet[i]);
       }
 #ifdef PACKET_ENCRYPTION
       printf("\r\nMIC: ");
-      for(uint16_t i= (length+2-MIC_FIELD_LEN); i<(length+2); i++) {
-        printf("%02x:", temp[i]);
+      for(uint16_t i= (length-MIC_FIELD_LEN); i<(length); i++) {
+        printf("%02x:", packet[i]);
       }
 #endif
     }

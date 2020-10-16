@@ -48,11 +48,7 @@ void SysTick_Handler (void)
      EntryPoint entryPoint = (EntryPoint)*((uint32_t *)((uint32_t)app_base + 0x3c));
      entryPoint();
   } else {
-#if ST_OTA_SERVICE_MANAGER_APPLICATION
-    SysCount_Handler();
-#else
     while(1);
-#endif
   }
 }
 void GPIO_Handler (void)

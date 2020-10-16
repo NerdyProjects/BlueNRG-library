@@ -87,15 +87,6 @@
  */
 void Hal_Write_Serial(const void* data1, const void* data2, uint16_t n_bytes1, uint16_t n_bytes2);
 
-/**
- * Enable interrupts from HCI controller.
- */
-void Enable_SPI_IRQ(void);
-
-/**
- * Disable interrupts from BLE controller.
- */
-void Disable_SPI_IRQ(void);
 
 void Hal_Init_Timer();
 uint32_t Hal_Get_Timer_Value();

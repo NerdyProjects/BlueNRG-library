@@ -28,8 +28,14 @@
 /* Number of services requests from the Sensor demo */
 #define NUM_APP_GATT_SERVICES (2 + 1) /* 2 Sensor services + 1 OTA service */
 
+/* Number of attributes requests from the sensor demo */
+#ifdef SENSOR_EMULATION
 /* Number of attributes requests from the chat demo */
 #define NUM_APP_GATT_ATTRIBUTES (15 + 9) /* 15 attributes x BLE Sensor demo services characteristics + 9 for OTA Service characteristics */
+#else  // No Humidity char
+#define NUM_APP_GATT_ATTRIBUTES (12 + 9)
+#endif
+
 
 /**
  * Set the number of 16-bytes units used on an OTA FW data packet for matching OTA client MAX ATT_MTU
@@ -44,8 +50,14 @@
 /* Number of services requests from the sensor demo */
 #define NUM_APP_GATT_SERVICES 2
 
+
 /* Number of attributes requests from the sensor demo */
-#define NUM_APP_GATT_ATTRIBUTES 15
+#ifdef SENSOR_EMULATION
+/* Number of attributes requests from the sensor  demo */
+#define NUM_APP_GATT_ATTRIBUTES (15) /* 15 attributes x BLE Sensor demo services characteristics */
+#else  // No Humidity char
+#define NUM_APP_GATT_ATTRIBUTES (12)
+#endif
 
 /* OTA characteristics maximum lenght */
 #define OTA_MAX_ATT_SIZE (0) 
@@ -69,7 +81,11 @@
 #define MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_1 (7) 
 
 /* Maximum number of attribute records that can be added to the second application service: environmental service */
-#define MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_2 (10)
+#ifdef SENSOR_EMULATION
+#define MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_2 (10) /* + humidity */
+#else
+#define MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_2 (7)  /* no humidity */
+#endif 
 
 /* Number of GATT attributes needed for the sensor demo. */
 #define NUM_GATT_ATTRIBUTES     (DEFAULT_NUM_GATT_ATTRIBUTES + NUM_APP_GATT_ATTRIBUTES)
@@ -87,10 +103,10 @@
 #endif
 
 /* Array size for the attribute value */
-#ifndef SENSOR_EMULATION
-#define ATT_VALUE_ARRAY_SIZE    (43 + 106  + OTA_ATT_VALUE_ARRAY_SIZE) //(GATT + GAP) = 43 (Device Name: BlueNRG) + Acceleration (Acceleration (27) + Free Fall (21) characteristics) +  Environmental Sensor (Temperature (28), Pressure (29)  characteristics)  Services
-#else
+#ifdef SENSOR_EMULATION
 #define ATT_VALUE_ARRAY_SIZE    (43 + 106 + 28 + OTA_ATT_VALUE_ARRAY_SIZE) //(GATT + GAP) = 43 (Device Name: BlueNRG) + Acceleration (Acceleration (27) + Free Fall (21) characteristics) +  Environmental Sensor (Temperature (28) , Pressure (29), Humidity (28) characteristics)  Services
+#else
+#define ATT_VALUE_ARRAY_SIZE    (43 + 106  + OTA_ATT_VALUE_ARRAY_SIZE) //(GATT + GAP) = 43 (Device Name: BlueNRG) + Acceleration (Acceleration (27) + Free Fall (21) characteristics) +  Environmental Sensor (Temperature (28), Pressure (29)  characteristics)  Services
 #endif 
 
 /* Flash security database size */

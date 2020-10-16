@@ -211,6 +211,11 @@
     <locationURI>PARENT-2-PROJECT_LOC/src/DTM_boot.c</locationURI>
     </link>
   <link>
+      <name>User/DTM_burst.c</name>
+    <type>1</type>
+    <locationURI>PARENT-2-PROJECT_LOC/src/DTM_burst.c</locationURI>
+    </link>
+  <link>
       <name>User/DTM_cmd_db.c</name>
     <type>1</type>
     <locationURI>PARENT-2-PROJECT_LOC/src/DTM_cmd_db.c</locationURI>

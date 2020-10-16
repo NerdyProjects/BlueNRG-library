@@ -27,17 +27,26 @@
 
 /* Exported types ------------------------------------------------------------*/
 typedef void (*EntryPoint)(void);
+extern uint8_t C_MEMORY_FLASH_APP_SIZE[];
 
 /* Exported constants --------------------------------------------------------*/
 #define BLUE_FLAG_RAM_BASE_ADDRESS      (0x20000030)
-#define BLUE_FLAG_FLASH_BASE_ADDRESS    (0x10040814)
 
-#define DTM_APP_ADDR                    (0x10040800)
+#define BLUE_FLAG_FLASH_BASE_ADDRESS    (0x10040014+(uint32_t)(uint8_t*)C_MEMORY_FLASH_APP_SIZE)
+
+#define DTM_APP_ADDR                    (0x10040000+(uint32_t)(uint8_t*)C_MEMORY_FLASH_APP_SIZE)
+
 
 #define BLUE_FLAG_RAM_RESET             (0x01010101)
 #define BLUE_FLAG_RESET                 (0x00000000)
 #define BLUE_FLAG_SET                   (0x424C5545)
-    
+
+#define FLASH_UNLOCK_WORD         0xFCECBCCC
+#define FLASH_LOCK_WORD           0
+
+
+/* Exported variables --------------------------------------------------------*/
+extern uint32_t volatile flash_sw_lock;
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

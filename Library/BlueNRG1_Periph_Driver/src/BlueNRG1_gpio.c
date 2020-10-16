@@ -482,7 +482,7 @@ void GPIO_ClearITPendingBit(uint32_t GPIO_Pins)
   /* Check the parameters */
   assert_param(IS_GPIO_PINS(GPIO_Pins));
 
-  SET_BIT(GPIO->IC, GPIO_Pins);
+  WRITE_REG(GPIO->IC, GPIO_Pins);
 }
 
 

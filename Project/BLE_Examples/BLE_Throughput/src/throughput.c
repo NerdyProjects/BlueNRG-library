@@ -278,7 +278,7 @@ void APP_Tick(void)
       if(packets != 0 && packets%NUM_PACKETS == 0){
         time2 = Clock_Time();
         tClockTime diff = time2-time;
-        printf("%d TX packets. Elapsed time: %d ms. App throughput: %.1f kbps.\n", NUM_PACKETS, (int)diff, (float)NUM_PACKETS*20*8/diff);
+        printf("%d TX packets. Elapsed time: %d ms. App throughput: %d kbps.\n", NUM_PACKETS, (int)diff, NUM_PACKETS*20*8/diff);
         time = Clock_Time();
         
       }
@@ -314,7 +314,7 @@ void APP_Tick(void)
       if(packets != 0 && packets%NUM_PACKETS == 0){
         time2 = Clock_Time();
         tClockTime diff = time2-time;
-        printf("%d TX packets. Elapsed time: %d ms. App throughput: %.1f kbps.\n", NUM_PACKETS, diff, (float)NUM_PACKETS*20*8/diff);
+        printf("%d TX packets. Elapsed time: %d ms. App throughput: %d kbps.\n", NUM_PACKETS, diff, NUM_PACKETS*20*8/diff);
         time = Clock_Time();
         
       }
@@ -462,7 +462,7 @@ void aci_gatt_notification_event(uint16_t Connection_Handle,
     if(packets != 0 && packets%NUM_PACKETS == 0){
       time2 = Clock_Time();
       tClockTime diff = time2-time;
-      printf("%d RX packets. Elapsed time: %d ms. App throughput: %.1f kbps.\n", NUM_PACKETS, (int)diff, (float)NUM_PACKETS*20*8/diff);
+      printf("%d RX packets. Elapsed time: %d ms. App throughput: %d kbps.\n", NUM_PACKETS, (int)diff, NUM_PACKETS*20*8/diff);
       if(lost_packets){
         printf("%d lost packet(s) (%d)\n", (int)lost_packets, (int)lost2);
       }

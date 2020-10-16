@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
-
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
   * @{
@@ -43,6 +43,28 @@ typedef struct{
 }multi_state_t;
 
 /* Private define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define HS_STARTUP_TIME         (uint16_t)(1)  /* High Speed start up time min value */
 #define DATA_LEN                (uint8_t)(26)
 #define N_STATE_MACHINES        STATEMACHINE_COUNT /* The number of state machines */
@@ -155,7 +177,7 @@ void beep_init(uint8_t StateMachineNo)
   multi_state.wakeup_time[StateMachineNo] = actPacket[StateMachineNo].WakeupTime;
   RADIO_SetChannelMap(StateMachineNo, &channel_map[0]);
   RADIO_SetChannel(StateMachineNo, channel[StateMachineNo],0);
-  RADIO_SetTxAttributes(StateMachineNo, network_id[StateMachineNo] , 0x555555, 0);
+  RADIO_SetTxAttributes(StateMachineNo, network_id[StateMachineNo] , 0x555555);
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER);
   
   if(encryption[StateMachineNo]) {
@@ -174,6 +196,7 @@ void beep_init(uint8_t StateMachineNo)
   */
 int main(void)
 {
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};  
   /* System Init */
   SystemInit();
   
@@ -185,12 +208,10 @@ int main(void)
   SdkEvalLedInit(LED2);
   SdkEvalLedInit(LED3);
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Set the parameters and configure the state machiness */
   for(uint8_t i = 0; i < N_STATE_MACHINES; i++) {
@@ -207,8 +228,7 @@ int main(void)
  
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
   }   
 }
 

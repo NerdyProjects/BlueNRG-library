@@ -17,7 +17,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stdio.h"
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
@@ -89,8 +89,7 @@ int main(void)
              partInfo.die_major,
              partInfo.die_cut);
     }
-    counter = (counter +1) % 0xFFFFF;
-    
+    counter = (counter +1) & (0xFFFFF);
   }
 }
 

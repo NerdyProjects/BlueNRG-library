@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>BlueNRG-2</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STBlueNRG-2_DFP.1.0.0</PackID>
+          <PackID>Keil.STBlueNRG-2_DFP.1.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x10040000,0x40000) IRAM(0x20000000,0x6000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -542,7 +542,7 @@
         <TargetCommonOption>
           <Device>BlueNRG-2</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STBlueNRG-2_DFP.1.0.0</PackID>
+          <PackID>Keil.STBlueNRG-2_DFP.1.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x10040000,0x40000) IRAM(0x20000000,0x6000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -862,7 +862,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>BLUENRG2_DEVICE RESET_MANAGER_SIZE=0x1B000 BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</Define>
+              <Define>BLUENRG2_DEVICE RESET_MANAGER_SIZE=0x1B800 BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\OTA\inc;..\..\..\..\..\Library\Bluetooth_LE\library\static_stack</IncludePath>
             </VariousControls>
@@ -898,7 +898,7 @@
             <ScatterFile>.\BlueNRG2.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B000"</Misc>
+            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B800"</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>

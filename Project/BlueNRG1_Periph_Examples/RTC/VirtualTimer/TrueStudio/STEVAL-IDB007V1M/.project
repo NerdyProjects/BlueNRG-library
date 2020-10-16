@@ -81,6 +81,11 @@
     <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/sleep.c</locationURI>
     </link>
   <link>
+      <name>HAL/vtimer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/vtimer.c</locationURI>
+    </link>
+  <link>
       <name>Library/BlueNRG1_adc.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_adc.c</locationURI>
@@ -129,6 +134,11 @@
       <name>Library/BlueNRG1_sysCtrl.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</locationURI>
+    </link>
+  <link>
+      <name>Library/BlueNRG1_timer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</locationURI>
     </link>
   <link>
       <name>Library/BlueNRG1_uart.c</name>
@@ -186,14 +196,19 @@
     <locationURI>PARENT-6-PROJECT_LOC/Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</locationURI>
     </link>
   <link>
-      <name>User/RTC_VirtualTimer_main.c</name>
-    <type>1</type>
-    <locationURI>PARENT-2-PROJECT_LOC/src/RTC_VirtualTimer_main.c</locationURI>
-    </link>
-  <link>
       <name>User/BlueNRG1_it.c</name>
     <type>1</type>
     <locationURI>PARENT-2-PROJECT_LOC/src/BlueNRG1_it.c</locationURI>
+    </link>
+  <link>
+      <name>User/RTC_VirtualTimer_BLE_main.c</name>
+    <type>1</type>
+    <locationURI>PARENT-2-PROJECT_LOC/src/RTC_VirtualTimer_BLE_main.c</locationURI>
+    </link>
+  <link>
+      <name>User/RTC_VirtualTimer_main.c</name>
+    <type>1</type>
+    <locationURI>PARENT-2-PROJECT_LOC/src/RTC_VirtualTimer_main.c</locationURI>
     </link>
   </linkedResources>
 </projectDescription>

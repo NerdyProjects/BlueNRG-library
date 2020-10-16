@@ -21,7 +21,7 @@
 
 #ifndef _DTM_CONFIG_H_
 #define _DTM_CONFIG_H_
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "bluenrg1_stack.h"
 #include "stack_user_cfg.h"
 
@@ -38,8 +38,13 @@
  */
 
 
-/* MAX numberof link for DTM */
+/* MAX number of link for DTM */
+#if DTM_THROUGHPUT_CONF
+#define DTM_NUM_LINK            2 /* Only for throughput configuration */
+#else
 #define DTM_NUM_LINK            8
+#endif 
+
 /* MAX numberof GATT services for DTM */
 #define DTM_NUM_GATT_SERVICES   8
 /* MAX number of GAP and GATT attributes for DTM */
@@ -62,10 +67,14 @@
 #define PREPARE_WRITE_LIST_SIZE (9) //(DEFAULT_PREP_WRITE_LIST_SIZE)
 
 /* Set supported max value for ATT_MTU */
+#if DTM_THROUGHPUT_CONF
+#define MAX_ATT_MTU              (247) 
+#else
 #define MAX_ATT_MTU              (220) 
+#endif
 
-/* Array size for the attribte value */
-#define ATT_VALUE_ARRAY_SIZE    (1344)
+/* Array size for the attribute value */
+#define ATT_VALUE_ARRAY_SIZE    (1248) //(1344)
 
 /* Flash security database size */
 #define FLASH_SEC_DB_SIZE       (0x400)
@@ -73,8 +82,11 @@
 /* Flash server database size */
 #define FLASH_SERVER_DB_SIZE    (0x400)
 
+#if DTM_THROUGHPUT_CONF
+#define OPT_MBLOCKS             (96) /* Only for throughput configuration */
+#else
 #define OPT_MBLOCKS             (0)
-
+#endif 
 
 /* Set the number of memory block for packet allocation */
 #define MBLOCKS_COUNT           (MBLOCKS_CALC(PREPARE_WRITE_LIST_SIZE, MAX_ATT_MTU, NUM_LINKS) + OPT_MBLOCKS)

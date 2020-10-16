@@ -24,7 +24,7 @@
 #define DTM_UPDATER_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum {
@@ -39,18 +39,32 @@ typedef enum {
   SPI_PROT_TRANS_COMPLETE_STATE,            /* Transaction complete phase   */
 } SpiProtoType;
 
+
+typedef void (*DTM_InterfaceHandler_Type)(void);
+
 /* Exported constants --------------------------------------------------------*/
 #define BUFFER_SIZE  (264) //(259+5)  /* 255 length + 4 ble header +5 SPI protocol header */
 
 /* Exported macro ------------------------------------------------------------*/
-#define SPI_STATE_TRANSACTION(NEWSTATE)        spi_proto_state = NEWSTATE
+#define SPI_STATE_TRANSACTION(NEWSTATE)       (spi_proto_state = NEWSTATE)
 #define SPI_STATE_CHECK(STATE)                (spi_proto_state==STATE)
 #define SPI_STATE_FROM(STATE)                 (spi_proto_state>=STATE)
 
-/* Exported functions ------------------------------------------------------- */
-void updater_init(void);
-void updater(uint8_t reset_event);
+#define DTM_INTERFACE_UART      (0)
+#define DTM_INTERFACE_SPI       (1)
+#define DTM_INTERFACE_UARTSLEEP (2)
+#define DTM_INTERFACE_UNDEF     (3)
 
+/* DTM interface GPIO = GPIO_Pin_12
+ * if 1 => DTM_INTERFACE_UART
+ * if 0 => DTM_INTERFACE_SPI
+ */
+#define DTM_INTERFACE_GPIO      ((uint32_t)0x00001000)  /*!< Pin 12 selected */
+
+/* Exported functions ------------------------------------------------------- */
+void updater(uint8_t reset_event, uint8_t dtm_interface);
+void updater_init_uart(void);
+void updater_init_spi(void);
 #endif /* DTM_UPDATER_H */
 
 /******************* (C) COPYRIGHT 2015 STMicroelectronics *****END OF FILE****/

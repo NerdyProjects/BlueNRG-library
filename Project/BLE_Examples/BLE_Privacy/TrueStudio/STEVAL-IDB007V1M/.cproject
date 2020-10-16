@@ -123,7 +123,7 @@
             </toolChain>
           </folderInfo>
         <sourceEntries>
-            <entry excluding="OTA|User/master.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""></entry>
+            <entry excluding="OTA|OTA/OTA_btl.c|User/master.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""></entry>
           </sourceEntries>
         </configuration>
       </storageModule>

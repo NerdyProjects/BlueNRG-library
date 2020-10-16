@@ -77,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.70.1.11471</state>
+          <state>8.40.1.21529</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1056,7 +1056,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.70.1.11471</state>
+          <state>8.40.1.21529</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -2033,7 +2033,10 @@
       <configuration>Master</configuration>
     </excluded>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\OTA\src\OTA_btl.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\OTA\src\OTA_btl.c</name>
+      <excluded>
+        <configuration>Slave</configuration>
+      </excluded>
     </file>
   </group>
   <group>

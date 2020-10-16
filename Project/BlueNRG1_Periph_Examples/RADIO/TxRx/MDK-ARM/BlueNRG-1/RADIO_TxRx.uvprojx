@@ -330,8 +330,8 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
-            <Define>USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
+              <MiscControls>--wchar32</MiscControls>
+            <Define>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\hal\inc</IncludePath>
             </VariousControls>
@@ -402,6 +402,11 @@
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/hal/src/osal.c</FilePath>
             </File>
+          <File>
+              <FileName>vtimer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/hal/src/vtimer.c</FilePath>
+            </File>
           </Files>
         </Group>
       <Group>
@@ -461,6 +466,11 @@
               <FileName>BlueNRG1_sysCtrl.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
+            </File>
+          <File>
+              <FileName>BlueNRG1_timer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</FilePath>
             </File>
           <File>
               <FileName>BlueNRG1_uart.c</FileName>
@@ -877,8 +887,8 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
-            <Define>USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
+              <MiscControls>--wchar32</MiscControls>
+            <Define>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ USE_FULL_ASSERT BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\hal\inc</IncludePath>
             </VariousControls>
@@ -949,6 +959,11 @@
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/hal/src/osal.c</FilePath>
             </File>
+          <File>
+              <FileName>vtimer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/hal/src/vtimer.c</FilePath>
+            </File>
           </Files>
         </Group>
       <Group>
@@ -1008,6 +1023,11 @@
               <FileName>BlueNRG1_sysCtrl.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
+            </File>
+          <File>
+              <FileName>BlueNRG1_timer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</FilePath>
             </File>
           <File>
               <FileName>BlueNRG1_uart.c</FileName>
@@ -1424,8 +1444,8 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
-            <Define>ST_USE_OTA_RESET_MANAGER BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
+              <MiscControls>--wchar32</MiscControls>
+            <Define>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ ST_USE_OTA_RESET_MANAGER BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\hal\inc</IncludePath>
             </VariousControls>
@@ -1461,7 +1481,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2800 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1495,6 +1515,11 @@
               <FileName>osal.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/hal/src/osal.c</FilePath>
+            </File>
+          <File>
+              <FileName>vtimer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/hal/src/vtimer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1555,6 +1580,11 @@
               <FileName>BlueNRG1_sysCtrl.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
+            </File>
+          <File>
+              <FileName>BlueNRG1_timer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</FilePath>
             </File>
           <File>
               <FileName>BlueNRG1_uart.c</FileName>
@@ -1966,8 +1996,8 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
-            <Define>ST_USE_OTA_RESET_MANAGER BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
+              <MiscControls>--wchar32</MiscControls>
+            <Define>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ ST_USE_OTA_RESET_MANAGER BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\;..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\..\Library\hal\inc</IncludePath>
             </VariousControls>
@@ -2003,7 +2033,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2800 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -2037,6 +2067,11 @@
               <FileName>osal.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/hal/src/osal.c</FilePath>
+            </File>
+          <File>
+              <FileName>vtimer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/hal/src/vtimer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2097,6 +2132,11 @@
               <FileName>BlueNRG1_sysCtrl.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
+            </File>
+          <File>
+              <FileName>BlueNRG1_timer.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</FilePath>
             </File>
           <File>
               <FileName>BlueNRG1_uart.c</FileName>

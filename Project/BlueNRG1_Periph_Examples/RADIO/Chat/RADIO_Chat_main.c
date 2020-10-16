@@ -23,6 +23,7 @@
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
 * @{
@@ -38,6 +39,29 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
+
 #define BLE_ADV_ACCESS_ADDRESS  (uint32_t)(0x8E89BED6)
 #define STARTING_CHANNEL        (uint8_t)(24)    // RF channel 22
 #define HS_STARTUP_TIME         (uint16_t)(1)  /* High Speed start up time min value */
@@ -62,7 +86,7 @@
 
 /* Blue FIFO */
 circular_fifo_t blueRec_fifo;
-uint8_t blueRec_buffer[MAX_PACKET_LENGTH*2];
+uint8_t blueRec_buffer[MAX_PACKET_LENGTH*2+MAX_PACKET_LENGTH];
 
 uint32_t interval;
 uint8_t uart_buffer[MAX_PACKET_LENGTH];
@@ -94,8 +118,8 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
     
     if((p->status & IRQ_RCV_OK) != 0) {
       SdkEvalLedToggle(LED2);
-      fifo_put(&blueRec_fifo, p->data[1]+2, &p->data[0]);
-      
+      fifo_put_var_len_item(&blueRec_fifo, p->data[1]+2, p->data);
+            
       if( (p->status & IRQ_ERR_ENC) != 0) {
         SdkEvalLedOn(LED2);
       }
@@ -208,8 +232,9 @@ void IOProcessInputData(uint8_t* data_buffer, uint16_t Nb_bytes)
 */
 int main(void)
 {
-  uint8_t temp[MAX_PACKET_LENGTH];
-  uint8_t length;
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
+  uint8_t packet[MAX_PACKET_LENGTH];
+  uint16_t length;
   
   /* System Init */
   SystemInit();
@@ -225,12 +250,10 @@ int main(void)
   SdkEvalLedInit(LED2);
   SdkEvalLedInit(LED3);
   
-  /* Radio configuration - HS_STARTUP_TIME 642 us, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Create the blueRec FIFO */
   fifo_init(&blueRec_fifo, MAX_PACKET_LENGTH*2, blueRec_buffer, 1);
@@ -258,8 +281,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
     
     /* SendingPacket == FALSE */
     if(flag_SendingPacket == FALSE) {
@@ -274,13 +296,12 @@ int main(void)
     }
     
     if(fifo_size(&blueRec_fifo) !=0) {
-      fifo_get(&blueRec_fifo, HEADER_LENGTH, temp);
-      length = temp[1];
-      fifo_get(&blueRec_fifo, length, &temp[2]);         
+      /* Get the length of the packet and the packet itself */
+      fifo_get_var_len_item(&blueRec_fifo, &length, packet);        
       
       /* -4 because the MIC field */
-      for(uint8_t i= 2; i<(length+HEADER_LENGTH-MIC_FIELD_LEN); i++) {
-        printf("%c", temp[i]);
+      for(uint8_t i= 2; i<(length-MIC_FIELD_LEN); i++) {
+        printf("%c", packet[i]);
       }
     }
     else if(SendingPacketFailed == TRUE) {

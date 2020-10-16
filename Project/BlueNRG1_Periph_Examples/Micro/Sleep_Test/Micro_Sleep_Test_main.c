@@ -1,9 +1,10 @@
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2020 STMicroelectronics ********************
 * File Name          : Micro/Sleep_Test/Micro_Sleep_Test_main.c 
 * Author             : AMS - RF Application Team
-* Version            : V1.1.0
-* Date               : 12-December-2018
-* Description        : BlueNRG-1,2 main file for sleep test
+* Version            : V2.0.0
+* Date               : 10-January-2020
+* Description        : BlueNRG-1,2 main file for sleep test based on Virtual/Sleep
+*                      timer
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -19,11 +20,27 @@
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
 #include "sleep.h"
-#include "bluenrg1_stack.h"
-#include "ble_status.h"
 #include "SDK_EVAL_Led.h"
 #include "osal.h"
-#include "Micro_Sleep_Test_config.h"
+#include "vtimer.h"
+
+/* High Speed start up time */
+#define HS_STARTUP_TIME 328 // 800 us
+#if (LS_SOURCE == LS_SOURCE_INTERNAL_RO)
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION         TRUE
+
+#define CALIBRATION_INTERVAL        1000
+
+#else
+
+/* No Calibration */
+#define INITIAL_CALIBRATION         FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples BlueNRG1 Standard Peripheral Examples
   * @{
@@ -40,11 +57,13 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
-#define WAKEUP_TIMER 0 //Virtual Timer #0
 #define WAKEUP_TIMEOUT 5000 // 5 sec 
 
 static uint8_t wakeup_source = 0;
 static uint8_t wakeup_level = 0;
+
+static VTIMER_HandleType timer_handle;
+
 
 /* Extern function prototypes ------------------------------------------------*/
 extern uint8_t __io_getcharNonBlocking(uint8_t *data);
@@ -78,49 +97,53 @@ static void user_set_wakeup_source(SdkEvalButton Button)
 
 void printWakeupSource(void)
 {
+  uint16_t src;
+  
   printf("WAKEUP Reason = ");
 
-  switch(BlueNRG_WakeupSource()) {
-  case WAKEUP_IO9:
-    printf("IO-9\r\n");
-    break;
-  case WAKEUP_IO10:
-    printf("IO-10\r\n");
-    break;
-  case WAKEUP_IO11:
-    printf("IO-11\r\n");
-    break;
-  case WAKEUP_IO12:
-    printf("IO-12\r\n");
-    break;
-  case WAKEUP_IO13:
-    printf("IO-13\r\n");
-    break;
-  case WAKEUP_SLEEP_TIMER1:
-    printf("SLEEP TIMER1\r\n");
-    break;
-  case WAKEUP_SLEEP_TIMER2:
-    printf("SLEEP TIMER2\r\n");
-    break;
-  case WAKEUP_BOR:
-    printf("BOR\r\n");
-    break;
-  case WAKEUP_POR:
-    printf("POR\r\n");
-    break;
-  case WAKEUP_SYS_RESET_REQ:
-    printf("SYS RESET REQ\r\n");
-    break;
-  case WAKEUP_RESET_WDG:
-    printf("WDG\r\n");
-    break;
-  case NO_WAKEUP_RESET:
-    printf("NO WAKEUP RESET\r\n");
-    break;
-  default:
-    printf("Unknown source\r\n");
-    break;
-  }
+  src = BlueNRG_WakeupSource();
+  
+  if (src & WAKEUP_IO9)
+    printf("IO-9 ");
+  
+  if (src & WAKEUP_IO10)
+    printf("IO-10 ");
+
+  if (src & WAKEUP_IO11)
+    printf("IO-11 ");
+
+  if (src & WAKEUP_IO12)
+    printf("IO-12 ");
+
+  if (src &WAKEUP_IO13)
+    printf("IO-13 ");
+
+  if (src & WAKEUP_SLEEP_TIMER1)
+    printf("SLEEP TIMER1 ");
+
+  if (src & WAKEUP_SLEEP_TIMER2)
+    printf("SLEEP TIMER2 ");
+
+  if (src & WAKEUP_BOR)
+    printf("BOR ");
+
+  if (src & WAKEUP_POR)
+    printf("POR ");
+
+  if (src & WAKEUP_SYS_RESET_REQ)
+    printf("SYS RESET REQ ");
+
+  if (src & WAKEUP_RESET_WDG)
+    printf("WDG ");
+
+  if (src & NO_WAKEUP_RESET)
+    printf("NO WAKEUP RESET ");
+  printf ("\r\n");
+}
+
+void HAL_VTimerTimeoutCallback(void *handle)
+{
+  /* Add app code to execute @ Sleep timeout */
 }
  
 /* Enable the Standby - SLEEPMODE_NOTIMER */
@@ -136,7 +159,7 @@ void sleep(void)
   printf("\r\nEnter to Standby - SLEEPMODE_NOTIMER\r\n");
   while(SdkEvalComUARTBusy() == SET);
   ret = BlueNRG_Sleep(SLEEPMODE_NOTIMER, wakeup_source, wakeup_level);
-  if (ret != BLE_STATUS_SUCCESS) {
+  if (ret != SUCCESS) {
     printf("BlueNRG_Sleep() error 0x%02x\r\n", ret);
     while(1);
   }
@@ -154,29 +177,28 @@ void sleep_timer(void)
   user_set_wakeup_source(USER_BUTTON); 
   
   printf("\r\nEnter to Sleep - SLEEPMODE_WAKETIMER\r\n");
-
-  ret = HAL_VTimerStart_ms(WAKEUP_TIMER, WAKEUP_TIMEOUT);
-  if (ret != BLE_STATUS_SUCCESS) {
+  HAL_VTimer_Stop(&timer_handle);
+  timer_handle.callback = HAL_VTimerTimeoutCallback;
+  ret = HAL_VTimerStart_ms(&timer_handle, WAKEUP_TIMEOUT);
+  if (ret != SUCCESS) {
     printf("HAL_VTimerStart_ms() error 0x%02x\r\n", ret);
     while(1);
   }
-  BTLE_StackTick();
-  
+
   while(SdkEvalComUARTBusy() == SET);
   ret = BlueNRG_Sleep(SLEEPMODE_WAKETIMER, wakeup_source, wakeup_level);
-  if (ret != BLE_STATUS_SUCCESS) {
+  if (ret != SUCCESS) {
     printf("BlueNRG_Sleep() error 0x%02x\r\n", ret);
     while(1);
   }
   printWakeupSource();
-  /* Stop VTimer */
-  HAL_VTimer_Stop(WAKEUP_TIMER);
+ 
 }
 
 
 int main(void)
 {
-  uint8_t charRead, ret;
+  uint8_t charRead;
   
   /* System Init */
   SystemInit();
@@ -197,18 +219,17 @@ int main(void)
   SdkEvalLedInit(LED1);
   SdkEvalLedOff(LED1);
 
-  /* BlufeNRG-1 stack init */
-  ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
-  if (ret != BLE_STATUS_SUCCESS) {
-    printf("Error during BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
-    while(1);
-  }
-  
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
+ 
   printf("Sleep Test\r\n");
   printf("Enter ? for list of commands\r\n");
 
   while(1) {
-    BTLE_StackTick();
+
+    /* Timer tick */
+    HAL_VTIMER_Tick();
+
 
     if (__io_getcharNonBlocking(&charRead)) {
       switch (charRead) {
@@ -241,9 +262,11 @@ int main(void)
   }
 }
 
-void HAL_VTimerTimeoutCallback(uint8_t timerNum)
+SleepModes App_SleepMode_Check(SleepModes sleepMode)
 {
-  /* Add app code to execute @ Sleep timeout */
+    SleepModes returnValue = sleepMode;
+    
+    return returnValue;
 }
 
 #ifdef  USE_FULL_ASSERT

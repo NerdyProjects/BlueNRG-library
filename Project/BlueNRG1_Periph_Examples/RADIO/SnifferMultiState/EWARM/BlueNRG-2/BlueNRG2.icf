@@ -287,6 +287,11 @@ define block rfTimeout_block with alignment = 4, size = 4 { section .rfTimeout};
 keep {section .rfTimeout};
 place at address mem: 0x20000018 { block rfTimeout_block, };
 
+/* BOR_config Block */             
+define block BOR_config_block with alignment = 4, size = 8 { section .BOR_config};
+keep {section .BOR_config};
+place at address mem: 0x2000001C { block BOR_config_block, };
+
 /* BLUE flag Ram Block - Software activation */             
 define block Blue_Flag_Ram_block with alignment = 4, size = 4 { section .__blueflag_RAM};
 keep {section .__blueflag_RAM};

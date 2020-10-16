@@ -97,7 +97,7 @@ void SysTick_Handler(void)
 
 void GPIO_Handler(void)
 {
-  if(SdkEvalPushButtonGetITPendingBit(USER_BUTTON) == SET)  // || ((wakeupFromSleepFlag) && (BlueNRG_WakeupSource() == WAKEUP_IO13))) 
+  if(SdkEvalPushButtonGetITPendingBit(USER_BUTTON) == SET)  // || ((wakeupFromSleepFlag) && (BlueNRG_WakeupSource() & WAKEUP_IO13))) 
   {
     SdkEvalPushButtonClearITPendingBit(USER_BUTTON);
   }

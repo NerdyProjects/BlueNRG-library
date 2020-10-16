@@ -44,16 +44,10 @@
 #define USB2SERIAL_FW_VERSION_MINOR    6
                   
                   
-#define DTM_FW_VERSION_MAJOR    3 //DK 3.0.0 --> 3.0
-#define DTM_FW_VERSION_MINOR    1 //DK 3.1.0 --> 3.1
+#define DTM_FW_VERSION_MAJOR    3 
+#define DTM_FW_VERSION_MINOR    2 //DK 3.2.0 --> 3.2
 #define DTM_FW_VERSION_PATCH    0 
 
-#ifdef UART_INTERFACE                  
-#define DTM_VARIANT             1
-#endif
-#ifdef SPI_INTERFACE
-#define DTM_VARIANT             2
-#endif
                   
 /* Commands */
 #define READ_VERSION            0x01

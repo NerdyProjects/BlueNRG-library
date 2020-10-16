@@ -21,7 +21,7 @@
 #define BlueNRG1_IT_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 
 /* Exported types ------------------------------------------------------------*/

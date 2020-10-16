@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "sleep.h"
 #include "misc.h"
@@ -100,6 +100,10 @@ WEAK_FUNCTION(SleepModes BlueNRG_Stack_Perform_Deep_Sleep_Check(void))
 {
   return SLEEPMODE_NOTIMER;
 }
+WEAK_FUNCTION(SleepModes HAL_VTIMER_TimerSleepCheck(SleepModes sleepMode))
+{
+  return SLEEPMODE_NOTIMER;
+}
 
 #ifndef FORCE_CORE_TO_16MHZ
 /* Macros to calculate the time diff between two machine times */
@@ -113,13 +117,13 @@ static void frequency_switch(void)
 {
   uint32_t currTimeTHR;
   int32_t time_diff = -1;
-  volatile uint8_t reset_reason;
+  volatile uint16_t reset_reason;
 
   /* Get the reset reason */
   reset_reason = SysCtrl_GetWakeupResetReason();
   
   /* If the BLE radio is NOT active or the Wakeup comes from radio transaction, the frequency switch is safe */
-  if (!((reset_reason ==  RESET_BLE_WAKEUP_FROM_TIMER1) || ((__blue_RAM.BlueGlobVar.Config & 8U) == 0))) { //    ((*(volatile uint32_t*)0x200000C0 & 8U) == 0U))) {
+  if (!((reset_reason &  RESET_BLE_WAKEUP_FROM_TIMER1) || ((__blue_RAM.BlueGlobVar.Config & 8U) == 0))) { //    ((*(volatile uint32_t*)0x200000C0 & 8U) == 0U))) {
     /* Check if the next transaction is enough in the future */
     currTimeTHR = BLUE_CTRL->CURRENT_TIME;
     time_diff = abs(TIME24_DIFF(rfTimeout, currTimeTHR));
@@ -377,15 +381,6 @@ static void BlueNRG_InternalSleep(SleepModes sleepMode, uint8_t gpioWakeBitMask)
     ptr++;
   } while (i < CSTACK_PREAMBLE_NUMBER); 
 
-  if (((partInfo.die_major<<4)|(partInfo.die_cut)) >= WA_DEVICE_VERSION) {
-    /* Lock the flash */
-    flash_sw_lock = FLASH_LOCK_WORD;
-    /* Disable BOR */
-    SET_BORconfigStatus(FALSE);
-  }
-  /* Copy of the BLUE_CTRL TIMEOUT register in RAM */
-  rfTimeout = BLUE_CTRL->TIMEOUT;
- 
   /* If the wakeup source is already active, we can skip the sleep to speed-up 
      the application execution */
   ioEnabled = SYSTEM_CTRL->WKP_IO_IE;
@@ -394,7 +389,16 @@ static void BlueNRG_InternalSleep(SleepModes sleepMode, uint8_t gpioWakeBitMask)
   if (ioValue){
     return;
   }
-  
+
+  if (((partInfo.die_major<<4)|(partInfo.die_cut)) >= WA_DEVICE_VERSION) {
+    /* Lock the flash */
+    flash_sw_lock = FLASH_LOCK_WORD;
+    /* Disable BOR */
+    SET_BORconfigStatus(FALSE);
+  }
+  /* Copy of the BLUE_CTRL TIMEOUT register in RAM */
+  rfTimeout = BLUE_CTRL->TIMEOUT;
+   
   //Enable deep sleep
   SystemSleepCmd(ENABLE);
   //The __disable_irq() used at the beginning of the BlueNRG_Sleep() function
@@ -409,7 +413,8 @@ static void BlueNRG_InternalSleep(SleepModes sleepMode, uint8_t gpioWakeBitMask)
   //So, exiting from the deep sleep the context is restored with wrong random value.
   SystemSleepCmd(DISABLE);
   
-  if (!wakeupFromSleepFlag) { 
+  if (!wakeupFromSleepFlag) {
+
     if((NVIC->ISPR[0]&(1<<BLUE_CTRL_IRQn)) == 0) { //At this stage the Blue Control Interrupt shall not be pending.
                                                    //So, if this happens means that the application has called the
                                                    //BlueNRG_Sleep() API with the wakeup source already acrive.
@@ -428,15 +433,15 @@ static void BlueNRG_InternalSleep(SleepModes sleepMode, uint8_t gpioWakeBitMask)
         }
       }
     }
-
-     
+    
+    /* Restore BOR configuration */
     if (((partInfo.die_major<<4)|(partInfo.die_cut)) >= WA_DEVICE_VERSION) {
       /* Restore BOR configuration */
       SET_BORconfigStatus(TRUE);
       /* Unlock the flash */
       flash_sw_lock = FLASH_UNLOCK_WORD;
     }
-    
+
     // Disable the STANDBY mode 
     if (sleepMode == SLEEPMODE_NOTIMER) {
       BLUE_CTRL->TIMEOUT &= ~(LOW_POWER_STANDBY<<28);
@@ -606,18 +611,15 @@ static void BlueNRG_InternalSleep(SleepModes sleepMode, uint8_t gpioWakeBitMask)
     //The five IRQs are linked to a real ISR. If any of the five IRQs
     //triggered, then pend their ISR
     //Capture the wake source from the BLE_REASON_RESET register
-    if ((CKGEN_SOC->REASON_RST == 0) &&
-        (CKGEN_BLE->REASON_RST >= WAKENED_FROM_IO9) && 
-          (CKGEN_BLE->REASON_RST <= WAKENED_FROM_IO13) && 
-            gpioWakeBitMask) {
-              if ((((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO9) == WAKENED_FROM_IO9) && (GPIO->IE & GPIO_Pin_9))   ||
-                  (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO10) == WAKENED_FROM_IO10) && (GPIO->IE & GPIO_Pin_10)) ||
-                    (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO11) == WAKENED_FROM_IO11) && (GPIO->IE & GPIO_Pin_11)) ||
-                      (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO12) == WAKENED_FROM_IO12) && (GPIO->IE & GPIO_Pin_12)) ||
-                        (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO13) == WAKENED_FROM_IO13) && (GPIO->IE & GPIO_Pin_13))) {
-                          NVIC->ISPR[0] = 1<<GPIO_IRQn;
-                        }
-            }
+    if ((CKGEN_SOC->REASON_RST == 0) && gpioWakeBitMask) {
+      if ((((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO9) == WAKENED_FROM_IO9) && (GPIO->IE & GPIO_Pin_9))   ||
+          (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO10) == WAKENED_FROM_IO10) && (GPIO->IE & GPIO_Pin_10)) ||
+          (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO11) == WAKENED_FROM_IO11) && (GPIO->IE & GPIO_Pin_11)) ||
+          (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO12) == WAKENED_FROM_IO12) && (GPIO->IE & GPIO_Pin_12)) ||
+          (((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO13) == WAKENED_FROM_IO13) && (GPIO->IE & GPIO_Pin_13))) {
+        NVIC->ISPR[0] = 1<<GPIO_IRQn;
+      }
+    }
 
     // Disable the STANDBY mode 
     if (sleepMode == SLEEPMODE_NOTIMER) {
@@ -649,7 +651,7 @@ uint8_t BlueNRG_Sleep(SleepModes sleepMode,
                       uint8_t gpioWakeBitMask, 
                       uint8_t gpioWakeLevelMask)
 {
-  SleepModes app_sleepMode, ble_sleepMode, sleepMode_allowed;
+  SleepModes app_sleepMode, ble_sleepMode, timer_sleepMode, sleepMode_allowed;
   
   /* Mask all the interrupt */
   ATOMIC_SECTION_BEGIN();
@@ -658,8 +660,10 @@ uint8_t BlueNRG_Sleep(SleepModes sleepMode,
   wakeupFromSleepFlag = 0; 
 
   ble_sleepMode = (SleepModes)BlueNRG_Stack_Perform_Deep_Sleep_Check();
+  timer_sleepMode = HAL_VTIMER_TimerSleepCheck(sleepMode);
   app_sleepMode = App_SleepMode_Check(sleepMode);
   sleepMode_allowed = (SleepModes)MIN(app_sleepMode, sleepMode);
+  sleepMode_allowed = (SleepModes)MIN(timer_sleepMode, sleepMode_allowed);
   sleepMode_allowed = (SleepModes)MIN(ble_sleepMode, sleepMode_allowed);
 
 #ifdef DEBUG_SLEEP_MODE
@@ -697,49 +701,52 @@ uint8_t BlueNRG_Sleep(SleepModes sleepMode,
   return SUCCESS;
 }
 
-uint8_t BlueNRG_WakeupSource(void)
+uint16_t BlueNRG_WakeupSource(void)
 {
+  uint16_t src=NO_WAKEUP_RESET;
+  
   if ((CKGEN_SOC->REASON_RST == 0) &&
-      (CKGEN_BLE->REASON_RST >= WAKENED_FROM_IO9) && 
-      (CKGEN_BLE->REASON_RST <= WAKENED_FROM_IO13)) {
-    if ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO9) == WAKENED_FROM_IO9) {
-      return WAKEUP_IO9;
-    }
-    if ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO10) == WAKENED_FROM_IO10) {
-      return WAKEUP_IO10;
-    }
-    if ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO11) == WAKENED_FROM_IO11) {
-      return WAKEUP_IO11;
-    }
-    if ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO12) == WAKENED_FROM_IO12) {
-      return WAKEUP_IO12;
-    }
-    if ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO13) == WAKENED_FROM_IO13) {
-      return WAKEUP_IO13;
-    }
+      ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO9) == WAKENED_FROM_IO9)) {
+    src |= WAKEUP_IO9;
+  }
+  if ((CKGEN_SOC->REASON_RST == 0) &&
+      ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO10) == WAKENED_FROM_IO10)) {
+    src |= WAKEUP_IO10;
+  }
+  if ((CKGEN_SOC->REASON_RST == 0) &&
+      ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO11) == WAKENED_FROM_IO11)) {
+    src |= WAKEUP_IO11;
+  }
+  if ((CKGEN_SOC->REASON_RST == 0) &&
+      ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO12) == WAKENED_FROM_IO12)) {
+    src |= WAKEUP_IO12;
+  }
+  if ((CKGEN_SOC->REASON_RST == 0) &&
+      ((CKGEN_BLE->REASON_RST & WAKENED_FROM_IO13) == WAKENED_FROM_IO13)) {
+    src |= WAKEUP_IO13;
   }
   if ((CKGEN_SOC->REASON_RST == 0) &&
       ((CKGEN_BLE->REASON_RST & WAKENED_FROM_BLUE_TIMER1) == WAKENED_FROM_BLUE_TIMER1)) {
-    return WAKEUP_SLEEP_TIMER1;
+    src |= WAKEUP_SLEEP_TIMER1;
   }
   if ((CKGEN_SOC->REASON_RST == 0) &&
       ((CKGEN_BLE->REASON_RST & WAKENED_FROM_BLUE_TIMER2) == WAKENED_FROM_BLUE_TIMER2)) {
-    return WAKEUP_SLEEP_TIMER2;
+    src |= WAKEUP_SLEEP_TIMER2;
   }
   if ((CKGEN_SOC->REASON_RST == 0) &&
       ((CKGEN_BLE->REASON_RST & WAKENED_FROM_POR) == WAKENED_FROM_POR)) {
-    return WAKEUP_POR;
+    src |= WAKEUP_POR;
   }
   if ((CKGEN_SOC->REASON_RST == 0) &&
       ((CKGEN_BLE->REASON_RST & WAKENED_FROM_BOR) == WAKENED_FROM_BOR)) {
-    return WAKEUP_BOR;
+    src |= WAKEUP_BOR;
   }
   if (CKGEN_SOC->REASON_RST == 2) {
-    return WAKEUP_SYS_RESET_REQ;
+    src |= WAKEUP_SYS_RESET_REQ;
   }
   if (CKGEN_SOC->REASON_RST == 4) {
-    return WAKEUP_RESET_WDG;
+    src |= WAKEUP_RESET_WDG;
   }
 
-  return NO_WAKEUP_RESET;
+  return src;
 }

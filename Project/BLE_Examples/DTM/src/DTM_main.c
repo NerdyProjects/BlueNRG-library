@@ -4,7 +4,7 @@
 * Author             : RF Application Team
 * Version            : 1.1.0
 * Date               : 27-June-2016
-* Description        : DTM application which configures a BlueNRG-1 device as a network coprocessor (UART or SPI conficuration) in order to be used with the BlueNRG GUI or other instruments as CBT
+* Description        : DTM application which configures a BlueNRG-1,2 device as a network coprocessor (UART or SPI conficuration) in order to be used with the BlueNRG GUI or other instruments as CBT
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -35,8 +35,8 @@
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
   -# Open the KEIL uVision 5 for ARM and select Project->Open Project menu. 
   -# Open the KEIL project
-     <tt> ...\\Project\\BLE_Examples\\DTM\\MDK-ARM\\BlueNRG-1\\DTM.uvprojx </tt> or
-     <tt> ...\\Project\\BLE_Examples\\DTM\\MDK-ARM\\BlueNRG-2\\DTM.uvprojx </tt>
+     <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\MDK-ARM\\BlueNRG-1\\DTM.uvprojx </tt> or
+     <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\MDK-ARM\\BlueNRG-2\\DTM.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -47,8 +47,8 @@
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
   -# Open the Embedded Workbench for ARM and select File->Open->Workspace menu. 
   -# Open the IAR project
-     <tt> ...\\Project\\BLE_Examples\\DTM\\EWARM\\BlueNRG-1\\DTM.eww </tt> or
-     <tt> ...\\Project\\BLE_Examples\\DTM\\EWARM\\BlueNRG-2\\DTM.eww </tt>
+     <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\EWARM\\BlueNRG-1\\DTM.eww </tt> or
+     <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\EWARM\\BlueNRG-2\\DTM.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -58,12 +58,14 @@
 * \subsection Project_configurations Project configurations
 - \c SPI - Network coprocessor configuration: SPI mode
 - \c UART - Network coprocessor configuration: UART mode
+- \c UART_Throughput - Network coprocessor configuration: Throughput mode
 
 
 * \section Board_supported Boards supported
 - \c STEVAL-IDB007V1
 - \c STEVAL-IDB007V2
 - \c STEVAL-IDB008V1
+- \c STEVAL-IDB008V1M
 - \c STEVAL-IDB008V2
 - \c STEVAL-IDB009V1
 
@@ -103,37 +105,40 @@
                         
 * \section Pin_settings Pin settings
 @table
-|            |                                                  UART                                                   |||||                                                   SPI                                                   |||||
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|            |                                                            UART                                                             ||||||                                                             SPI                                                             ||||||                                                       UART_Throughput                                                       ||||||
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     GND    |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|   RESETN   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    VBLUE   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
 
 @endtable 
 
@@ -149,27 +154,27 @@
 
 * \section LEDs_description LEDs description
 @table
-|            |                                                  UART                                                   |||||                                                   SPI                                                   |||||
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|     DL1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|            |                                                            UART                                                             ||||||                                                             SPI                                                             ||||||                                                       UART_Throughput                                                       ||||||
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|     DL1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
 
 @endtable
 
 
 * \section Buttons_description Buttons description
 @table
-|                |                                                  UART                                                   |||||                                                   SPI                                                   |||||
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |
+|                |                                                            UART                                                             ||||||                                                             SPI                                                             ||||||                                                       UART_Throughput                                                       ||||||
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |
 
 @endtable
 
@@ -178,17 +183,17 @@
 DTM (Direct Test Mode) application allows to configure a BlueNRG-1,2 as a network coprocessor and target BLE technology evaluation & RF evaluation performances tests using the BlueNRG GUI or other instruments as CBT. 
 
 Two network coprocessor configurations are available:
- - UART (DTM binary file: DTM_UART.hex)
+ - UART (DTM binary file: DTM_UART.hex, serial baudrate = 115200)
  - SPI  (DTM binary file: DTM_SPI.hex)
+
+NOTE: UART_Throughput configuration must be used only for throughput evaluation tests through the BlueNRG GUI, Throughput tab. 
 
 DTM_UART.hex and DTM_SPI.hex binary image files are built for also including the
 updater code which allows to update the specific DTM FW version trough the BlueNRG GUI, Tools, BlueNRG Updater utility.
 
 DTM binary images without updater code are also provided: DTM_UART_NOUPDATER.bin for UART configuration and DTM_SPI_NOUPDATER.bin for SPI configuration.
 
-Once the STEVAL-IDB007Vx, BlueNRG-1 platform has been configured as network coprocessor (using related DTM_UART.hex or DTM_SPI.hex binary files), 
-or STEVAL-IDB008Vx, BlueNRG-2 platform has been configured as network coprocessor (using related DTM_UART.hex or DTM_SPI.hex binary files).
-New DTM binary files versions can be updated directly using the BlueNRG GUI, Tools, BlueNRG Updater utility.
+Once the STEVAL-IDB007Vx, BlueNRG-1 platform has been configured as network coprocessor (using related DTM_UART.hex or DTM_SPI.hex binary files),  or STEVAL-IDB008Vx, BlueNRG-2 platform has been configured as network coprocessor (using related DTM_UART.hex or DTM_SPI.hex binary files), new DTM binary files versions can be updated directly using the BlueNRG GUI, Tools, BlueNRG Updater utility.
 
 The DTM project memory layout is as follows:
   
@@ -196,7 +201,7 @@ The DTM project memory layout is as follows:
      
 - <b> DTM </b>
 
---------------  0x10040800
+--------------  0x10042000
 
 - <b> DTM Updater </b>
 
@@ -232,12 +237,16 @@ If the DTM Updater support is not necessary, the DTM Updater code can be removed
 #include "hw_config.h"
 #include "miscutil.h" 
 #include "DTM_cmd_db.h"
+#include "DTM_burst.h"
 
 #define RESET_REASON_WDG        ((uint8_t)0x05)
 #define RESET_REASON_LOCKUP     ((uint8_t)0x06)
 #define RESET_REASON_BOR        ((uint8_t)0x07)
 #define RESET_REASON_CRASH      ((uint8_t)0x08)
 
+volatile extern uint8_t DTM_INTERFACE;
+const uint8_t IO_WAKEUP_PIN[] = {0, 4, 0x10};
+ 
 /* Add aci_blue_initialized_event() prototype */
 void aci_blue_initialized_event(uint8_t Reason_Code);
 
@@ -263,11 +272,21 @@ void aci_blue_crash_info_event(uint8_t Crash_Type,
  *             
  *      DTM
  * 
- * ------------- 0x10040800
+ * ------------- 0x10042000 (MEMORY_FLASH_APP_OFFSET)
  *  DTM Updater
- * ------------- 0x10040000
+ * ------------- 0x10040000 (_MEMORY_FLASH_BEGIN_)
  *
+ * The DTM UART/UART_Sleep, SPI project configurations include the DTM updater code + 
+ * the DTM specific code (Configuration --> Preprocessor option: UART --> UART_INTERFACE; UART Sleep -->  UART_SLEEP; SPI --> SPI_INTERFACE).
+ * The DTM SPI_NOUPDATER, UART_NOUPDATER project configurations allows to build the binary 
+ * images (with based address = MEMORY_FLASH_APP_OFFSET) which includes only the DTM specific code. (Configuration --> Preprocessor option: UART_NOUPDATER --> UART_INTERFACE; SPI_NOUPDATER --> SPI_INTERFACE).
+ * This binary image can be used for  upgrading the DTM binary image on a device: 
+ * the assumption is that the device has been previosly loaded with the DTM full image (DTM + DTM Updater built with DTM UART/UART_Sleep, SPI project configurations), 
+ * and that the user just wants to upgrade the DTM specific code with a new version, using the DTM SPI_NOUPDATER, UART_NOUPDATER project configurations
+ * binary images. 
  * The DTM Updater allows to access the memory flash through ACI_HAL commands.
+ * It is placed on the bootloader section from  _MEMORY_FLASH_BEGIN_ to  
+ * _MEMORY_FLASH_BEGIN_ + MEMORY_FLASH_APP_OFFSET (0x2000). 
  * The DTM Updater can be activated in the following way:
  *  1) Activation by using ACI_HAL_UPDATER_START
  *  2) Activation by using IO3 pin (high level at start up).
@@ -280,14 +299,28 @@ void aci_blue_crash_info_event(uint8_t Crash_Type,
  *  1) Disable/Remove the file DTM_Updater_xxx.c inside the folder project
  *     DTM_Updater.
  *  2) Option/Linker: Change the symbol definition from 
- *     MEMORY_FLASH_APP_OFFSET=0x800 to MEMORY_FLASH_APP_OFFSET=0.
+ *     MEMORY_FLASH_APP_OFFSET=0x2000 to MEMORY_FLASH_APP_OFFSET=0.
  *
  *  The same communication port (SPI or UART with related pins) of the DTM
  *  is used for the DTM Updater. Any change of relevant pins must be reported
  *  also in DTM Updater firmware.
  *
- ****************************************************************************
- ****************************************************************************
+ *  NOTES: UART default baudrate is 115200; 
+ * 
+ *  UART_Throughput configuration must be used only for throughput evaluation tests 
+ *  through the BlueNRG GUI, Throughput tab.
+ *
+ ******************************************************************************
+ **                                WARNING                                   **
+ ******************************************************************************
+ * DTM v.3.2 available on BlueNRG-1,2 SDK v. 3.2.0 has an offset of 0x2000 (8 KB).
+ * This image is not compatible with DTM_Updater image provided on previous SDK
+ * versions (offset = 0x800).
+ * In order to make it compatible with previous DTM_Updater versions, please 
+ * rebuild the DTM UART or SPI configurations with linker symbol 
+ * MEMORY_FLASH_APP_OFFSET=0x800.
+ ******************************************************************************
+ ******************************************************************************
 */
 
 int main(void)
@@ -312,19 +345,19 @@ int main(void)
   aci_hal_write_config_data(0x2C, 1, &Value);
   
 #else
-  RESET_REASON_Type xResetReason;
+  uint16_t xResetReason;
 
   uint8_t reset_reason = 0x01;
   
   /* EVT_BLUE_INITIALIZED */  
   xResetReason = SysCtrl_GetWakeupResetReason();
-  if(xResetReason == RESET_WDG) {
+  if(xResetReason & RESET_WDG) {
     reset_reason = RESET_REASON_WDG;
   }
-  else if(xResetReason == RESET_LOCKUP) {
+  else if(xResetReason & RESET_LOCKUP) {
     reset_reason = RESET_REASON_LOCKUP;
   }
-  else if(xResetReason == RESET_BLE_BOR) {
+  else if(xResetReason & RESET_BLE_BOR) {
     reset_reason = RESET_REASON_BOR;
   }
   if((crash_info.signature&0xFFFF0000) == CRASH_SIGNATURE_BASE) {  
@@ -352,8 +385,9 @@ int main(void)
 
   while(1) {
     /* BlueNRG-1 stack tick */
+    BURST_Tick();
     BTLE_StackTick();
     transport_layer_tick();
-    BlueNRG_Sleep(SLEEPMODE_NOTIMER, IO_WAKEUP_PIN, 0); // 4: IO11 0: low level
+    BlueNRG_Sleep(SLEEPMODE_NOTIMER, IO_WAKEUP_PIN[DTM_INTERFACE], 0); // 4: IO11 0: low level
   }
 }

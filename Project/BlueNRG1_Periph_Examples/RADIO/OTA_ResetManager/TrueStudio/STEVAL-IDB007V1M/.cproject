@@ -35,7 +35,11 @@
               </tool>
             <tool id="com.atollic.truestudio.exe.release.toolchain.gcc.290241006" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
                 <option id="com.atollic.truestudio.gcc.symbols.defined.1796500802" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
-                  <listOptionValue builtIn="false" value="ST_OTA_SERVICE_MANAGER_APPLICATION=1"></listOptionValue>
+                  <listOptionValue builtIn="false" value="SMPS_INDUCTOR=SMPS_INDUCTOR_10uH"></listOptionValue>
+                <listOptionValue builtIn="false" value="LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_HW_HS_16MHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_DEVICE_BLUENRG_1"></listOptionValue>
+                <listOptionValue builtIn="false" value="ST_OTA_SERVICE_MANAGER_APPLICATION=1"></listOptionValue>
                 <listOptionValue builtIn="false" value="ST_OTA_MANAGER_APPLICATION=1"></listOptionValue>
                 <listOptionValue builtIn="false" value="DEBUG_"></listOptionValue>
                 <listOptionValue builtIn="false" value="BLUENRG1_DEVICE"></listOptionValue>
@@ -75,7 +79,7 @@
               <option id="com.atollic.truestudio.ld.libraries.list.236294709" name="Libraries" superClass="com.atollic.truestudio.ld.libraries.list" useByScannerDiscovery="false" valueType="libs">
                   </option>
               <option id="com.atollic.truestudio.ld.general.clib.464792059" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.clib" value="com.atollic.truestudio.ld.general.clib.small" valueType="enumerated"></option>
-              <option id="com.atollic.truestudio.ld.misc.linkerflags.1262506742" name="Other options" superClass="com.atollic.truestudio.ld.misc.linkerflags" value="-Wl,--cref  -Wl,--defsym=MEMORY_FLASH_APP_SIZE=0x2000" valueType="string"></option>
+              <option id="com.atollic.truestudio.ld.misc.linkerflags.1262506742" name="Other options" superClass="com.atollic.truestudio.ld.misc.linkerflags" value="-Wl,--cref  -Wl,--defsym=MEMORY_FLASH_APP_SIZE=0x2800" valueType="string"></option>
               <option id="com.atollic.truestudio.ld.general.nostartfiles.1641428941" name="Do not use standard start files" superClass="com.atollic.truestudio.ld.general.nostartfiles" value="true" valueType="boolean"></option>
               <option id="com.atollic.truestudio.ld.general.nodefaultlibs.493642514" name="Do not use default libraries" superClass="com.atollic.truestudio.ld.general.nodefaultlibs" value="true" valueType="boolean"></option>
               <option id="com.atollic.truestudio.ld.libraries.searchpath.573131208" name="Library search path" superClass="com.atollic.truestudio.ld.libraries.searchpath" useByScannerDiscovery="false" valueType="libPaths">
@@ -152,7 +156,11 @@
               </tool>
             <tool id="com.atollic.truestudio.exe.release.toolchain.gcc.290241006" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
                 <option id="com.atollic.truestudio.gcc.symbols.defined.1796500802" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
-                  <listOptionValue builtIn="false" value="SERVER_YMODEM"></listOptionValue>
+                  <listOptionValue builtIn="false" value="SMPS_INDUCTOR=SMPS_INDUCTOR_10uH"></listOptionValue>
+                <listOptionValue builtIn="false" value="LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="SERVER_YMODEM"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_HW_HS_16MHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_DEVICE_BLUENRG_1"></listOptionValue>
                 <listOptionValue builtIn="false" value="ST_OTA_SERVICE_MANAGER_APPLICATION=1"></listOptionValue>
                 <listOptionValue builtIn="false" value="DEBUG_"></listOptionValue>
                 <listOptionValue builtIn="false" value="BLUENRG1_DEVICE"></listOptionValue>
@@ -269,7 +277,11 @@
               </tool>
             <tool id="com.atollic.truestudio.exe.release.toolchain.gcc.290241006" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
                 <option id="com.atollic.truestudio.gcc.symbols.defined.1796500802" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
-                  <listOptionValue builtIn="false" value="ST_OTA_SERVICE_MANAGER_APPLICATION=1"></listOptionValue>
+                  <listOptionValue builtIn="false" value="SMPS_INDUCTOR=SMPS_INDUCTOR_10uH"></listOptionValue>
+                <listOptionValue builtIn="false" value="LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_HW_HS_16MHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="CONFIG_DEVICE_BLUENRG_1"></listOptionValue>
+                <listOptionValue builtIn="false" value="ST_OTA_SERVICE_MANAGER_APPLICATION=1"></listOptionValue>
                 <listOptionValue builtIn="false" value="_DEBUG"></listOptionValue>
                 <listOptionValue builtIn="false" value="BLUENRG1_DEVICE"></listOptionValue>
                 <listOptionValue builtIn="false" value="HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ"></listOptionValue>

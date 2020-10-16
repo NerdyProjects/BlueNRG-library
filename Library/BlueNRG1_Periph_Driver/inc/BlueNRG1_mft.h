@@ -29,7 +29,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
   * @{
@@ -180,18 +180,6 @@
 * @}
 */
 
-/** @defgroup MFT_PWMX_Pin_Definitions PWMX Pins Definitions
-  * @{
-  */
-
-#define MFT_PWM0_PIN     GPIO_Pin_2       /* The PWM0 pin */
-#define MFT_PWM1_PIN     GPIO_Pin_3       /* The PWM1 pin */
-
-#define IS_MFT_PWMX_PIN(VALUE) (((VALUE) == MFT_PWM0_PIN) || ((VALUE) == MFT_PWM1_PIN))
-
-/**
-* @}
-*/
   
   
 /** @defgroup MFT_TIMERx_Definitions TIMERx Definitions

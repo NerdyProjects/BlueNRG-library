@@ -330,7 +330,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ SMPS_INDUCTOR=SMPS_INDUCTOR_10uH BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION MASTER_SLAVE=1 MASTER_SLAVE_NUM_MASTERS=1 MASTER_SLAVE_NUM_SLAVES=6 MASTER_SLAVE_SCAN_WINDOW=20.00 MASTER_SLAVE_SLEEP_TIME=0.00 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\inc;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\BLE_Application\OTA\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc</IncludePath>
@@ -922,7 +922,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ SMPS_INDUCTOR=SMPS_INDUCTOR_10uH BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION MASTER=1 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\inc;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\BLE_Application\OTA\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc</IncludePath>

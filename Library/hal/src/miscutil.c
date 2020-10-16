@@ -1,9 +1,9 @@
 /**
 ******************************************************************************
-* @file    misc.c 
-* @author  AMG - RF Application Team
-* @version V1.1.0
-* @date    3-April-2018
+* @file    miscutil.c 
+* @author  AMS - RF Application Team
+* @version V1.2.0
+* @date    14-February-2020
 * @brief   Miscellaneous utilities
 ******************************************************************************
 * @attention
@@ -15,11 +15,11 @@
 * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
 * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *
-* <h2><center>&copy; COPYRIGHT 2017 STMicroelectronics</center></h2>
+* <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
 ******************************************************************************
 */ 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "miscutil.h"
 
 NO_INIT_SECTION(crash_info_t crash_info_ram, ".__crash_RAM");
@@ -31,6 +31,10 @@ NO_INIT_SECTION(crash_info_t crash_info_ram, ".__crash_RAM");
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define BLUENRG2_IDCODE      (0x0200A041)
+
+#define BLUENRG2N_ID_BASE    (0x1000001C) 
+#define BLUENRG2N_IDCODE     (0xF200A044) 
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
@@ -38,14 +42,24 @@ NO_INIT_SECTION(crash_info_t crash_info_ram, ".__crash_RAM");
 void HAL_GetPartInfo(PartInfoType *partInfo)
 {
   volatile uint32_t *ptr = (volatile uint32_t *)(CKGEN_SOC_BASE + 0x28);
+  volatile uint32_t *ptr_2n = (volatile uint32_t *)(BLUENRG2N_ID_BASE); 
 
   partInfo->die_major    = CKGEN_SOC->DIE_ID_b.VERSION;
   partInfo->die_cut      = CKGEN_SOC->DIE_ID_b.REV;
 
   partInfo->jtag_id_code = *ptr;
   if (partInfo->jtag_id_code == BLUENRG2_IDCODE) {
-    /* BlueNRG-2 id is conventionally 2 */
-    partInfo->die_id = DIE_ID_BLUENRG2;
+    
+    if  (*ptr_2n == BLUENRG2N_IDCODE) 
+    {
+      /* BlueNRG-2N id */
+      partInfo->die_id = DIE_SW_ID_BLUENRG2N;
+    }  
+    else
+    {
+      /* BlueNRG-2 id is conventionally 2 */
+      partInfo->die_id = DIE_ID_BLUENRG2;
+    }
   } else {
     /* BlueNRG-1 id is conventionally 1 */
     partInfo->die_id = DIE_ID_BLUENRG1;

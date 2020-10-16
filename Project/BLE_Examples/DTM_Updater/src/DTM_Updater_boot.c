@@ -13,7 +13,7 @@
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "DTM_Updater_Config.h"
 
 #define RESET_WAKE_DEEPSLEEP_REASONS 0x05
@@ -25,6 +25,16 @@
 #endif
 
 #define BLUE_FLAG_TAG   (0x00000000)
+
+/* ------------------------------------------------------------------------------
+*   volatile uint32_t flash_sw_lock;
+*
+*  This is used to lock/unlock the flash operations in software.
+*  The unlock word is 0xFCECBCCC
+* ------------------------------------------------------------------------------ */
+SECTION(".flash_sw_lock")
+REQUIRED(NO_INIT(uint32_t volatile flash_sw_lock));
+
  
 NORETURN_FUNCTION(void NMI_Handler(void))
 {
@@ -185,6 +195,9 @@ REQUIRED(const intvec_elem __vector_table[]) = {
 extern int main(void);
 void __iar_program_start(void) @ "ENTRYPOINT"
 {
+  /* Lock the flash */
+  flash_sw_lock = FLASH_LOCK_WORD;
+
   asm("CPSID i"); // Disable interrupts.
   main();
 }

@@ -24,7 +24,7 @@
 #define __USER_PLATFORM_CONFIGURATION_AUTO_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 
 #ifdef __cplusplus

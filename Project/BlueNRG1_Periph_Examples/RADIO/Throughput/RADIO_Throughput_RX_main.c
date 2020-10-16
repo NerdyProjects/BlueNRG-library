@@ -18,12 +18,13 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
+#include "main_common.h"
+#include "vtimer.h"
 #if ST_USE_OTA_RESET_MANAGER
 #include "radio_ota.h"
 #endif
@@ -104,6 +105,7 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
 */
 int main(void)
 {
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   uint8_t ret;
   
   /* System Init */
@@ -116,12 +118,10 @@ int main(void)
   SdkEvalLedInit(LED1);
   SdkEvalLedInit(LED2);
     
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
     
   /* Set the Network ID */
   HAL_RADIO_SetNetworkID(BLE_ADV_ACCESS_ADDRESS);
@@ -138,8 +138,7 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */    
-    RADIO_CrystalCheck();  
+    HAL_VTIMER_Tick(); 
     
     if(rx_done == TRUE) {
       rx_done = FALSE;

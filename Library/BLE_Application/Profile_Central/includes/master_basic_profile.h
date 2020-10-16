@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
   * @file    master_basic_profile.h
-  * @author  AMG - RF Application team
-  * @version V1.2.0
-  * @date    12-December-2016
+  * @author  AMS - RF Application team
+  * @version V1.3.0
+  * @date    03-February-2020
   * @brief   Header file for BlueNRG-1 master/central library APIs.
   ******************************************************************************
   * @attention
@@ -554,7 +554,7 @@ uint8_t Master_TerminateDiscovery(void);
   */
 extern void Master_DeviceDiscovery_CB(uint8_t *status, uint8_t *addr_type, uint8_t *addr, 
 				      uint8_t *data_length, uint8_t *data, 
-				      uint8_t *RSSI);
+				      int8_t *RSSI);
 
 //@} \\END Master Device Discovery Functions
 

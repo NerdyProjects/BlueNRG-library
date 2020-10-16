@@ -43,6 +43,10 @@ typedef enum {SUCCESS = 0, ERROR} ErrorStatus;
 #define HOST_TO_LE_16(buf, val)    ( ((buf)[0] =  (uint8_t) (val)    ) , \
                                    ((buf)[1] =  (uint8_t) (val>>8) ) )
 
+/** @brief Macro that returns a 16-bit value from a buffer where the value is stored in Little Endian Format */
+#define LE_TO_HOST_16(ptr)   (uint16_t) ( ((uint16_t)*((uint8_t *)ptr)) | \
+                                           ((uint16_t)*((uint8_t *)ptr + 1) << 8) )
+
 /** @brief Macro that returns a value from a 32-bit buffer where the value is stored in Little Endian Format */
 #define LE_TO_HOST_32(ptr)   (uint32_t) ( ((uint32_t) \
                                            *((uint8_t *)ptr)) | \

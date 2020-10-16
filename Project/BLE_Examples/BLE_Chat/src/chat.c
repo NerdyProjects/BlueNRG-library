@@ -19,6 +19,7 @@
 #include "gp_timer.h"
 #include "ble_const.h" 
 #include "bluenrg1_stack.h"
+#include "bluenrg1_api.h"
 #include "app_state.h"
 #include "osal.h"
 #include "gatt_db.h"
@@ -31,6 +32,12 @@
 /* Private defines -----------------------------------------------------------*/
 
 #define CMD_BUFF_SIZE 512
+
+#if SERVER
+  #define SERVER_ADDRESS 0xaa, 0x00, 0x00, 0xE1, 0x80, 0x02
+  #define LOCAL_NAME  'C','h','a','t','_','1','_','2'
+  #define MANUF_DATA_SIZE 27
+#endif 
 
 /* Private macros ------------------------------------------------------------*/
 
@@ -231,20 +238,59 @@ void Make_Connection(void)
   
 #else
   
-  uint8_t local_name[] = {AD_TYPE_COMPLETE_LOCAL_NAME,'B','l','u','e','N','R','G','1','_','C','h','a','t'};
+  /* NOTE: Updated original Server advertising data in order to be also recognized by “BLE Sensor” app Client */
   
+  tBDAddr bdaddr = {SERVER_ADDRESS};
+
+  uint8_t manuf_data[MANUF_DATA_SIZE] = { 
+    2,                      /* Length of AD type Transmission Power */
+    0x0A, 0x00,             /* Transmission Power = 0 dBm */ 
+    9,                      /* Length of AD type Complete Local Name */
+    0x09,                   /* AD type Complete Local Name */ 
+    LOCAL_NAME,             /* Local Name */            
+    13,                     /* Length of AD type Manufacturer info */
+    0xFF,                   /* AD type Manufacturer info */
+    0x01,                   /* Protocol version */
+    0x05,		            /* Device ID: 0x05 */
+    0x00,                   /* Feature Mask byte#1 */
+    0x00,                   /* Feature Mask byte#2 */
+    0x00,                   /* Feature Mask byte#3 */
+    0x00,                   /* Feature Mask byte#4 */
+    0x00,                   /* BLE MAC start */
+    0x00, 
+    0x00, 
+    0x00, 
+    0x00, 
+    0x00                    /* BLE MAC stop */
+  };
+  
+  
+  for (int var = 0; var < 6; ++var) {
+    manuf_data[MANUF_DATA_SIZE -1  - var] = bdaddr[var];
+  }
+  
+  uint8_t local_name[] = { AD_TYPE_COMPLETE_LOCAL_NAME, LOCAL_NAME };
+
 #if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
   hci_le_set_scan_response_data(18,BTLServiceUUID4Scan); 
 #else
   hci_le_set_scan_response_data(0,NULL);
 #endif /* ST_OTA_FIRMWARE_UPGRADE_SUPPORT */ 
-  
+
   ret = aci_gap_set_discoverable(ADV_IND, 0, 0, PUBLIC_ADDR, NO_WHITE_LIST_USE,
                                  sizeof(local_name), local_name, 0, NULL, 0, 0);
-  if (ret != BLE_STATUS_SUCCESS)
+  if(ret != BLE_STATUS_SUCCESS)
+  {
     printf ("Error in aci_gap_set_discoverable(): 0x%02x\r\n", ret);
+  }
   else
+  {
     printf ("aci_gap_set_discoverable() --> SUCCESS\r\n");
+  }
+  
+  /* Update Advertising data with manuf_data */
+  aci_gap_update_adv_data(MANUF_DATA_SIZE, manuf_data);
+  
 #endif
 }
 
@@ -426,7 +472,6 @@ void aci_gatt_notification_event(uint16_t Connection_Handle,
                                  uint8_t Attribute_Value_Length,
                                  uint8_t Attribute_Value[])
 { 
-#if CLIENT
   uint16_t attr_handle;
  
   attr_handle = Attribute_Handle;
@@ -435,7 +480,6 @@ void aci_gatt_notification_event(uint16_t Connection_Handle,
       for(int i = 0; i < Attribute_Value_Length; i++) 
           printf("%c", Attribute_Value[i]);
     }
-#endif
 }
 
 /*******************************************************************************

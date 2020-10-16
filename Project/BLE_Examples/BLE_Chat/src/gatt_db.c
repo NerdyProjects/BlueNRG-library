@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "ble_const.h" 
 #include "bluenrg1_stack.h"

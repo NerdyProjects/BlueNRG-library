@@ -194,12 +194,6 @@ SERVICE_MANAGER_SIZE = 0x11000;
 MEMORY_FLASH_APP_SIZE = DEFINED(ST_USE_OTA_SERVICE_MANAGER_APPLICATION) ? (_MEMORY_FLASH_SIZE_ - SERVICE_MANAGER_SIZE - FLASH_NVM_DATASIZE) : MEMORY_FLASH_APP_SIZE ;
 MEMORY_FLASH_APP_OFFSET = DEFINED(ST_USE_OTA_SERVICE_MANAGER_APPLICATION) ? (SERVICE_MANAGER_SIZE) : MEMORY_FLASH_APP_OFFSET ;
 
-
-EXTERNAL_BLE_STACK_FLASH_OFFSET = DEFINED(EXTERNAL_BLE_STACK_FLASH_OFFSET) ? EXTERNAL_BLE_STACK_FLASH_OFFSET : 0;
-cmd_call_table = _MEMORY_FLASH_BEGIN_ + 0xC0 + EXTERNAL_BLE_STACK_FLASH_OFFSET;
-ev_call_table = 0x200002cc;
-
-
 /* Entry Point */
 ENTRY(RESET_HANDLER)
 
@@ -289,6 +283,8 @@ SECTIONS
     KEEP(*(.flash_sw_lock))
     . = 0x10;
     KEEP(*(.rfTimeout))
+    . = 0x14 ;
+    KEEP(*(.BOR_config))
     . = 0x28 ;
     KEEP(*(.__blueflag_RAM))
       _edata2 = .;        /* create a global symbol at data end (.__crash_RAM is skipped since it must not be initialized) */
@@ -317,7 +313,6 @@ SECTIONS
   {
     . = ALIGN(4);
     _sbss = .;         /* define a global symbol at bss start */
-    *(.bss.ev_call_table)
     *(.bss)
     *(.bss*)
     *(COMMON)

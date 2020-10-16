@@ -77,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.70.1.11471</state>
+          <state>8.40.1.21529</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -185,6 +185,8 @@
         </option>
         <option>
           <name>CCDefines</name>
+          <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+          <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
           <state>USER_BUTTON=BUTTON_1</state>
           <state>USE_FULL_ASSERT</state>
         </option>

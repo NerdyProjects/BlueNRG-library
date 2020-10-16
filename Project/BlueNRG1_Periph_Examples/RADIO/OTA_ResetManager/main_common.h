@@ -29,6 +29,28 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define HS_STARTUP_TIME         (uint16_t)(1)  /* High Speed start up time min value */
 #define OTA_ACCESS_ADDRESS      (uint32_t)(0x88D188DA)
 #define OTA_CHANNEL             24
@@ -104,7 +126,7 @@ extern volatile uint32_t appAddress;
 
 
 #define NVM_SIZE                   PAGE_SIZE_ROUND(4 * 1024)
-#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(8 * 1024)
+#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(10 * 1024)
 
 
 /** @brief OTA application with OTA Service manager address: don't change them */

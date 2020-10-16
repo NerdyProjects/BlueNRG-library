@@ -1,9 +1,8 @@
 /**
   ******************************************************************************
   * @file    hal_radio.h
-  * @author  AMS - VMA RF Application team
-  * @version V1.1.0
-  * @date    3-April-2018
+  * @author  RF Application team
+  * @date    Jan-2020
   * @brief   BlueNRG-1,2 HAL radio APIs 
   ******************************************************************************
   * @attention
@@ -15,7 +14,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
   ******************************************************************************
   */
 #ifndef __HAL_RADIO_H_

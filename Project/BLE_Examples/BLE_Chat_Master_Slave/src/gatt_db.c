@@ -1,11 +1,13 @@
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "ble_const.h" 
 #include "bluenrg1_stack.h"
-#include "app_state.h"
 #include "osal.h"
+#include "app_state.h"
 #include "SDK_EVAL_Config.h"
+#include "chat.h"
 
 uint16_t chatServHandle, TXCharHandle, RXCharHandle;
 

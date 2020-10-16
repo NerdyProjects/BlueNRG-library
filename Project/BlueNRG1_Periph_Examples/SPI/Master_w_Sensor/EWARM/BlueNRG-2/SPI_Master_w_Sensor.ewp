@@ -77,7 +77,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -181,6 +181,8 @@
       <debug>1</debug>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>USE_FULL_ASSERT</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -1048,7 +1050,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.40.3.8937</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -1152,6 +1154,8 @@
       <debug>1</debug>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>USE_FULL_ASSERT</state>
         <state>BLUENRG1_SPI_DMA</state>
         <state>BLUENRG2_DEVICE</state>
@@ -2020,7 +2024,7 @@
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.40.3.8937</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -2124,6 +2128,8 @@
       <debug>1</debug>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>USE_FULL_ASSERT</state>
         <state>BLUENRG1_SPI_IRQ</state>
         <state>BLUENRG2_DEVICE</state>

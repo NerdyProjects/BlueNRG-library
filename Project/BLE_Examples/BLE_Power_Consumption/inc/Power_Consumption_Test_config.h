@@ -1,7 +1,7 @@
 #ifndef _MICRO_SLEEP_TEST_CONFIG_H_
 #define _MICRO_SLEEP_TEST_CONFIG_H_
 
-//#include "BlueNRG_x_device.h"
+//#include "bluenrg_x_device.h"
 #include "bluenrg1_stack.h"
 #include "stack_user_cfg.h"
 

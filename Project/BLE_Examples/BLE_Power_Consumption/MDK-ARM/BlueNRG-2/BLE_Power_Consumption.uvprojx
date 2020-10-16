@@ -13,7 +13,7 @@
         <TargetCommonOption>
           <Device>BlueNRG-2</Device>
         <Vendor>STMicroelectronics</Vendor>
-        <PackID>Keil.STBlueNRG-2_DFP.1.0.0</PackID>
+        <PackID>Keil.STBlueNRG-2_DFP.1.0.1</PackID>
         <PackURL>http://www.keil.com/pack/</PackURL>
         <Cpu>IROM(0x10040000,0x40000) IRAM(0x20000000,0x6000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
         <FlashUtilSpec></FlashUtilSpec>
@@ -327,7 +327,7 @@
           <vShortEn>0</vShortEn>
           <vShortWch>0</vShortWch>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ SMPS_INDUCTOR=SMPS_INDUCTOR_10uH BLUENRG2_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_1</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc</IncludePath>

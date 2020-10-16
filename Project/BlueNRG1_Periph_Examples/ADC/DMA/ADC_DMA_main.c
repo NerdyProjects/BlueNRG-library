@@ -16,7 +16,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include <stdio.h>
@@ -42,6 +42,9 @@
 #define ADC_DMA_BUFFER_LEN      (256)
 
 /* Private macro -------------------------------------------------------------*/
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
 /* Private variables ---------------------------------------------------------*/ 
 volatile uint32_t lSystickCounter=0;
 ADC_InitType xADC_InitType;
@@ -63,6 +66,8 @@ void DMA_Configuration(void);
 
 int main(void)
 {
+  float adc_value_avg_f = 0.0, adc_value_f = 0.0;
+  
   /* System initialization function */
   SystemInit();
   
@@ -78,6 +83,9 @@ int main(void)
   /* SysTick initialization 1ms */  
   SysTick_Config(SYST_CLOCK/1000 - 1);  
 
+  if(ADC_SwCalibration())
+    printf("No calibration points found. SW compensation cannot be done.\r\n");
+  
   /* DMA Initialization */
   DMA_Configuration();
   
@@ -93,7 +101,6 @@ int main(void)
   /* Infinite loop */
   while(1) {
     
-    
     /* Check DMA_CH_UART_TX Transfer Complete interrupt */
     if(DMA_GetFlagStatus(DMA_FLAG_TC0)) {      
       DMA_ClearFlag(DMA_FLAG_TC0);
@@ -101,10 +108,13 @@ int main(void)
       /* ADC_DMA_CH0 disable */
       DMA_Cmd(ADC_DMA_CH0, DISABLE);
       
-      printf("Acquisition from DMA channel 0\r\n");
+      /* Calculate the average */
       for(uint16_t i=0;i<ADC_DMA_BUFFER_LEN;i++) {
-        printf("ADC value: %.0f mV\r\n", ADC_ConvertDifferentialVoltage(buffer_adc[i], xADC_InitType.ADC_Attenuation)*1000.0);
+        adc_value_f = ADC_ConvertDifferentialVoltage(buffer_adc[i], xADC_InitType.ADC_Attenuation);
+        adc_value_avg_f += ADC_CompensateOutputValue(adc_value_f);
       }
+      adc_value_avg_f /= ADC_DMA_BUFFER_LEN;
+      printf("ADC value: %d.%03d mV\r\n", PRINT_INT(ADC_CompensateOutputValue(adc_value_avg_f )*1000.0), PRINT_FLOAT(ADC_CompensateOutputValue(adc_value_avg_f )*1000.0) );
       
       /* Application delay before next measurement */
       SdkDelayMs(100);

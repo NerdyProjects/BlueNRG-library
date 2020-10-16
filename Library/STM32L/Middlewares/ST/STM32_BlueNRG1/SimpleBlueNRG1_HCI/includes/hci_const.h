@@ -19,9 +19,9 @@
 
 /**
  * Maximum payload of HCI commands that can be sent. Change this value if needed.
- * This value can be up to 255.
+ * This value can be up to 256.
  */
-#define HCI_MAX_PAYLOAD_SIZE 128
+#define HCI_MAX_PAYLOAD_SIZE 256
 
 /* HCI Packet types */
 #define HCI_COMMAND_PKT		0x01
@@ -536,6 +536,5 @@ typedef __packed struct _evt_blue_aci{
 #define cmd_opcode_ocf(op)		(op & 0x03ff)
 
 
-int hci_send_req(struct hci_request *r, BOOL async);
 
 #endif /* __HCI_INTERNAL_H_ */

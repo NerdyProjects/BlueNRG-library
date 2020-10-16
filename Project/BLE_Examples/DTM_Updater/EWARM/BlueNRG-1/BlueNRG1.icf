@@ -305,6 +305,8 @@ place at address mem: 0x20000034 { block Crash_Info_block, };
 /*******************************************************************************
 * Sections placement
 *******************************************************************************/
+define exported symbol C_MEMORY_FLASH_APP_SIZE = MEMORY_FLASH_APP_SIZE;
+
 place in REGION_FLASH { readonly };
 place in REGION_RAM { readwrite };
 place at end of REGION_RAM {block CSTACK };

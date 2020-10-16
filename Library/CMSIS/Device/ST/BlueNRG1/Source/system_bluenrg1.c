@@ -55,6 +55,9 @@
       - NOTE: BOR_CONFIG  preprocessor option is set to BOR_ON by default (brown-out threshold enabled). 
 
     - Regarding the ATB0_ANA_ENG_REG, ATB1_ANA_ENG_REG registers settings, some test modes are also available in order to address some test scenarios.
+
+      WARNING: when using one of the test modes DIO14 cannot be used and must be kept configured as an input pin.
+
       User should sets such registers as follows:
   
         - Low speed crystal oscillator test mode:
@@ -107,8 +110,8 @@
 
 **/
 
-#include "BlueNRG_x_device.h"
-#include "BlueNRG1_flash.h"
+#include "bluenrg_x_device.h"
+#include "BluenRG1_flash.h"
 #include "misc.h"
 #include "miscutil.h"
 #include "hal_types.h"
@@ -150,7 +153,7 @@ WEAK_FUNCTION(void DMA_Handler(void) {});
 WEAK_FUNCTION(void PKA_Handler(void) {});
 
 #ifndef NO_SMART_POWER_MANAGEMENT
-static void nextRF_transaction(uint8_t reset_reason);
+static void nextRF_transaction(uint16_t reset_reason);
 #endif
 
 /* ------------------------------------------------------------------------------
@@ -262,13 +265,14 @@ volatile uint8_t hot_table_radio_config[HOT_TABLE_RADIO_SIZE]={0x00};
 *  This variable is only used during the smart power management 
 *  procedure 
 *  ------------------------------------------------------------------------------ */
-volatile uint8_t BOR_config[7];
+SECTION(".BOR_config")
+REQUIRED(volatile uint8_t BOR_config[7]);
 
 
 int __low_level_init(void) 
 {
   uint8_t i;
-  volatile uint8_t reset_reason;
+  volatile uint16_t reset_reason;
 
 #if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
   SYSTEM_CTRL->CTRL_b.MHZ32_SEL = 1;
@@ -292,7 +296,9 @@ int __low_level_init(void)
     wakeupFromSleepFlag = 1; /* A wakeup from Standby or Sleep occurred */
     CS_contextRestore();     /* Restore the context */
     /* if the context restore worked properly, we should never return here */
-    while(1) { ; }
+    while(1) {
+      NVIC_SystemReset();
+    }
 #else
     return 0;
 #endif   
@@ -302,7 +308,7 @@ int __low_level_init(void)
 
 #ifdef __CC_ARM
 
-void RESET_HANDLER(void)
+__attribute__((noreturn)) void RESET_HANDLER(void)
 {
   if(__low_level_init()==1)
     __main();
@@ -310,6 +316,7 @@ void RESET_HANDLER(void)
     __set_MSP((uint32_t)_INITIAL_SP);
     main();
   }
+  while(1);
 }
 
 
@@ -766,7 +773,7 @@ void SET_BORconfigStatus(uint8_t enabled)
 
 #ifndef NO_SMART_POWER_MANAGEMENT
 /* Function to evaluate if the application has enough time to load the hot table */
-static void nextRF_transaction(uint8_t reset_reason)
+__STATIC_INLINE void nextRF_transaction(uint16_t reset_reason)
 {
   uint32_t currTimeTHR;
   int32_t time_diff = -1;
@@ -774,7 +781,7 @@ static void nextRF_transaction(uint8_t reset_reason)
   uint8_t load_hot_table = 1;
 
   /* Wakeup from radio transaction. So, nothing to do */
-  if (reset_reason ==  RESET_BLE_WAKEUP_FROM_TIMER1) {
+  if (reset_reason &  RESET_BLE_WAKEUP_FROM_TIMER1) {
     return;
   }
 
@@ -842,7 +849,7 @@ void DeviceConfiguration(BOOL coldStart, BOOL waitLS_Ready)
 #elif (SMPS_INDUCTOR == SMPS_INDUCTOR_NONE)
     cold_start_config[11] = SMPS_OFF;
 #else
-#error "No definition for SMPS Configuration"
+#warning "No definition for SMPS Configuration"
 #endif
   
     /* Low Speed Crystal Source */
@@ -851,7 +858,7 @@ void DeviceConfiguration(BOOL coldStart, BOOL waitLS_Ready)
 #elif (LS_SOURCE == LS_SOURCE_INTERNAL_RO)
     cold_start_config[20] = LOW_FREQ_RO;
 #else
-#error "No definition for Low Speed Crystal Source"
+#warning "No definition for Low Speed Crystal Source"
 #endif
 
     /* Setup RCO32K trimming value in PMU_ANA_USER_REG  */

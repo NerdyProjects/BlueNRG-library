@@ -20,7 +20,7 @@
 */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include "DTM_Updater.h"
 #include "DTM_Updater_Config.h"
 #include "ble_status.h"
@@ -58,17 +58,14 @@ typedef  PACKED(struct) devConfigS  {
   uint8_t  Test_mode;
 } devConfig_t;
 
+
 /* Private define ------------------------------------------------------------*/
-#ifdef UART_INTERFACE
-#define CMD_BUFF_OFFSET 1
-#define EVT_BUFF_OFFSET 0
-#endif
-#ifdef SPI_INTERFACE
-#define CMD_BUFF_OFFSET 6
-#define EVT_BUFF_OFFSET 4
-#endif
+const uint8_t CMD_BUFF_OFFSET[] = {1, 6};
+const uint8_t EVT_BUFF_OFFSET[] = {0, 4};
 
 #define FLASH_PREMAP_MAIN    0x08
+
+#define UART_115200
 
 #define DMA_DIR_PeripheralDST              ((uint32_t)0x00000010)
 #define DMA_Priority_Medium                ((uint32_t)0x00001000)
@@ -184,16 +181,12 @@ SET_BIT(SPI->ITCR, SET<<1); \
   while(0 == SPI->SR_b.TFE) tmp |= SPI->TDR; \
     CLEAR_BIT(SPI->ITCR, SET<<1);}
 
-
-/* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-
 static uint32_t updater_calc_crc(uint32_t address, uint32_t nr_of_sector);
 static void DMA_Rearm(DMA_CH_Type* DMAy_Channelx, uint32_t buffer, uint32_t size);
 
-
+/* Private variables ---------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-
 // x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 +
 // x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x^1 + x^0
 #define CRC_POLY        0x04C11DB7      // the poly without the x^32
@@ -230,7 +223,6 @@ static void DMA_Rearm(DMA_CH_Type* DMAy_Channelx, uint32_t buffer, uint32_t size
   
 }
 
-#ifdef UART_INTERFACE
 static void DTM_SystemInit(void)
 {
   uint32_t sysclk_config, fsm_status;
@@ -270,24 +262,21 @@ static void DTM_SystemInit(void)
   AHBUPCONV->COMMAND = 0x15;
 #endif
 }
-#endif
 
 
-#define UART_115200
 
+                  
 /**
-* @brief  updater Init.
+* @brief  Updater Init SPI.
 * @param  None
 * @retval None
 */
-void updater_init(void)
+void updater_init_spi(void)
 {  
   uint32_t tmpreg = 0;
   
   /* Remap the vector table */
   FLASH->CONFIG = FLASH_PREMAP_MAIN;
-  
-#ifdef SPI_INTERFACE
   
   CKGEN_SOC->CLOCK_EN = 0x1C073;
     
@@ -332,9 +321,21 @@ void updater_init(void)
   
   /* Enable SPI_TX/SPI_RX DMA requests */
   SET_BIT(SPI->DMACR, (SPI_DMAReq_Tx | SPI_DMAReq_Rx));
-#endif
   
-#ifdef UART_INTERFACE
+}
+
+/**
+* @brief  Updater Init UART.
+* @param  None
+* @retval None
+*/
+void updater_init_uart(void)
+{  
+  uint32_t tmpreg = 0;
+  
+  /* Remap the vector table */
+  FLASH->CONFIG = FLASH_PREMAP_MAIN;
+  
   DTM_SystemInit();
   CKGEN_SOC->CLOCK_EN = 0x1C06B;
   
@@ -375,8 +376,8 @@ void updater_init(void)
   
   /* Enable SPI_TX/SPI_RX DMA requests */
   SET_BIT(UART->DMACR, UART_DMAReq_Tx);
-#endif
 }
+
 
 #define FLASH_WORD_LEN       4
 #define FLASH_INT_CMDDONE    0x01
@@ -401,6 +402,10 @@ static uint32_t flash_Write(uint32_t address, uint8_t *data, uint32_t writeLengt
 //    return ERR_INVALID_ADDRESS;
 //  }
 
+  /* Lock word to avoid undesired FLASH operation */
+  if (flash_sw_lock != FLASH_UNLOCK_WORD)
+    return ERROR;
+  
   totalLen = writeLength;
   // Total length multiple of FLASH_WORD_LEN
   if (writeLength%FLASH_WORD_LEN)
@@ -469,6 +474,10 @@ static uint32_t flash_Erase(uint32_t eraseType, uint32_t address)
       return ERROR;
   }
   
+  /* Lock word to avoid undesired FLASH operation */
+  if (flash_sw_lock != FLASH_UNLOCK_WORD)
+    return ERROR;
+  
   // Clear the IRQ flags
   *FLASH_REG_IRQRAW = 0x0000003F;
   // Load the flash address to erase
@@ -493,7 +502,7 @@ static uint32_t flash_Erase(uint32_t eraseType, uint32_t address)
 * @param  None
 * @retval Desired sleep level
 */
-void updater(uint8_t reset_event)
+void updater(uint8_t reset_event, uint8_t dtm_interface)
 {
   uint8_t event_buffer[BUFFER_SIZE];  
   uint8_t command_buffer[BUFFER_SIZE];
@@ -502,246 +511,227 @@ void updater(uint8_t reset_event)
   volatile uint8_t reset_pending = 0;
   uint16_t event_buffer_len = 0;
   volatile uint16_t hci_pckt_len = 0;
-  
-#ifdef SPI_INTERFACE  
+  hci_state state = WAITING_TYPE;
+  uint8_t dma_state = DMA_IDLE;
+  uint16_t collected_payload_len = 0;
+  uint16_t payload_len;
   uint8_t cs_prev = SET;
   SpiProtoType spi_proto_state = SPI_PROT_CONFIGURED_STATE;
   
-  event_buffer[4] = 0x04;
-  event_buffer[5] = 0xFF;
-  event_buffer[6] = 0x03;
-  event_buffer[7] = 0x01;
-  event_buffer[8] = 0x00;
-  event_buffer[9] = reset_event;
-#endif
-#ifdef UART_INTERFACE
-  hci_state state = WAITING_TYPE;
-  uint8_t dma_state = DMA_IDLE;  
-  uint16_t collected_payload_len = 0;
-  uint16_t payload_len;
-//  hci_acl_hdr *acl_hdr;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+0] = 0x04;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+1] = 0xFF;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x03;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+3] = 0x01;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+4] = 0x00;
+  event_buffer[EVT_BUFF_OFFSET[dtm_interface]+5] = reset_event;
   
-  event_buffer[0] = 0x04;
-  event_buffer[1] = 0xFF;
-  event_buffer[2] = 0x03;
-  event_buffer[3] = 0x01;
-  event_buffer[4] = 0x00;
-  event_buffer[5] = reset_event;
-#endif
   event_buffer_len = 6;
   event_pending = 1;
   
   
   while(1) {
     /* Check reset pending */
-#ifdef SPI_INTERFACE
-    if (event_pending==0 && reset_pending) {
-#endif
-#ifdef UART_INTERFACE
     if (event_pending==0 && reset_pending && dma_state == DMA_IDLE) {
-      while(UART->FR != 0x00000090); // UART_FLAG_BUSY = 0 UART_FLAG_TXFE = 1 UART_FLAG_RXFE = 1
-#endif
+      if (dtm_interface == DTM_INTERFACE_UART) {
+        while(UART->FR != 0x00000090); // UART_FLAG_BUSY = 0 UART_FLAG_TXFE = 1 UART_FLAG_RXFE = 1
+      }
       NVIC_SystemReset();
     }
     
-    
-#ifdef SPI_INTERFACE
-    /* CS pin falling edge - start SPI communication */
-    if((SPI_READ_CS() == 0) && (cs_prev==SET)) {
-      cs_prev = RESET;
-      
-      /*if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
-      SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
-    }
+//#ifdef SPI_INTERFACE
+    if (dtm_interface == DTM_INTERFACE_SPI) {
+      /* CS pin falling edge - start SPI communication */
+      if((SPI_READ_CS() == 0) && (cs_prev==SET)) {
+        cs_prev = RESET;
+        
+        /*if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
+        SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
+      }
       else */
-      if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_STATE)) {
+        if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_STATE)) {
+          SPI_CLEAR_TXFIFO();
+          SPI_SENDATA(0xFF);
+          SPI_STATE_TRANSACTION(SPI_PROT_CONFIGURED_HOST_REQ_STATE);
+        }
+      }
+      /* CS pin rising edge - close SPI communication */
+      else if((SPI_READ_CS() != 0) && (cs_prev==RESET)) {
+        cs_prev = SET;
+        
+        if(SPI_STATE_FROM(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
+          SPI_LOW_IRQ();
+          //        SPI_STATE_TRANSACTION(SPI_PROT_TRANS_COMPLETE_STATE);
+          
+          /* Pass the number of data received in fifo_command */
+          uint16_t rx_buffer_len = (BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR)));        
+          if((BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR)))>5) {
+            
+            /* check ctrl field from command buffer */  
+            if(command_buffer[0] == SPI_CTRL_WRITE) {
+              command_pending = 1;
+            }
+            else if(command_buffer[0] == SPI_CTRL_READ) {
+              event_pending = 0;
+            }
+          }
+          SPI_STATE_TRANSACTION(SPI_PROT_CONFIGURED_STATE);  
+        }
+      }
+      
+      if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_HOST_REQ_STATE)) {  
+        //      transport_layer_receive_data();
+        uint8_t data[4] = {(uint8_t)BUFFER_SIZE, (uint8_t)(BUFFER_SIZE>>8), 0, 0};      
+        DMA_Rearm(DMA_CH_SPI_RX, (uint32_t)command_buffer, BUFFER_SIZE);
+        DMA_Rearm(DMA_CH_SPI_TX, (uint32_t)data, SPI_HEADER_LEN);
+        
+        SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
+        SPI_HIGH_IRQ();
+      }
+      /* Event queue */
+      else if (event_pending!=0 && (SPI_STATE_CHECK(SPI_PROT_CONFIGURED_STATE)) ) {
+        SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
+        //      transport_layer_send_data(event_buffer, event_buffer_len);
+        event_buffer[0] = (uint8_t)BUFFER_SIZE;
+        event_buffer[1] = (uint8_t)(BUFFER_SIZE>>8);
+        event_buffer[2] = (uint8_t)event_buffer_len;
+        event_buffer[3] = (uint8_t)(event_buffer_len>>8);
+        
         SPI_CLEAR_TXFIFO();
         SPI_SENDATA(0xFF);
-        SPI_STATE_TRANSACTION(SPI_PROT_CONFIGURED_HOST_REQ_STATE);
-      }
-    }
-    /* CS pin rising edge - close SPI communication */
-    else if((SPI_READ_CS() != 0) && (cs_prev==RESET)) {
-      cs_prev = SET;
-      
-      if(SPI_STATE_FROM(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
-        SPI_LOW_IRQ();
-        //        SPI_STATE_TRANSACTION(SPI_PROT_TRANS_COMPLETE_STATE);
         
-        /* Pass the number of data received in fifo_command */
-        uint16_t rx_buffer_len = (BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR)));        
-        if((BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR)))>5) {
-          
-          /* check ctrl field from command buffer */  
-          if(command_buffer[0] == SPI_CTRL_WRITE) {
-            command_pending = 1;
-          }
-          else if(command_buffer[0] == SPI_CTRL_READ) {
-            event_pending = 0;
-          }
+        DMA_Rearm(DMA_CH_SPI_RX, (uint32_t)command_buffer, BUFFER_SIZE);
+        DMA_Rearm(DMA_CH_SPI_TX, (uint32_t)event_buffer, event_buffer_len+SPI_HEADER_LEN);
+        
+        SPI_HIGH_IRQ();
+      }
+      
+      while(SPI_STATE_CHECK(SPI_PROT_WAITING_HEADER_STATE)) {
+        if( (BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR))) >4) {
+          SPI_LOW_IRQ();
+          SPI_STATE_TRANSACTION(SPI_PROT_WAITING_DATA_STATE);
+          break;
         }
-        SPI_STATE_TRANSACTION(SPI_PROT_CONFIGURED_STATE);  
       }
     }
-    
-    if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_HOST_REQ_STATE)) {      
-      //      transport_layer_receive_data();
-      uint8_t data[4] = {(uint8_t)BUFFER_SIZE, (uint8_t)(BUFFER_SIZE>>8), 0, 0};      
-      DMA_Rearm(DMA_CH_SPI_RX, (uint32_t)command_buffer, BUFFER_SIZE);
-      DMA_Rearm(DMA_CH_SPI_TX, (uint32_t)data, SPI_HEADER_LEN);
-      
-      SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
-      SPI_HIGH_IRQ();
-    }
-    /* Event queue */
-    else if (event_pending!=0 && (SPI_STATE_CHECK(SPI_PROT_CONFIGURED_STATE)) ) {
-      SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
-      //      transport_layer_send_data(event_buffer, event_buffer_len);
-      event_buffer[0] = (uint8_t)BUFFER_SIZE;
-      event_buffer[1] = (uint8_t)(BUFFER_SIZE>>8);
-      event_buffer[2] = (uint8_t)event_buffer_len;
-      event_buffer[3] = (uint8_t)(event_buffer_len>>8);
-      
-      SPI_CLEAR_TXFIFO();
-      SPI_SENDATA(0xFF);
-      
-      DMA_Rearm(DMA_CH_SPI_RX, (uint32_t)command_buffer, BUFFER_SIZE);
-      DMA_Rearm(DMA_CH_SPI_TX, (uint32_t)event_buffer, event_buffer_len+SPI_HEADER_LEN);
-      
-      SPI_HIGH_IRQ();
-    }
-    
-    while(SPI_STATE_CHECK(SPI_PROT_WAITING_HEADER_STATE)) {
-      if( (BUFFER_SIZE - ((uint16_t)(DMA_CH_SPI_RX->CNDTR))) >4) {
-        SPI_LOW_IRQ();
-        SPI_STATE_TRANSACTION(SPI_PROT_WAITING_DATA_STATE);
-        break;
+//#endif
+//#ifdef UART_INTERFACE
+    else if (dtm_interface == DTM_INTERFACE_UART) {
+      while ((UART->RIS & UART_IT_RX) != RESET) {
+        /* The Interrupt flag is cleared from the FIFO manager */    
+        uint8_t data = UART->DR;      
+        {        
+          if(state == WAITING_TYPE)
+            hci_pckt_len = 0;    
+          {
+            command_buffer[hci_pckt_len++] = data;
+            
+            if(state == WAITING_TYPE){
+              /* Only command or vendor packets are accepted. */
+              if(data == HCI_COMMAND_PKT){
+                state = WAITING_OPCODE_1;
+              }
+              //            else if(data == HCI_ACLDATA_PKT){
+              //              state = WAITING_HANDLE;
+              //            }
+              else if(data == HCI_VENDOR_PKT){
+                state = WAITING_CMDCODE;
+              }
+              else{
+                /* Incorrect type. Reset state machine. */
+                state = WAITING_TYPE;
+              }
+            }
+            else if(state == WAITING_OPCODE_1){
+              state = WAITING_OPCODE_2;
+            }
+            else if(state == WAITING_OPCODE_2){
+              state = WAITING_PARAM_LEN;
+            }
+            else if(state == WAITING_CMDCODE){
+              state = WAITING_CMD_LEN1;
+            }
+            else if(state == WAITING_CMD_LEN1){
+              payload_len = data;
+              state = WAITING_CMD_LEN2;
+            }
+            else if(state == WAITING_CMD_LEN2){
+              payload_len += data << 8;
+              collected_payload_len = 0;
+              if(payload_len == 0){
+                state = WAITING_TYPE;
+                //        packet_received();
+                command_pending = 1;           
+              }
+              else {
+                state = WAITING_PAYLOAD;
+              }
+            }
+            else if(state == WAITING_PARAM_LEN){
+              payload_len = data;
+              collected_payload_len = 0;
+              if(payload_len == 0){
+                state = WAITING_TYPE;
+                //        packet_received();
+                command_pending = 1;
+              }
+              else {
+                state = WAITING_PAYLOAD;
+              }            
+            }
+            
+            /*** State transitions for ACL packets ***/
+            //          else if(state == WAITING_HANDLE){
+            //            state = WAITING_HANDLE_FLAG;
+            //          }
+            //          else if(state == WAITING_HANDLE_FLAG){
+            //            state = WAITING_DATA_LEN1;
+            //          }
+            //          else if(state == WAITING_DATA_LEN1){
+            //            state = WAITING_DATA_LEN2;
+            //          }
+            //          else if(state == WAITING_DATA_LEN2){
+            //            acl_hdr = (void *)&command_buffer[HCI_HDR_SIZE];
+            //            payload_len = acl_hdr->dlen;
+            //            collected_payload_len = 0;
+            //            if(payload_len == 0){
+            //              state = WAITING_TYPE;
+            //              //        packet_received();
+            //              command_pending = 1;
+            //            }
+            //            else{
+            //              state = WAITING_PAYLOAD;
+            //            }
+            //          }
+            /*****************************************/
+            
+            else if(state == WAITING_PAYLOAD){
+              collected_payload_len += 1;
+              if(collected_payload_len >= payload_len){
+                /* Reset state machine. */
+                state = WAITING_TYPE;
+                //        packet_received();
+                command_pending = 1;
+              }
+            }          
+          }        
+        }     
       }
     }
-#endif
-    
-#ifdef UART_INTERFACE
-    while ((UART->RIS & UART_IT_RX) != RESET) {
-      /* The Interrupt flag is cleared from the FIFO manager */    
-      uint8_t data = UART->DR;      
-      {        
-        if(state == WAITING_TYPE)
-          hci_pckt_len = 0;    
-        {
-          command_buffer[hci_pckt_len++] = data;
-          
-          if(state == WAITING_TYPE){
-            /* Only command or vendor packets are accepted. */
-            if(data == HCI_COMMAND_PKT){
-              state = WAITING_OPCODE_1;
-            }
-//            else if(data == HCI_ACLDATA_PKT){
-//              state = WAITING_HANDLE;
-//            }
-            else if(data == HCI_VENDOR_PKT){
-              state = WAITING_CMDCODE;
-            }
-            else{
-              /* Incorrect type. Reset state machine. */
-              state = WAITING_TYPE;
-            }
-          }
-          else if(state == WAITING_OPCODE_1){
-            state = WAITING_OPCODE_2;
-          }
-          else if(state == WAITING_OPCODE_2){
-            state = WAITING_PARAM_LEN;
-          }
-          else if(state == WAITING_CMDCODE){
-            state = WAITING_CMD_LEN1;
-          }
-          else if(state == WAITING_CMD_LEN1){
-            payload_len = data;
-            state = WAITING_CMD_LEN2;
-          }
-          else if(state == WAITING_CMD_LEN2){
-            payload_len += data << 8;
-            collected_payload_len = 0;
-            if(payload_len == 0){
-              state = WAITING_TYPE;
-              //        packet_received();
-              command_pending = 1;           
-            }
-            else {
-              state = WAITING_PAYLOAD;
-            }
-          }
-          else if(state == WAITING_PARAM_LEN){
-            payload_len = data;
-            collected_payload_len = 0;
-            if(payload_len == 0){
-              state = WAITING_TYPE;
-              //        packet_received();
-              command_pending = 1;
-            }
-            else {
-              state = WAITING_PAYLOAD;
-            }            
-          }
-          
-          /*** State transitions for ACL packets ***/
-//          else if(state == WAITING_HANDLE){
-//            state = WAITING_HANDLE_FLAG;
-//          }
-//          else if(state == WAITING_HANDLE_FLAG){
-//            state = WAITING_DATA_LEN1;
-//          }
-//          else if(state == WAITING_DATA_LEN1){
-//            state = WAITING_DATA_LEN2;
-//          }
-//          else if(state == WAITING_DATA_LEN2){
-//            acl_hdr = (void *)&command_buffer[HCI_HDR_SIZE];
-//            payload_len = acl_hdr->dlen;
-//            collected_payload_len = 0;
-//            if(payload_len == 0){
-//              state = WAITING_TYPE;
-//              //        packet_received();
-//              command_pending = 1;
-//            }
-//            else{
-//              state = WAITING_PAYLOAD;
-//            }
-//          }
-          /*****************************************/
-          
-          else if(state == WAITING_PAYLOAD){
-            collected_payload_len += 1;
-            if(collected_payload_len >= payload_len){
-              /* Reset state machine. */
-              state = WAITING_TYPE;
-              //        packet_received();
-              command_pending = 1;
-            }
-          }          
-        }        
-      }     
-    }    
-#endif
+//#endif
     
     /* Command FIFO */
     if (command_pending==1 && (!reset_pending)) {
       
-      /* ======================================================================================= */
       /* Set user events to temporary queue */
-#ifdef SPI_INTERFACE
-      uint8_t * buff = command_buffer+CMD_BUFF_OFFSET;
-#endif
-#ifdef UART_INTERFACE
-      uint8_t * buff = command_buffer+CMD_BUFF_OFFSET;
-#endif      
+      uint8_t * buff = command_buffer+CMD_BUFF_OFFSET[dtm_interface];
       
-      event_buffer[EVT_BUFF_OFFSET+0] = 0x04;     // HCI_EVENT
-      event_buffer[EVT_BUFF_OFFSET+1] = COMMAND_COMPLETE_EVENT;
-      event_buffer[EVT_BUFF_OFFSET+2] = 0x04;     // number of bytes in the event
-      event_buffer[EVT_BUFF_OFFSET+3] = 0x01;     // 1 HCI_CMD_SLOT 
-      event_buffer[EVT_BUFF_OFFSET+4] = buff[0];     // OPCODE_LB
-      event_buffer[EVT_BUFF_OFFSET+5] = buff[1];     // OPCODE_HB
-      event_buffer[EVT_BUFF_OFFSET+6] = 0x00;     // reason code: command successful
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+0] = 0x04;     // HCI_EVENT
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+1] = COMMAND_COMPLETE_EVENT;
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x04;     // number of bytes in the event
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+3] = 0x01;     // 1 HCI_CMD_SLOT 
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+4] = buff[0];     // OPCODE_LB
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+5] = buff[1];     // OPCODE_HB
+      event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = 0x00;     // reason code: command successful
       
       event_pending = 1;
       
@@ -762,20 +752,20 @@ void updater(uint8_t reset_event)
           break;
           
         case CMD_UPDATER_GET_VERSION:
-          event_buffer[EVT_BUFF_OFFSET+2] = 0x05;             // overwrite return data length
-          event_buffer[EVT_BUFF_OFFSET+7] = UPDATER_VERSION;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x05;             // overwrite return data length
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7] = UPDATER_VERSION;
           break;
           
         case CMD_UPDATER_GET_BUFSIZE:
-          event_buffer[EVT_BUFF_OFFSET+2] = 0x06;             // overwrite return data length
-          event_buffer[EVT_BUFF_OFFSET+7] = (uint8_t)(UPDATER_BUF_SIZE);
-          event_buffer[EVT_BUFF_OFFSET+8] = (uint8_t)(UPDATER_BUF_SIZE >> 8);
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x06;             // overwrite return data length
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7] = (uint8_t)(UPDATER_BUF_SIZE);
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+8] = (uint8_t)(UPDATER_BUF_SIZE >> 8);
           break;
           
         case CMD_UPDATER_ERASE_BLUEFLAG:
           word_tmp = BLUE_FLAG_RESET;
           if(flash_Write(BLUE_FLAG_FLASH_BASE_ADDRESS, (uint8_t *)&word_tmp, 4) == 0) {
-            event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
           }
           else {
             event_buffer[4+6] = BLUEFLAG_FAILED_OP;
@@ -785,22 +775,22 @@ void updater(uint8_t reset_event)
           /* Write the blue flag */
           word_tmp = BLUE_FLAG_SET;
           if(flash_Write(BLUE_FLAG_FLASH_BASE_ADDRESS, (uint8_t *)&word_tmp, 4) == 0) {
-            event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
           }
           else {
-            event_buffer[EVT_BUFF_OFFSET+6] = BLUEFLAG_FAILED_OP;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLUEFLAG_FAILED_OP;
           }
           break;
           
         case CMD_UPDATER_READ_HW_VERS:
-          event_buffer[EVT_BUFF_OFFSET+2] = 0x05;               // overwrite return data length
-          event_buffer[EVT_BUFF_OFFSET+7] = ((CKGEN_SOC->DIE_ID)>>4)&0x0000000F;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x05;               // overwrite return data length
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7] = ((CKGEN_SOC->DIE_ID)>>4)&0x0000000F;
           break;
           
         case CMD_UPDATER_ERASE_SECTOR:
           
           /* Verify the address is inside the Flash range and avoid the first page used by the updater itself */
-          event_buffer[EVT_BUFF_OFFSET+6] = FLASH_ERASE_FAILED;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = FLASH_ERASE_FAILED;
           /* Removed the check of _MEMORY_FLASH_END_ to be compatible with BlueNRG-2 (that has an increased flash size
            * Otherwise, the project should be splitted BlueNRG-1 / BlueNRG-2. So, 6 configuration.
            * 6 different c files will be generated, and the DTM should include the related Updater file according to the device used. */          
@@ -808,14 +798,14 @@ void updater(uint8_t reset_event)
           if(word_tmp>=DTM_APP_ADDR && (word_tmp&0x3FF) == 0) {
             
             if(flash_Erase(0x02, word_tmp)==0) {
-              event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+              event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
             }          
           }          
           break;
           
         case CMD_UPDATER_PROG_DATA_BLOCK:
           /* Verify the address is inside the Flash range */
-          event_buffer[EVT_BUFF_OFFSET+6] = FLASH_WRITE_FAILED;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = FLASH_WRITE_FAILED;
           /* Removed the check of _MEMORY_FLASH_END_ to be compatible with BlueNRG-2 (that has an increased flash size
            * Otherwise, the project should be splitted BlueNRG-1 / BlueNRG-2. So, 6 configuration.
            * 6 different c files will be generated, and the DTM should include the related Updater file according to the device used. */
@@ -843,7 +833,7 @@ void updater(uint8_t reset_event)
             
             if(length_a) {              
               if(flash_Write(word_tmp, buff + 9-misalign_word, length_a) == 0) {
-                event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+                event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
                 word_tmp += length_a;                
               }
               else {
@@ -859,10 +849,10 @@ void updater(uint8_t reset_event)
               }
               /* word write */
               if(flash_Write(word_tmp, buff + 9-misalign_word+length_a, 4) == 0) {
-                event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;                
+                event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;                
               }
               else {
-                event_buffer[EVT_BUFF_OFFSET+6] = FLASH_WRITE_FAILED;
+                event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = FLASH_WRITE_FAILED;
               }
             }
           }
@@ -882,93 +872,91 @@ void updater(uint8_t reset_event)
             length |= (((uint16_t)buff[8])<<8);
             
             for (uint32_t i = 0; i < length; i ++) {
-              event_buffer[EVT_BUFF_OFFSET+7+i] = *((uint8_t *)word_tmp);
+              event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7+i] = *((uint8_t *)word_tmp);
               word_tmp++;
             }
-            event_buffer[EVT_BUFF_OFFSET+2] = 0x04 + length;
-            event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x04 + length;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
           }
           else {
-            event_buffer[EVT_BUFF_OFFSET+6] = FLASH_READ_FAILED;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = FLASH_READ_FAILED;
           }
           break;
           
         case CMD_UPDATER_CALC_CRC:
-          event_buffer[EVT_BUFF_OFFSET+6] = FLASH_READ_FAILED;
-          event_buffer[EVT_BUFF_OFFSET+2] = 0x08;
-          event_buffer[EVT_BUFF_OFFSET+7] = 0xFF;
-          event_buffer[EVT_BUFF_OFFSET+8] = 0xFF;
-          event_buffer[EVT_BUFF_OFFSET+9] = 0xFF;
-          event_buffer[EVT_BUFF_OFFSET+10] = 0xFF;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = FLASH_READ_FAILED;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] = 0x08;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7] = 0xFF;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+8] = 0xFF;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+9] = 0xFF;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+10] = 0xFF;
           
           /* Removed the check of _MEMORY_FLASH_END_ to be compatible with BlueNRG-2 (that has an increased flash size
            * Otherwise, the project should be splitted BlueNRG-1 / BlueNRG-2. So, 6 configuration.
            * 6 different c files will be generated, and the DTM should include the related Updater file according to the device used. */
 //          if(word_tmp>=DTM_APP_ADDR && word_tmp<=_MEMORY_FLASH_END_) {
           if(word_tmp>=DTM_APP_ADDR) {
-            event_buffer[EVT_BUFF_OFFSET+6] = BLE_STATUS_SUCCESS;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = BLE_STATUS_SUCCESS;
             
             uint32_t crc;
             uint32_t length;            
             length = (uint32_t)buff[7];            
             crc = updater_calc_crc(word_tmp, length);
             
-            event_buffer[EVT_BUFF_OFFSET+7] = (uint8_t)crc;
-            event_buffer[EVT_BUFF_OFFSET+8] = (uint8_t)(crc >> 8);
-            event_buffer[EVT_BUFF_OFFSET+9] = (uint8_t)(crc >> 16);
-            event_buffer[EVT_BUFF_OFFSET+10] =(uint8_t)(crc >> 24);
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+7] = (uint8_t)crc;
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+8] = (uint8_t)(crc >> 8);
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+9] = (uint8_t)(crc >> 16);
+            event_buffer[EVT_BUFF_OFFSET[dtm_interface]+10] =(uint8_t)(crc >> 24);
           }
           break;
           
         default:
-          event_buffer[EVT_BUFF_OFFSET+1] = COMMAND_STATUS_EVENT;          
-          event_buffer[EVT_BUFF_OFFSET+3] = BLE_ERROR_UNKNOWN_HCI_COMMAND;
-          event_buffer[EVT_BUFF_OFFSET+4] = 0x01;     // 1 HCI_CMD_SLOT 
-          event_buffer[EVT_BUFF_OFFSET+5] = buff[0];     // OPCODE_LB
-          event_buffer[EVT_BUFF_OFFSET+6] = buff[1];     // OPCODE_HB
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+1] = COMMAND_STATUS_EVENT;          
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+3] = BLE_ERROR_UNKNOWN_HCI_COMMAND;
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+4] = 0x01;     // 1 HCI_CMD_SLOT 
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+5] = buff[0];     // OPCODE_LB
+          event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = buff[1];     // OPCODE_HB
           break;
         }
       }
       else {
-        event_buffer[EVT_BUFF_OFFSET+1] = COMMAND_STATUS_EVENT;          
-        event_buffer[EVT_BUFF_OFFSET+3] = BLE_ERROR_UNKNOWN_HCI_COMMAND;
-        event_buffer[EVT_BUFF_OFFSET+4] = 0x01;     // 1 HCI_CMD_SLOT 
-        event_buffer[EVT_BUFF_OFFSET+5] = buff[0];     // OPCODE_LB
-        event_buffer[EVT_BUFF_OFFSET+6] = buff[1];     // OPCODE_HB
+        event_buffer[EVT_BUFF_OFFSET[dtm_interface]+1] = COMMAND_STATUS_EVENT;          
+        event_buffer[EVT_BUFF_OFFSET[dtm_interface]+3] = BLE_ERROR_UNKNOWN_HCI_COMMAND;
+        event_buffer[EVT_BUFF_OFFSET[dtm_interface]+4] = 0x01;     // 1 HCI_CMD_SLOT 
+        event_buffer[EVT_BUFF_OFFSET[dtm_interface]+5] = buff[0];     // OPCODE_LB
+        event_buffer[EVT_BUFF_OFFSET[dtm_interface]+6] = buff[1];     // OPCODE_HB
       }
       
       if(event_pending == 1) {
-        if(event_buffer[EVT_BUFF_OFFSET+2]>4)
-          event_buffer_len = (7 + event_buffer[EVT_BUFF_OFFSET+2] - 4);
+        if(event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2]>4)
+          event_buffer_len = (7 + event_buffer[EVT_BUFF_OFFSET[dtm_interface]+2] - 4);
         else
           event_buffer_len = 7;
       }
       command_pending = 0;
     }
     
-#ifdef UART_INTERFACE
-    /* Event queue */
-    if (event_pending!=0 && (dma_state == DMA_IDLE)) {
-      if (dma_state == DMA_IDLE) {
-        dma_state = DMA_IN_PROGRESS;
-        DMA_Rearm(DMA_CH_UART_TX, (uint32_t)event_buffer, event_buffer_len);
-        event_pending = 0;
+    if (dtm_interface == DTM_INTERFACE_UART) {
+      /* Event queue */
+      if (event_pending!=0 && (dma_state == DMA_IDLE)) {
+        if (dma_state == DMA_IDLE) {
+          dma_state = DMA_IN_PROGRESS;
+          DMA_Rearm(DMA_CH_UART_TX, (uint32_t)event_buffer, event_buffer_len);
+          event_pending = 0;
+        }
+      }
+      
+      if((DMA->ISR & DMA_FLAG_TC_UART_TX) != (uint32_t)RESET) {
+        DMA->IFCR = DMA_FLAG_TC_UART_TX;
+        
+        /* DMA finished the transfer */
+        dma_state = DMA_IDLE;
+        
+        /* DMA_CH disable */
+        CLEAR_BIT(DMA_CH_UART_TX->CCR, SET);
+        
       }
     }
-    
-    if((DMA->ISR & DMA_FLAG_TC_UART_TX) != (uint32_t)RESET) {
-      DMA->IFCR = DMA_FLAG_TC_UART_TX;
-      
-      /* DMA finished the transfer */
-      dma_state = DMA_IDLE;
-      
-      /* DMA_CH disable */
-      CLEAR_BIT(DMA_CH_UART_TX->CCR, SET);
-      
-    }
-    
-#endif
-    
   }
 }
 

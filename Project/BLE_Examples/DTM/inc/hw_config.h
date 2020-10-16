@@ -53,16 +53,12 @@
 
 #define SPI_IRQ_PIN     GPIO_Pin_7
 
-#ifdef UART_INTERFACE
-#ifdef UART_SLEEP
-#define IO_WAKEUP_PIN   0x10
-#else
-#define IO_WAKEUP_PIN   0
-#endif
-#endif
-#ifdef SPI_INTERFACE
-#define IO_WAKEUP_PIN   4
-#endif
+/* DTM interface GPIO = GPIO_Pin_12
+ * if 1 => DTM_INTERFACE_UART
+ * if 0 => DTM_INTERFACE_SPI
+ */
+#define DTM_INTERFACE_GPIO      (GPIO_Pin_12)
+
 
 
 /** Set the watchdog reload interval in [s] = (WDT_LOAD + 3) / (clock frequency in Hz). */
@@ -72,24 +68,37 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
 void WDG_Configuration(void);
-void NVIC_Configuration(void);
-void GPIO_Configuration(void);
-void UART_Configuration(void);
-void DMA_Configuration(void);
-void SPI_Slave_Configuration(void);
+
+void HW_UART_Configuration(void);
+void HW_UARTSLEEP_Configuration(void);
+void HW_SPI_Configuration(void);
+
+void GPIO_UARTSLEEP_Handler(void);
+void GPIO_SPI_Handler(void);
+void DMA_UARTSLEEP_Handler(void);
+void DMA_UART_Handler(void);
+
 
 uint8_t DMA_Rearm(DMA_CH_Type* DMAy_Channelx, uint32_t buffer, uint32_t size);
-uint8_t DMAUart_SendData(uint32_t address, uint8_t size);
-void NVIC_DisableRadioIrq(void);
-void NVIC_EnableRadioIrq(void);
-
+#define GPIO_CTS_Input() (GPIO_Init(&(GPIO_InitType){UART_CTS_PIN, GPIO_Input, DISABLE, DISABLE}))
 void GPIO_CTS_Uart(void);
-void GPIO_RTS_Uart(void);
-void GPIO_CTS_Input(void);
 void GPIO_CTS_Irq(FunctionalState NewState);
-void GPIO_RTS_Output(void);
+
+#define NVIC_DisableCSnIrq()  (NVIC_Init(&(NVIC_InitType){GPIO_IRQn, MED_PRIORITY, DISABLE}))
+
+#define NVIC_EnableCSnIrq()  (NVIC_Init(&(NVIC_InitType){GPIO_IRQn, MED_PRIORITY, ENABLE}))
+
+#define NVIC_DisableRadioIrq()  (NVIC_Init(&(NVIC_InitType){BLUE_CTRL_IRQn, 0, DISABLE}))
+
+#define NVIC_EnableRadioIrq()  (NVIC_Init(&(NVIC_InitType){BLUE_CTRL_IRQn, 0, ENABLE}))
+
+
+#define GPIO_RTS_Uart()  (GPIO_Init(&(GPIO_InitType){UART_RTS_PIN, Serial1_Mode, DISABLE, DISABLE}))
+
+#define GPIO_RTS_Output()   GPIO_SetBits(UART_RTS_PIN); \
+                            GPIO_Init(&(GPIO_InitType){UART_RTS_PIN, GPIO_Output, DISABLE, DISABLE});
+
 
 #endif /* HW_CONFIG_H */
 

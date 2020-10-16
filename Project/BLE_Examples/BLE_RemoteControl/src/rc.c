@@ -45,6 +45,9 @@
 #define DEBUG 1
 #endif
 
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
 /* Private macros ------------------------------------------------------------*/
 #if DEBUG
 #include <stdio.h>
@@ -105,7 +108,7 @@ void Update_Temperature(void)
   if (status) {
     HOST_TO_LE_16(adv_data+TEMP_OFFSET, (int16_t)temperature_data);
     hci_le_set_advertising_data(sizeof(adv_data),adv_data);
-    PRINTF("Updated temperature: %.2f C deg\n",temperature_data);
+    PRINTF("Updated temperature: %d.%02d C deg\n",PRINT_INT(temperature_data),PRINT_FLOAT(temperature_data));
   }
 }
 

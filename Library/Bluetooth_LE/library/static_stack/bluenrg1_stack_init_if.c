@@ -44,7 +44,7 @@ WEAK_FUNCTION(void hci_encryption_key_refresh_complete_event(uint8_t Status,
 WEAK_FUNCTION(void aci_hal_end_of_radio_activity_event(uint8_t Last_State,
                                          uint8_t Next_State,
                                          uint32_t Next_State_SysTime){});
-WEAK_FUNCTION(void aci_hal_scan_req_report_event(uint8_t RSSI,
+WEAK_FUNCTION(void aci_hal_scan_req_report_event(int8_t RSSI,
                                    uint8_t Peer_Address_Type,
                                    uint8_t Peer_Address[6]){});
 WEAK_FUNCTION(void aci_hal_fw_error_event(uint8_t FW_Error_Type,

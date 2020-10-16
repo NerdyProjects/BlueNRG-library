@@ -120,7 +120,7 @@ void MFT1A_Handler(void)
     }
     else
     {
-      /* Count the numper of CPU clock perion in one period of input signal */
+      /* Count the number of CPU clock periods in one period of input signal */
       period_counter_a = time1_a - MFT1->TNCRA + (underflow_counter_a * 0xFFFF);
       
       /* Clear underflow counter and reset the counter to avoid underflow */

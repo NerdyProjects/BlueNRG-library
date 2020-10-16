@@ -2,8 +2,8 @@
 ******************************************************************************
 * @file    BlueNRG1_adc.c
 * @author  RF Application Team
-  * @version V2.5.0
-  * @date  12-November-2018
+* @version V2.6.0
+* @date  30-January-2019
 * @brief   This file provides all the ADC firmware functions.
 ******************************************************************************
 * @attention
@@ -24,12 +24,12 @@
 
 
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
-  * @{
-  */
+* @{
+*/
 
 /** @addtogroup ADC_Peripheral  ADC Peripheral
-  * @{
-  */
+* @{
+*/
 
 
 /** @defgroup ADC_Private_Types Private Types
@@ -75,6 +75,7 @@
 /** @defgroup ADC_Private_Variables Private Variables
 * @{
 */
+static float slope = 1.0, offset = 0.0;
 
 /**
 * @}
@@ -125,7 +126,7 @@ float ADC_ConvertDifferentialVoltage(int16_t raw_value, uint8_t attenuation)
 float ADC_ConvertSingleEndedVoltage(int16_t raw_value, uint8_t channel, uint8_t vRef, uint8_t attenuation)
 {
   float pga, raw_value_f, divider;
-    
+  
   if( ADC->CONF_b.SKIP == 1) {
     divider = ADC_FS_OSR_32_64_SKIP;
   }
@@ -135,7 +136,7 @@ float ADC_ConvertSingleEndedVoltage(int16_t raw_value, uint8_t channel, uint8_t 
   
   pga = (float)attenuation;
   raw_value_f = (float)raw_value;
-
+  
   if(ADC->CONF_b.OSR == ADC_OSR_100 || ADC->CONF_b.OSR == ADC_OSR_200) {
     if( ADC->CONF_b.SKIP == 1) {
       divider = ADC_FS_OSR_100_200_SKIP;
@@ -200,24 +201,24 @@ void ADC_DeInit(void)
 
 
 /**
-  * @brief  Fills the ADC_InitStruct with default values.
-  * @param  ADC_InitStruct: pointer to an @ref ADC_InitType structure which will be initialized.
-  * @retval None
-  */
+* @brief  Fills the ADC_InitStruct with default values.
+* @param  ADC_InitStruct: pointer to an @ref ADC_InitType structure which will be initialized.
+* @retval None
+*/
 void ADC_StructInit(ADC_InitType* ADC_InitStruct)
 {
   /* Set the decimation rate */
   ADC_InitStruct->ADC_OSR = ADC_OSR_200;
-
+  
   /* Select the input source */
   ADC_InitStruct->ADC_Input = ADC_Input_None;
-
+  
   /* Set the reference voltage */
   ADC_InitStruct->ADC_ReferenceVoltage = ADC_ReferenceVoltage_0V6;
-
+  
   /* Set the conversion mode */
   ADC_InitStruct->ADC_ConversionMode = ADC_ConversionMode_Single;
-
+  
   /* Set the attenuation */
   ADC_InitStruct->ADC_Attenuation = ADC_Attenuation_0dB;
 }
@@ -264,7 +265,7 @@ void ADC_Init(ADC_InitType* ADC_InitStruct)
   
   /* Set the attenuation */
   ADC->CONF_b.PGASEL = ADC_InitStruct->ADC_Attenuation;
-
+  
 }
 
 
@@ -278,7 +279,7 @@ void ADC_Cmd(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState)); 
-
+  
   if(NewState==ENABLE) {
     if(ADC->CONF_b.MIC_SEL) {
       ADC->CTRL_b.MIC_ON = SET;
@@ -313,7 +314,7 @@ void ADC_DmaCmd(FunctionalState NewState)
   }
 }
 
-                                                  
+
 /**
 * @brief  Specified the ADC input channel.
 * @param  adc_input: Specifies the input used for the conversion.
@@ -324,7 +325,7 @@ void ADC_SelectInput(uint8_t AdcInput)
 {
   /* Check the parameter */
   assert_param(IS_ADC_INPUT(AdcInput));
-
+  
   ADC->CONF_b.CHSEL = AdcInput;
 }
 
@@ -347,7 +348,7 @@ void ADC_Calibration(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState)); 
-
+  
   if(NewState==ENABLE) {
     ADC->CTRL_b.CALEN = SET;
   }
@@ -355,7 +356,7 @@ void ADC_Calibration(FunctionalState NewState)
     ADC->CTRL_b.RSTCALEN = SET;
     ADC->CTRL_b.CALEN = RESET;
   }
-
+  
 }
 
 
@@ -378,7 +379,7 @@ void ADC_AutoOffsetUpdate(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState)); 
-
+  
   if(NewState==ENABLE) {
     ADC->CTRL_b.AUTO_OFFSET = SET;
   }
@@ -398,7 +399,7 @@ void ADC_ThresholdCheck(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState)); 
-
+  
   if(NewState==ENABLE) {
     ADC->CTRL_b.ENAB_COMP = SET;
   }
@@ -430,7 +431,7 @@ void ADC_ThresholdConfig(uint32_t ThresholdLow, uint32_t ThresholdHigh)
 uint16_t ADC_GetOffset(void)
 {
   uint16_t value;
-
+  
   /* Conversion done with filter bypassed */
   if(ADC->CONF_b.SKIP == 0) {
     value = READ_REG(ADC->OFFSET_MSB);
@@ -439,7 +440,7 @@ uint16_t ADC_GetOffset(void)
   else {
     value = READ_REG(ADC->OFFSET_LSB);
   }
-
+  
   return value;
 }
 
@@ -453,7 +454,7 @@ uint16_t ADC_GetOffset(void)
 */
 void ADC_SetOffset(uint16_t Offset)
 {
-
+  
   /* Conversion done with filter bypassed */
   if(ADC->CONF_b.SKIP == 0) {
     ADC->OFFSET_MSB = Offset;
@@ -475,14 +476,14 @@ void ADC_ConversionMode(uint8_t ConvertionMode)
 {
   /* Check the parameters */
   assert_param(IS_ADC_CONVERSIONMODE(ConvertionMode));
-
+  
   if(ConvertionMode==ADC_ConversionMode_Continuous) {
     ADC->CONF_b.CONT = SET;
   }
   else {
     ADC->CONF_b.CONT = RESET;
   }
-
+  
 }
 
 /**
@@ -496,15 +497,15 @@ void ADC_SelectFrequencyMic(uint8_t Frequency)
 {
   /* Check the parameters */
   assert_param(IS_ADC_MIC_FREQ_SEL(Frequency));
-
+  
   /* Check the value of Frequency */
   if(Frequency == ADC_MIC_800KHZ) {
-    ADC->CONF_b.DIG_FILT_CLK = RESET;
-  }
-  else if(Frequency == ADC_MIC_1600KHZ) {
     ADC->CONF_b.DIG_FILT_CLK = SET;
   }
-
+  else if(Frequency == ADC_MIC_1600KHZ) {
+    ADC->CONF_b.DIG_FILT_CLK = RESET;
+  }
+  
 }
 
 
@@ -543,7 +544,7 @@ uint8_t ADC_GetFlags(void)
 FlagStatus ADC_GetFlagStatus(uint8_t ADC_Flag)
 {
   FlagStatus status;
-
+  
   /* Check the parameters */
   assert_param(IS_ADC_GET_FLAG(ADC_Flag));
   
@@ -556,7 +557,7 @@ FlagStatus ADC_GetFlagStatus(uint8_t ADC_Flag)
     /* SPI_FLAG is reset */
     status = RESET;
   }
-
+  
   return status;  
 }
 
@@ -576,10 +577,10 @@ FlagStatus ADC_GetFlagStatus(uint8_t ADC_Flag)
 ITStatus ADC_GetITStatus(uint8_t ADC_Flag)
 {
   ITStatus status;
-
+  
   /* Check the parameters */
   assert_param(IS_ADC_GET_FLAG(ADC_Flag));
-
+  
   /* Check the status of the specified SPI interrupt */
   if (READ_BIT(ADC->IRQSTAT, ADC_Flag) != (uint16_t)RESET) {
     /* ADC_Flag is set */
@@ -589,7 +590,7 @@ ITStatus ADC_GetITStatus(uint8_t ADC_Flag)
     /* SPI_IT is reset */
     status = RESET;
   }
-
+  
   return status;
 }
 
@@ -611,7 +612,7 @@ void ADC_ITConfig(uint8_t ADC_Flag, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState));
   assert_param(IS_ADC_GET_FLAG(ADC_Flag));
-
+  
   if (NewState != DISABLE) {
     /* Enable the selected SPI interrupts */
     CLEAR_BIT(ADC->IRQMASK, ADC_Flag);
@@ -647,7 +648,7 @@ float ADC_GetConvertedData(uint8_t DataType, uint8_t Vref)
   
   raw_value = (int16_t)ADC_GetRawData();
   pga_reg = ADC->CONF_b.PGASEL;
-
+  
   if(DataType==ADC_Input_AdcPin1) {
     return ADC_ConvertSingleEndedVoltage(raw_value, (uint8_t)ADC_Input_AdcPin1, Vref, pga_reg);
   }
@@ -701,18 +702,66 @@ void ADC_Filter(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState)); 
-
+  
   /* If ENABLE the filter, then reset the SKIP bifield */
   if(NewState==ENABLE) {
     ADC->CONF_b.SKIP = RESET;
   }
-
+  
   /* If DISABLE the filter, then set the SKIP bifield */
   else {
     ADC->CONF_b.SKIP = SET;
   }
 }
 
+
+/**
+* @brief  Generates the slope and the offset used for the software compensation.
+* @param  None
+* @retval uint8_t 1 means No calibration points recorded. 0 Success.
+*/
+uint8_t ADC_SwCalibration(void)
+{
+  uint32_t ifr0_v1, ifr0_v2, ifr0_v3;
+  float v1f, v2f, v3f;
+  
+  /* Read calibration values */
+  ifr0_v1 = *(uint32_t*)0x100007D0; /* 0.0 V */
+  ifr0_v2 = *(uint32_t*)0x100007D8; /* 1.8 V */
+  ifr0_v3 = *(uint32_t*)0x100007E0; /* 3.6 V */
+  
+  /* Check if the calibration points are valid */
+  if(ifr0_v1 == 0xFFFFFFFF && ifr0_v2 == 0xFFFFFFFF && ifr0_v3 == 0xFFFFFFFF) {
+    return 1;
+  }
+  
+  /* Convert according to the ADC pin 2 formula with PGA 9.54 dB */
+  v1f = (3 * (0.6 - (( ((float)((int16_t)(ifr0_v1>>16))) /ADC_FS_OSR_100_200) * ADC_VREF)));
+  v2f = (3 * (0.6 - (( ((float)((int16_t)(ifr0_v2>>16))) /ADC_FS_OSR_100_200) * ADC_VREF)));
+  v3f = (3 * (0.6 - (( ((float)((int16_t)(ifr0_v3>>16))) /ADC_FS_OSR_100_200) * ADC_VREF)));
+    
+  /* Calculate the slope */
+  slope = 2.0 - ( (v3f - v1f)/3.6 );
+  
+  /* Calculate the slope */
+  offset = (v1f - 1.8 + v2f * slope) / 2.0;
+    
+  return 0;
+}
+
+/**
+* @brief  Apply the slope and the offset in order to compensate the output value.
+*         Before call this function, the API ADC_SwCalibration() must be called and 
+*         it must return 0 (success).
+*         value can be an ADC value from battery sensor or ADC pins.
+* @param  float The value coming from the API ADC_GetConvertedData().
+* @retval float The compensated ADC output value.
+*/
+float ADC_CompensateOutputValue(float value)
+{
+  /* Apply slope and offset */
+  return (float)((value * slope) - offset);
+}
 
 /**
 * @}

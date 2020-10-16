@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "ble_const.h" 
 #include "bluenrg1_stack.h"
 #include "osal.h"

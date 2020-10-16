@@ -24,7 +24,7 @@
 #define BlueNRG1_IT_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /* Exported defines ------------------------------------------------------------*/
 #define DMA_CH_UART_TX                  DMA_CH1

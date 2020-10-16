@@ -1,9 +1,8 @@
 /**
 ******************************************************************************
 * @file    hal_radio.c
-* @author  AMG - RF Application team
-* @version V1.1.0
-* @date    3-April-2018
+* @author  RF Application team
+* @date    Jan-2020
 * @brief   BlueNRG-1,2 HAL radio APIs 
 ******************************************************************************
 * @attention
@@ -15,10 +14,11 @@
 * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
 * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *
-* <h2><center>&copy; COPYRIGHT 2017 STMicroelectronics</center></h2>
+* <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
 ******************************************************************************
 */
 #include "hal_radio.h"
+#include "BlueNRG1_timer.h"
 
 static ActionPacket aPacket[2]; 
 static uint32_t networkID = 0x88DF88DF;
@@ -83,7 +83,9 @@ uint8_t HAL_RADIO_SendPacket(uint8_t channel,
                              uint8_t (*Callback)(ActionPacket*, ActionPacket*) )
 {
   uint8_t returnValue = SUCCESS_0;
-  uint32_t dummy;
+  uint32_t dummy,time;
+  
+  time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(wakeup_time);
   
   if(channel > 39) {
     returnValue = INVALID_PARAMETER_C0;
@@ -97,11 +99,11 @@ uint8_t HAL_RADIO_SendPacket(uint8_t channel,
     uint8_t map[5]= {0xFF,0xFF,0xFF,0xFF,0xFF};
     RADIO_SetChannelMap(0, &map[0]);
     RADIO_SetChannel(0, channel, 0);
-    RADIO_SetTxAttributes(0, networkID, 0x555555, SCA_DEFAULTVALUE);   
+    RADIO_SetTxAttributes(0, networkID, 0x555555);   
       
     aPacket[0].StateMachineNo = STATE_MACHINE_0;
-    aPacket[0].ActionTag =  TXRX | PLL_TRIG | TIMER_WAKEUP | RELATIVE;
-    aPacket[0].WakeupTime = wakeup_time;
+    aPacket[0].ActionTag =  TXRX | PLL_TRIG;
+    aPacket[0].WakeupTime = time;
     aPacket[0].ReceiveWindowLength = 0; /* does not affect for Tx */
     aPacket[0].data = txBuffer;
     aPacket[0].next_true = NULL_0;
@@ -140,7 +142,9 @@ uint8_t HAL_RADIO_SendPacketWithAck(uint8_t channel,
                                     uint8_t (*Callback)(ActionPacket*, ActionPacket*) )
 {
   uint8_t returnValue = SUCCESS_0;
-  uint32_t dummy;
+  uint32_t dummy,time;
+  
+  time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(wakeup_time);
   
   if(channel > 39) {
     returnValue = INVALID_PARAMETER_C0;      
@@ -155,11 +159,11 @@ uint8_t HAL_RADIO_SendPacketWithAck(uint8_t channel,
     RADIO_SetChannelMap(0, &map[0]);
     RADIO_SetChannel(0, channel, 0);
     
-    RADIO_SetTxAttributes(0, networkID, 0x555555, SCA_DEFAULTVALUE);   
+    RADIO_SetTxAttributes(0, networkID, 0x555555);   
 
     aPacket[0].StateMachineNo = STATE_MACHINE_0;   
-    aPacket[0].ActionTag =  TXRX | PLL_TRIG | TIMER_WAKEUP | RELATIVE;  
-    aPacket[0].WakeupTime = wakeup_time;
+    aPacket[0].ActionTag =  TXRX | PLL_TRIG;  
+    aPacket[0].WakeupTime = time;
     aPacket[0].ReceiveWindowLength = 0; /* does not affect for Tx */
     aPacket[0].data = txBuffer;
     aPacket[0].next_true = &aPacket[1];
@@ -177,6 +181,7 @@ uint8_t HAL_RADIO_SendPacketWithAck(uint8_t channel,
     aPacket[1].condRoutine = CondRoutineTrue;
     aPacket[1].dataRoutine = Callback;
     
+
     RADIO_SetReservedArea(&aPacket[0]);
     RADIO_SetReservedArea(&aPacket[1]);
     returnValue = RADIO_MakeActionPacketPending(&aPacket[0]);    
@@ -207,7 +212,9 @@ uint8_t HAL_RADIO_ReceivePacket(uint8_t channel,
                                 uint8_t (*Callback)(ActionPacket*, ActionPacket*) )
 {
   uint8_t returnValue = SUCCESS_0;
-  uint32_t dummy;
+  uint32_t dummy,time;
+  
+  time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(wakeup_time);
   
   if(channel > 39) {
     returnValue = INVALID_PARAMETER_C0;
@@ -222,11 +229,11 @@ uint8_t HAL_RADIO_ReceivePacket(uint8_t channel,
     RADIO_SetChannelMap(0, &map[0]);
     RADIO_SetChannel(0, channel, 0);
     
-    RADIO_SetTxAttributes(0, networkID, 0x555555, SCA_DEFAULTVALUE);
+    RADIO_SetTxAttributes(0, networkID, 0x555555);
     
     aPacket[0].StateMachineNo = STATE_MACHINE_0;
-    aPacket[0].ActionTag =  PLL_TRIG | TIMER_WAKEUP | RELATIVE;
-    aPacket[0].WakeupTime = wakeup_time;
+    aPacket[0].ActionTag =  PLL_TRIG;
+    aPacket[0].WakeupTime = time;//wakeup_time;
     aPacket[0].ReceiveWindowLength = receive_timeout;
     aPacket[0].data = rxBuffer;
     aPacket[0].next_true = NULL_0;
@@ -266,7 +273,9 @@ uint8_t HAL_RADIO_ReceivePacketWithAck(uint8_t channel,
                                        uint8_t (*Callback)(ActionPacket*, ActionPacket*) )
 {
   uint8_t returnValue = SUCCESS_0;
-  uint32_t dummy;
+  uint32_t dummy,time;
+  
+  time = (uint32_t)TIMER_GetCurrentSysTime() + TIMER_UsToSystime(wakeup_time);
   
   if(channel > 39) {
     returnValue = INVALID_PARAMETER_C0;      
@@ -280,11 +289,11 @@ uint8_t HAL_RADIO_ReceivePacketWithAck(uint8_t channel,
     uint8_t map[5]= {0xFF,0xFF,0xFF,0xFF,0xFF};
     RADIO_SetChannelMap(0, &map[0]);
     RADIO_SetChannel(0,channel,0);
-    RADIO_SetTxAttributes(0, networkID,0x555555,SCA_DEFAULTVALUE);   
+    RADIO_SetTxAttributes(0, networkID,0x555555);   
     
     aPacket[0].StateMachineNo = STATE_MACHINE_0;
-    aPacket[0].ActionTag =  PLL_TRIG | TIMER_WAKEUP | RELATIVE;
-    aPacket[0].WakeupTime = wakeup_time;
+    aPacket[0].ActionTag =  PLL_TRIG;
+    aPacket[0].WakeupTime = time;//wakeup_time;
     aPacket[0].ReceiveWindowLength = receive_timeout;
     aPacket[0].data = rxBuffer;
     aPacket[0].next_true = &aPacket[1];
@@ -311,4 +320,4 @@ uint8_t HAL_RADIO_ReceivePacketWithAck(uint8_t channel,
 }
 
 
-/******************* (C) COPYRIGHT 2017 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2020 STMicroelectronics *****END OF FILE****/

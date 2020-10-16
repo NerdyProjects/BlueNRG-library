@@ -15,7 +15,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 #include <stdio.h>
 #include "BlueNRG1_conf.h"
 #include "BlueNRG1_it.h"

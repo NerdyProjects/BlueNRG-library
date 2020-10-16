@@ -82,6 +82,11 @@ do {\
 #define CHAR_LEN (DEFAULT_ATT_MTU - 3)
 #endif
 
+
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
+
 /* discovery procedure mode context */
 typedef struct discoveryContext_s {
   uint8_t device_found_address_type;
@@ -153,7 +158,7 @@ void Print_Anchor_Period(void)
                                       &Max_Free_Slot);
   if (Status == 0)
   {
-      PRINTF("Anchor Period = %.3f ms, Max Free Slot = %.3f ms\r\n", Anchor_Period*0.625, Max_Free_Slot*0.625);
+    PRINTF("Anchor Period = %d.%02d ms, Max Free Slot = %d.%02d ms\r\n", PRINT_INT(Anchor_Period*0.625),PRINT_FLOAT(Anchor_Period*0.625) , PRINT_INT(Max_Free_Slot*0.625),PRINT_FLOAT(Max_Free_Slot*0.625) );
   }
 }
           
@@ -273,23 +278,23 @@ if (num_masters >0)
   PRINTF("\r\n");
   PRINTF("Num of Masters: %d\r\n", num_masters);
   PRINTF("Num of Slaves: %d\r\n", num_slaves);
-  PRINTF("Minimal Scan Window: %.2f ms\r\n", scan_window);
-  PRINTF("Sleep time: %.2f ms\r\n", sleep_time);
+  PRINTF("Minimal Scan Window: %d.%02d ms\r\n", PRINT_INT(scan_window), PRINT_FLOAT(scan_window));
+  PRINTF("Sleep time: %d.%02d ms\r\n", PRINT_INT(sleep_time), PRINT_FLOAT(sleep_time));
   PRINTF("\r\n");
   
   PRINTF("****** Output Connection Parameters ******************************\r\n");
   PRINTF("\r\n");
-  PRINTF("Anchor Period Length: %.2f ms\r\n", MS_Connection_Parameters.AnchorPeriodLength);
+  PRINTF("Anchor Period Length: %d.%02d ms\r\n", PRINT_INT(MS_Connection_Parameters.AnchorPeriodLength), PRINT_FLOAT(MS_Connection_Parameters.AnchorPeriodLength));
   PRINTF("\r\n");
   PRINTF("****** BLE APIs Connection Parameters: BLE time units/(ms)********\r\n");
   PRINTF("\r\n");
-  PRINTF("Scan Window: %d (%.2f ms)\r\n", MS_Connection_Parameters.Scan_Window, MS_Connection_Parameters.Scan_Window *0.625);
-  PRINTF("Connection Interval: %d (%.2f ms)\r\n", MS_Connection_Parameters.Connection_Interval,MS_Connection_Parameters.Connection_Interval * 1.25);
-  PRINTF("Scan Interval: %d (%.2f ms)\r\n", MS_Connection_Parameters.Scan_Interval, MS_Connection_Parameters.Scan_Interval * 0.625);
-  PRINTF("Advertising Interval: %d (%.2f ms)\r\n", MS_Connection_Parameters.Advertising_Interval, MS_Connection_Parameters.Advertising_Interval * 0.625);
-  PRINTF("CE Event Length: %d (%.2f ms)\r\n", MS_Connection_Parameters.CE_Length, MS_Connection_Parameters.CE_Length * 0.625);
+  PRINTF("Scan Window: %d (%d.%02d ms)\r\n", MS_Connection_Parameters.Scan_Window, PRINT_INT(MS_Connection_Parameters.Scan_Window *0.625),PRINT_FLOAT(MS_Connection_Parameters.Scan_Window *0.625) );
+  PRINTF("Connection Interval: %d (%d.%02d ms)\r\n", MS_Connection_Parameters.Connection_Interval,PRINT_INT(MS_Connection_Parameters.Connection_Interval * 1.25),PRINT_FLOAT(MS_Connection_Parameters.Connection_Interval * 1.25));
+  PRINTF("Scan Interval: %d (%d.%02d ms)\r\n", MS_Connection_Parameters.Scan_Interval, PRINT_INT(MS_Connection_Parameters.Scan_Interval * 0.625), PRINT_FLOAT(MS_Connection_Parameters.Scan_Interval * 0.625));
+  PRINTF("Advertising Interval: %d (%d.%02d ms)\r\n", MS_Connection_Parameters.Advertising_Interval, PRINT_INT(MS_Connection_Parameters.Advertising_Interval * 0.625),PRINT_FLOAT(MS_Connection_Parameters.Advertising_Interval * 0.625) );
+  PRINTF("CE Event Length: %d (%d.%02d ms)\r\n", MS_Connection_Parameters.CE_Length, PRINT_INT(MS_Connection_Parameters.CE_Length * 0.625),PRINT_FLOAT(MS_Connection_Parameters.CE_Length * 0.625) );
   
-  //PRINTF("Connection bandwidth: %.2f \r\n", (1000*PACKETS_PER_CI*20*8)/Connection_Interval_ms);
+  //PRINTF("Connection bandwidth: %d.%02d \r\n", PRINT_INT((1000*PACKETS_PER_CI*20*8)/Connection_Interval_ms),PRINT_FLOAT((1000*PACKETS_PER_CI*20*8)/Connection_Interval_ms) );
   PRINTF("******************************************************************\r\n");
 #endif 
 

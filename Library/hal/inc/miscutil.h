@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
   * @file    miscutil.h
-  * @author  AMG - RF Application team
-  * @version V1.1.0
-  * @date    3-April-2018
+  * @author  AMS - RF Application team
+  * @version V1.2.0
+  * @date    14-February-2020
   * @brief   Header file for miscellaneous utilities.
   ******************************************************************************
   * @attention
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
   ******************************************************************************
   */
 #ifndef __MISCUTIL_H__
@@ -27,6 +27,8 @@
 
 #define DIE_ID_BLUENRG2     ((uint8_t)2)
 #define DIE_ID_BLUENRG1     ((uint8_t)1)
+
+#define DIE_SW_ID_BLUENRG2N ((uint8_t)4) 
 
 
 /**

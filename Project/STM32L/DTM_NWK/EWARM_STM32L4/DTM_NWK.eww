@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\DTM_NWK.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>Build_ALL</name>
+            <member>
+                <project>DTM_NWK</project>
+                <configuration>DTM_NWK_SPI</configuration>
+            </member>
+            <member>
+                <project>DTM_NWK</project>
+                <configuration>DTM_NWK_UART</configuration>
+            </member>
+            <member>
+                <project>DTM_NWK</project>
+                <configuration>DTM_NWK_UART_HWFlowCtrl</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

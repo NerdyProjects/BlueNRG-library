@@ -42,8 +42,8 @@
 #endif
 
 #define UPDATE_CONN_PARAM 0 
-#define  ADV_INTERVAL_MIN_MS  1000
-#define  ADV_INTERVAL_MAX_MS  1200
+#define  ADV_INTERVAL_MIN_MS  500
+#define  ADV_INTERVAL_MAX_MS  600
 
 #define BLE_SENSOR_VERSION_STRING "1.1.0" 
 
@@ -79,6 +79,8 @@ volatile uint8_t request_free_fall_notify = FALSE;
 /* Private functions ---------------------------------------------------------*/
 
 #ifndef SENSOR_EMULATION
+
+static IMU_6AXES_InitTypeDef Acc_InitStructure; 
 /*******************************************************************************
  * Function Name  : Init_Accelerometer.
  * Description    : Init LIS331DLH accelerometer.
@@ -89,24 +91,23 @@ volatile uint8_t request_free_fall_notify = FALSE;
 void Init_Accelerometer(void)
 {
   /* LSM6DS3 library setting */
-  IMU_6AXES_InitTypeDef InitStructure;
   uint8_t tmp1 = 0x00;
   
   Imu6AxesDrv = &LSM6DS3Drv;
   Imu6AxesDrvExt = &LSM6DS3Drv_ext_internal;
-  InitStructure.G_FullScale      = 125.0f;
-  InitStructure.G_OutputDataRate = 13.0f;
-  InitStructure.G_X_Axis         = 0; //1;
-  InitStructure.G_Y_Axis         = 0;//1;
-  InitStructure.G_Z_Axis         = 0; //1;
-  InitStructure.X_FullScale      = 2.0f;
-  InitStructure.X_OutputDataRate = 13.0f;
-  InitStructure.X_X_Axis         = 1;
-  InitStructure.X_Y_Axis         = 1;
-  InitStructure.X_Z_Axis         = 1;  
+  Acc_InitStructure.G_FullScale      = 125.0f;
+  Acc_InitStructure.G_OutputDataRate = 13.0f;
+  Acc_InitStructure.G_X_Axis         = 0; //1;
+  Acc_InitStructure.G_Y_Axis         = 0;//1;
+  Acc_InitStructure.G_Z_Axis         = 0; //1;
+  Acc_InitStructure.X_FullScale      = 2.0f;
+  Acc_InitStructure.X_OutputDataRate = 13.0f;
+  Acc_InitStructure.X_X_Axis         = 1;
+  Acc_InitStructure.X_Y_Axis         = 1;
+  Acc_InitStructure.X_Z_Axis         = 1;  
   
   /* LSM6DS3 initiliazation */
-  Imu6AxesDrv->Init(&InitStructure);
+  Imu6AxesDrv->Init(&Acc_InitStructure);
     
   /* Disable all mems IRQs in order to enable free fall detection */ //TBR
   LSM6DS3_IO_Write(&tmp1, LSM6DS3_XG_MEMS_ADDRESS, LSM6DS3_XG_INT1_CTRL, 1);
@@ -117,6 +118,8 @@ void Init_Accelerometer(void)
   /* Enable Free fall detection */
   Imu6AxesDrvExt->Enable_Free_Fall_Detection(); 
 }
+
+static PRESSURE_InitTypeDef Pressure_InitStructure;
 
 /*******************************************************************************
  * Function Name  : Init_Pressure_Temperature_Sensor.
@@ -129,14 +132,13 @@ void Init_Pressure_Temperature_Sensor(void)
 {  
   /* LPS25HB initialization */
 
-  PRESSURE_InitTypeDef InitStructure;
-  InitStructure.OutputDataRate = LPS25HB_ODR_1Hz;
-  InitStructure.BlockDataUpdate = LPS25HB_BDU_READ; //LPS25HB_BDU_READ LPS25HB_BDU_CONT
-  InitStructure.DiffEnable = LPS25HB_DIFF_ENABLE;  // LPS25HB_DIFF_ENABLE
-  InitStructure.SPIMode = LPS25HB_SPI_SIM_3W;  // LPS25HB_SPI_SIM_3W
-  InitStructure.PressureResolution = LPS25HB_P_RES_AVG_32;
-  InitStructure.TemperatureResolution = LPS25HB_T_RES_AVG_16;  
-  xLPS25HBDrv->Init(&InitStructure);
+  Pressure_InitStructure.OutputDataRate = LPS25HB_ODR_1Hz;
+  Pressure_InitStructure.BlockDataUpdate = LPS25HB_BDU_READ; //LPS25HB_BDU_READ LPS25HB_BDU_CONT
+  Pressure_InitStructure.DiffEnable = LPS25HB_DIFF_ENABLE;  // LPS25HB_DIFF_ENABLE
+  Pressure_InitStructure.SPIMode = LPS25HB_SPI_SIM_3W;  // LPS25HB_SPI_SIM_3W
+  Pressure_InitStructure.PressureResolution = LPS25HB_P_RES_AVG_32;
+  Pressure_InitStructure.TemperatureResolution = LPS25HB_T_RES_AVG_16;  
+  xLPS25HBDrv->Init(&Pressure_InitStructure);
 }
 
 /*******************************************************************************

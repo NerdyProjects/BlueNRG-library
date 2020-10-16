@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2017 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2019 STMicroelectronics ********************
 * File Name          : RADIO_RX_main.c 
 * Author             : RF Application Team
-* Version            : V1.1.0
-* Date               : April-2018
+* Version            : V1.2.0
+* Date               : April-2019
 * Description        : This example shows the usage of the sleep functionality with
 *                      the radio driver. This main file configures the main receiver device.
 ********************************************************************************
@@ -19,13 +19,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
+#include "main_common.h"
 #include "sleep.h"
+#include "vtimer.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
 * @{
@@ -52,6 +53,14 @@ uint8_t receivedAckData[MAX_PACKET_LENGTH];
 uint8_t rx_done = FALSE;
 uint8_t schedule_rx = TRUE;
 uint32_t rx_timeout = RX_TIMEOUT_NOTOK;
+
+#ifdef RX_VIRTUAL_TIMER 
+#define VTIMER_DELAY 2000
+#define VTIMER_APPLICATION 0
+static VTIMER_HandleType vtimer_handle[1];
+static volatile uint8_t vtimer_action = 0; 
+#endif 
+
 
 /* Private function prototypes -----------------------------------------------*/
 uint8_t RxCallback(ActionPacket* p, ActionPacket* next);
@@ -97,6 +106,15 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
   return TRUE;   
 }
 
+#ifdef RX_VIRTUAL_TIMER 
+void vtimer_callback(void *handle)
+{
+  //vtimer_action = 1;
+  SdkEvalLedToggle(LED3);
+  HAL_VTimerStart_ms(handle, VTIMER_DELAY);
+  
+}
+#endif
 
 /**
 * @brief  This main routine. 
@@ -104,6 +122,7 @@ uint8_t RxCallback(ActionPacket* p, ActionPacket* next)
 */
 int main(void)
 {
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
   uint8_t ret;
   
   /* System Init */
@@ -118,18 +137,20 @@ int main(void)
   /* Configure the LEDs */
   SdkEvalLedInit(LED1);
   SdkEvalLedInit(LED2);
+#ifdef RX_VIRTUAL_TIMER 
+  SdkEvalLedInit(LED3);
+#endif
   SdkEvalLedOn(LED1);
+  SdkEvalLedOn(LED2);
   
   /* Delay useful for getting time to attach the debugger */
-  for(volatile int i = 0; i < 0xAFFFFF; i++);
+  //for(volatile int i = 0; i < 0xAFFFFF; i++);
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
-    
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
+  
   /* Build the packet */
   sendData[0] = 0x02;
   sendData[1] = 5;   /* Length position is fixed */
@@ -142,17 +163,18 @@ int main(void)
   /* Set the Network ID */
   HAL_RADIO_SetNetworkID(BLE_ADV_ACCESS_ADDRESS);
   
-  /* Set back-to-back time greater than TX device as guard time*/
-  RADIO_SetBackToBackTime(200);
-  
   /* Configures the transmit power level */
   RADIO_SetTxPower(MAX_OUTPUT_RF_POWER);
   
+#ifdef RX_VIRTUAL_TIMER 
+  vtimer_handle[VTIMER_APPLICATION].callback = vtimer_callback;
+  HAL_VTimerStart_ms(&vtimer_handle[VTIMER_APPLICATION], VTIMER_DELAY); 
+#endif 
+  
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */
-    RADIO_CrystalCheck();
-    
+    HAL_VTIMER_Tick();
+   
     if(rx_done == TRUE) {
       printf("Packet Received: ");
       for(volatile uint16_t i = 0; i < (receivedData[1] + HEADER_LENGTH); i++) {
@@ -169,7 +191,8 @@ int main(void)
         printf("ERROR %d (%d)\r\n",ret, packet_counter);
       }
     }
-    BlueNRG_Sleep(SLEEPMODE_WAKETIMER, 0, 0);
+    
+    BlueNRG_Sleep(SLEEPMODE_NOTIMER, 0, 0);
   }
 }
 

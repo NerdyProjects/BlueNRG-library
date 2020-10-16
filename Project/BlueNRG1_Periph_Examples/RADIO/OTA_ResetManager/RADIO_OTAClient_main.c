@@ -34,6 +34,7 @@
 #include "bluenrg1_it_stub.h"
 #include "hal_radio.h"
 #include "main_common.h"
+#include "vtimer.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef  void (*pFunction)(void);
@@ -133,7 +134,8 @@ int main(void)
   OTA_Init();
   PRINTF("\r\nBlueNRG-1 BLE OTA Manager CLIENT (version: %s)\r\nNext free address location is: 0x%00000000X\r\n", OTA_MANAGER_VERSION_STRING, APP_WITH_OTA_SERVICE_ADDRESS);
   
-  while(1) {    
+  while(1) {
+    HAL_VTIMER_Tick();
     if (OTA_Tick() == 1) {
       
       /* Jump to the new application */
@@ -417,11 +419,11 @@ void OTA_Jump_To_New_Application(void)
 */
 uint8_t OTA_Init()
 {
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
   
   /* Set the Network ID */
   HAL_RADIO_SetNetworkID(OTA_ACCESS_ADDRESS);
@@ -477,7 +479,7 @@ uint8_t OTA_Tick()
   
   else if(ota_state_machine_g == OTA_START) {
     if(app_size<=SM_APP_SIZE) { /* Check if the new application fit the Flash memory */
-      PRINTF("OK for 0x%08X %.2f KB max %.2f KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
+      PRINTF("OK for 0x%08X %d KB max %d KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
       PRINTF("OTA_START\r\n");
       tx_buffer[0] = HEADER_START;
       tx_buffer[1] = 0;
@@ -496,7 +498,7 @@ uint8_t OTA_Tick()
     }
     /* TO BE DONE */
     else { /* If the new image does not fit the Flash memory */
-      PRINTF("NOT ok for 0x%08X %.2f KB max %.2f KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
+      PRINTF("NOT ok for 0x%08X %d KB max %d KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
       PRINTF("OTA_NOTSTART\r\n");
       tx_buffer[0] = HEADER_NOTSTART;
       tx_buffer[1] = 0;
@@ -588,7 +590,7 @@ uint8_t OTA_Tick()
         app_size -= page_size;
       }
       page_size = 0;
-      PRINTF("app_size 0x%08X %.2f KB\r\n", app_size, ((float)app_size)/1024.0);
+      PRINTF("app_size 0x%08X %d KB\r\n", app_size, ((float)app_size)/1024.0);
     }
     if(app_size) {
       ota_state_machine_g = OTA_DATAREQ;

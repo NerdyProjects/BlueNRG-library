@@ -51,6 +51,11 @@
     <locationURI>virtual:/virtual</locationURI>
     </link>
   <link>
+      <name>Hal/vtimer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/vtimer.c</locationURI>
+    </link>
+  <link>
       <name>Hal/clock.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/clock.c</locationURI>
@@ -79,6 +84,11 @@
       <name>Hal/osal.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/osal.c</locationURI>
+    </link>
+  <link>
+      <name>Library/BlueNRG1_timer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</locationURI>
     </link>
   <link>
       <name>Library/BlueNRG1_adc.c</name>

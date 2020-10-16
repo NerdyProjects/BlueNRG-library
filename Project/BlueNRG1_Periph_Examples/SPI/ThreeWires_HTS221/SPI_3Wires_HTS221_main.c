@@ -34,6 +34,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -86,7 +90,7 @@ int main(void)
     } while(HTS221_BitStatus == HTS221_RESET);
     
     HTS221_Get_Measurement(&humidity, &temperature);    
-    printf("Humidity %.0f %% Temperature %.1f 'C\r\n", humidity/10.0, temperature/10.0);
+    printf("Humidity %d.%02d %% Temperature %d.%02d 'C\r\n", PRINT_INT(humidity/10.0),PRINT_FLOAT(humidity/10.0), PRINT_INT(temperature/10.0), PRINT_FLOAT(temperature/10.0));
   }  
   
 }

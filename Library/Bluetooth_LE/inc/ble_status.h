@@ -29,7 +29,9 @@
 #ifndef __BLE_STATUS_H__
 #define __BLE_STATUS_H__
 
-#include <bluenrg1_api.h> 
+#include <stdint.h>
+
+typedef uint8_t tBleStatus;
 
 /* @brief Standard Error Codes as specified by the Bluetooth Specifications
  * Vol.2, Part D ("Error Codes").

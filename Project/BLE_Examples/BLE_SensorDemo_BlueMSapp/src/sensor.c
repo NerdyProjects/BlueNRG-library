@@ -26,6 +26,7 @@
 #include "LPS25HB.h"
 #include "lsm6ds3.h"
 #include "lsm6ds3_hal.h"
+#include "OTA_btl.h"   
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #ifndef DEBUG
@@ -62,6 +63,10 @@ LSM6DS3_DrvExtTypeDef *Imu6AxesDrvExt = NULL;
 
 volatile uint8_t request_free_fall_notify = FALSE; 
   
+static IMU_6AXES_InitTypeDef Acc_InitStructure;
+
+static PRESSURE_InitTypeDef Pressure_InitStructure;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -75,25 +80,24 @@ volatile uint8_t request_free_fall_notify = FALSE;
 void Init_Accelerometer(void)
 {
   /* LSM6DS3 library setting */
-  IMU_6AXES_InitTypeDef InitStructure;
   AxesRaw_t axes; 
   uint8_t tmp1 = 0x00;
   
   Imu6AxesDrv = &LSM6DS3Drv;
   Imu6AxesDrvExt = &LSM6DS3Drv_ext_internal;
-  InitStructure.G_FullScale      = 125.0f;
-  InitStructure.G_OutputDataRate = 13.0f;
-  InitStructure.G_X_Axis         = 1;
-  InitStructure.G_Y_Axis         = 1;
-  InitStructure.G_Z_Axis         = 1;
-  InitStructure.X_FullScale      = 2.0f;
-  InitStructure.X_OutputDataRate = 13.0f;
-  InitStructure.X_X_Axis         = 1;
-  InitStructure.X_Y_Axis         = 1;
-  InitStructure.X_Z_Axis         = 1;  
+  Acc_InitStructure.G_FullScale      = 125.0f;
+  Acc_InitStructure.G_OutputDataRate = 13.0f;
+  Acc_InitStructure.G_X_Axis         = 1;
+  Acc_InitStructure.G_Y_Axis         = 1;
+  Acc_InitStructure.G_Z_Axis         = 1;
+  Acc_InitStructure.X_FullScale      = 2.0f;
+  Acc_InitStructure.X_OutputDataRate = 13.0f;
+  Acc_InitStructure.X_X_Axis         = 1;
+  Acc_InitStructure.X_Y_Axis         = 1;
+  Acc_InitStructure.X_Z_Axis         = 1;  
   
   /* LSM6DS3 initiliazation */
-  Imu6AxesDrv->Init(&InitStructure);
+  Imu6AxesDrv->Init(&Acc_InitStructure);
     
   /* Disable all mems IRQs */
   LSM6DS3_IO_Write(&tmp1, LSM6DS3_XG_MEMS_ADDRESS, LSM6DS3_XG_INT1_CTRL, 1);
@@ -115,14 +119,13 @@ void Init_Pressure_Temperature_Sensor(void)
 {  
   /* LPS25HB initialization */
 
-  PRESSURE_InitTypeDef InitStructure;
-  InitStructure.OutputDataRate = LPS25HB_ODR_1Hz;
-  InitStructure.BlockDataUpdate = LPS25HB_BDU_READ; //LPS25HB_BDU_READ LPS25HB_BDU_CONT
-  InitStructure.DiffEnable = LPS25HB_DIFF_ENABLE;  // LPS25HB_DIFF_ENABLE
-  InitStructure.SPIMode = LPS25HB_SPI_SIM_3W;  // LPS25HB_SPI_SIM_3W
-  InitStructure.PressureResolution = LPS25HB_P_RES_AVG_32;
-  InitStructure.TemperatureResolution = LPS25HB_T_RES_AVG_16;  
-  xLPS25HBDrv->Init(&InitStructure);
+  Pressure_InitStructure.OutputDataRate = LPS25HB_ODR_1Hz;
+  Pressure_InitStructure.BlockDataUpdate = LPS25HB_BDU_READ; //LPS25HB_BDU_READ LPS25HB_BDU_CONT
+  Pressure_InitStructure.DiffEnable = LPS25HB_DIFF_ENABLE;  // LPS25HB_DIFF_ENABLE
+  Pressure_InitStructure.SPIMode = LPS25HB_SPI_SIM_3W;  // LPS25HB_SPI_SIM_3W
+  Pressure_InitStructure.PressureResolution = LPS25HB_P_RES_AVG_32;
+  Pressure_InitStructure.TemperatureResolution = LPS25HB_T_RES_AVG_16;  
+  xLPS25HBDrv->Init(&Pressure_InitStructure);
 }
 
 /*******************************************************************************
@@ -197,6 +200,14 @@ uint8_t Sensor_DeviceInit()
     return ret;
   }
 
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT     
+  ret = OTA_Add_Btl_Service();
+  if(ret == BLE_STATUS_SUCCESS)
+    PRINTF("OTA service added successfully.\n");
+  else
+    PRINTF("Error while adding OTA service.\n");
+#endif /* ST_OTA_FIRMWARE_UPGRADE_SUPPORT */ 
+
   /* Start the Sensor Timer */
   ret = HAL_VTimerStart_ms(SENSOR_TIMER, acceleration_update_rate);
   if (ret != BLE_STATUS_SUCCESS) {
@@ -238,7 +249,11 @@ void Set_DeviceConnectable(void)
     0x00, /* BLE MAC stop */
   };
   
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
+  hci_le_set_scan_response_data(18,BTLServiceUUID4Scan); 
+#else
   hci_le_set_scan_response_data(0,NULL);
+#endif /* ST_OTA_FIRMWARE_UPGRADE_SUPPORT */ 
   
   PRINTF("Set General Discoverable Mode.\n");
   
@@ -343,6 +358,9 @@ void hci_disconnection_complete_event(uint8_t Status,
   connection_handle =0;
   
   SdkEvalLedOn(LED1);//activity led   
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
+  OTA_terminate_connection();
+#endif 
 }/* end hci_disconnection_complete_event() */
 
 
@@ -375,3 +393,29 @@ void HAL_VTimerTimeoutCallback(uint8_t timerNum)
     sensorTimer_expired = TRUE;
   }
 }
+
+void aci_gatt_attribute_modified_event(uint16_t Connection_Handle,
+                                       uint16_t Attr_Handle,
+                                       uint16_t Offset,
+                                       uint16_t Attr_Data_Length,
+                                       uint8_t Attr_Data[])
+{
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
+  OTA_Write_Request_CB(Connection_Handle, Attr_Handle, Attr_Data_Length, Attr_Data);
+#endif /* ST_OTA_FIRMWARE_UPGRADE_SUPPORT */ 
+}
+
+
+void aci_hal_end_of_radio_activity_event(uint8_t Last_State,
+                                         uint8_t Next_State,
+                                         uint32_t Next_State_SysTime)
+{
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
+  if (Next_State == 0x02) /* 0x02: Connection event slave */
+  {
+    OTA_Radio_Activity(Next_State_SysTime);  
+  }
+#endif 
+}
+
+

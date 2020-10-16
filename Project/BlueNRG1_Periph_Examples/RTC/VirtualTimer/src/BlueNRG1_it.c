@@ -3,7 +3,7 @@
   * @file    BlueNRG1_it.c 
   * @author  VMA RF Application Team
   * @version V1.0.0
-  * @date    September-2015
+  * @date    September-2019
   * @brief   Main Interrupt Service Routines.
   *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
@@ -25,7 +25,11 @@
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
 #include "ble_const.h"
+#if USE_STANDALONE_VIRTUAL_TIMER
+#include "vtimer.h"
+#else
 #include "bluenrg1_stack.h"
+#endif
 #include "clock.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples
@@ -111,8 +115,16 @@ void UART_Handler(void)
 
 void Blue_Handler(void)
 {
-   // Call RAL_Isr
-   RAL_Isr();
+#if USE_STANDALONE_VIRTUAL_TIMER
+    uint32_t intreason = BLUE_CTRL->INTERRUPT;
+   
+    if (intreason & (1 << 15)) {
+            HAL_VTIMER_TimeoutCallback();
+    }
+    BLUE_CTRL->INTERRUPT = intreason;
+#else
+    RAL_Isr();
+#endif 
 }
 
 /**

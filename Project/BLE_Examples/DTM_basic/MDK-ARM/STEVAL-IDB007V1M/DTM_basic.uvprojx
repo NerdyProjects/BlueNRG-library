@@ -330,7 +330,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>SPI_INTERFACE WATCHDOG WATCHDOG_TIME=1 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\..\DTM\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc</IncludePath>
@@ -367,7 +367,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x800 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -564,6 +564,11 @@
               <FileName>DTM_boot.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/src/DTM_boot.c</FilePath>
+            </File>
+          <File>
+              <FileName>DTM_burst.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../DTM/src/DTM_burst.c</FilePath>
             </File>
           <File>
               <FileName>DTM_cmd_db.c</FileName>
@@ -925,7 +930,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>SPI_INTERFACE WATCHDOG WATCHDOG_TIME=1 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\..\DTM\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc</IncludePath>
@@ -962,7 +967,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x800 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1164,6 +1169,11 @@
               <FileName>DTM_boot.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/src/DTM_boot.c</FilePath>
+            </File>
+          <File>
+              <FileName>DTM_burst.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../DTM/src/DTM_burst.c</FilePath>
             </File>
           <File>
               <FileName>DTM_cmd_db.c</FileName>
@@ -1525,7 +1535,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>UART_INTERFACE WATCHDOG WATCHDOG_TIME=1 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\..\DTM\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc</IncludePath>
@@ -1562,7 +1572,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x800 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1759,6 +1769,11 @@
               <FileName>DTM_boot.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/src/DTM_boot.c</FilePath>
+            </File>
+          <File>
+              <FileName>DTM_burst.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../DTM/src/DTM_burst.c</FilePath>
             </File>
           <File>
               <FileName>DTM_cmd_db.c</FileName>
@@ -2120,7 +2135,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>UART_INTERFACE WATCHDOG WATCHDOG_TIME=1 UART_SLEEP BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\..\DTM\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc</IncludePath>
@@ -2157,7 +2172,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x800 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -2354,6 +2369,11 @@
               <FileName>DTM_boot.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/src/DTM_boot.c</FilePath>
+            </File>
+          <File>
+              <FileName>DTM_burst.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../DTM/src/DTM_burst.c</FilePath>
             </File>
           <File>
               <FileName>DTM_cmd_db.c</FileName>
@@ -2715,7 +2735,7 @@
           <v6WtE>0</v6WtE>
           <v6Rtti>0</v6Rtti>
           <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--wchar32</MiscControls>
             <Define>UART_INTERFACE WATCHDOG WATCHDOG_TIME=1 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ USER_BUTTON=BUTTON_2</Define>
             <Undefine></Undefine>
             <IncludePath>..\..\..\DTM\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc</IncludePath>
@@ -2752,7 +2772,7 @@
           <ScatterFile>BlueNRG1.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x800 </Misc>
+          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -2776,6 +2796,11 @@
               <FileName>DTM_Updater_UART.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/DTM_Updater/DTM_Updater_UART.c</FilePath>
+            <FileOption>
+                <CommonProperty>
+                  <IncludeInBuild>0</IncludeInBuild>
+                </CommonProperty>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -2949,6 +2974,11 @@
               <FileName>DTM_boot.c</FileName>
             <FileType>1</FileType>
             <FilePath>../../../DTM/src/DTM_boot.c</FilePath>
+            </File>
+          <File>
+              <FileName>DTM_burst.c</FileName>
+            <FileType>1</FileType>
+            <FilePath>../../../DTM/src/DTM_burst.c</FilePath>
             </File>
           <File>
               <FileName>DTM_cmd_db.c</FileName>

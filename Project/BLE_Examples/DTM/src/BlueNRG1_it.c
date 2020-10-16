@@ -47,6 +47,21 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+volatile extern uint8_t DTM_INTERFACE;
+
+/* GPIO_HandlerCallback function */
+void dtm_void_function(void) {};
+const DTM_InterfaceHandler_Type GPIO_HandlerCallback[] = {
+        dtm_void_function,
+        GPIO_SPI_Handler,
+        GPIO_UARTSLEEP_Handler};
+
+/* DMA_HandlerCallback function */
+const DTM_InterfaceHandler_Type DMA_HandlerCallback[] = {
+        DMA_UART_Handler,
+        dtm_void_function, 
+        DMA_UARTSLEEP_Handler};
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -112,32 +127,13 @@ void SysTick_Handler(void)
 * @param  None
 * @retval None
 */
-uint8_t command_in_progress = 0;
-
-#ifdef UART_INTERFACE
-#ifdef UART_SLEEP
 void GPIO_Handler(void)
 {
-  if(GPIO_GetITPendingBit(UART_CTS_PIN) == SET) {
-    
-    if(READ_BIT(GPIO->IS, UART_CTS_PIN)) {     /* if level sensitive */
-      CLEAR_BIT(GPIO->IS, UART_CTS_PIN);       /* EDGE sensitive */
-    }
-    GPIO_ClearITPendingBit(UART_CTS_PIN);
-    
-    if(READ_BIT(GPIO->IEV, UART_CTS_PIN) != 0) {
-      CLEAR_BIT(GPIO->IEV, UART_CTS_PIN);
-      GPIO_RTS_Output();
-    }
-    else {
-      SET_BIT(GPIO->IEV, UART_CTS_PIN); 
-      GPIO_RTS_Uart();
-      
-    }
-    
-  }
+  GPIO_HandlerCallback[DTM_INTERFACE]();
 }
-#endif
+
+
+
 void UART_Handler(void)
 {  
   uint8_t data;
@@ -156,100 +152,22 @@ void UART_Handler(void)
   }
 }
 
+
 /**
 * @brief  This function handles DMA Handler.
 */
 void DMA_Handler(void)
 {
-  /* Check DMA_CH_UART_TX Transfer Complete interrupt */
-  if(DMA_GetFlagStatus(DMA_FLAG_TC_UART_TX)) {
-    DMA_ClearFlag(DMA_FLAG_TC_UART_TX);
-    
-    /* DMA1 finished the transfer of SrcBuffer */
-    dma_state = DMA_IDLE;
-    
-    /* DMA_CH disable */
-    DMA_CH_UART_TX->CCR_b.EN = RESET;
-    DEBUG_NOTES(DMA_TC);
-    
-#ifdef UART_SLEEP
-    while(UART_GetFlagStatus(UART_FLAG_TXFE) == RESET);
-    while(UART_GetFlagStatus(UART_FLAG_BUSY) == SET);
-    GPIO_SetBits(UART_RTS_PIN);     // high RTS
-    GPIO_CTS_Input();
-    GPIO_CTS_Irq(DISABLE);
-    while(GPIO_ReadBit(UART_CTS_PIN) == Bit_RESET);    // wait for CTS high
-    GPIO_CTS_Irq(ENABLE);
-#endif
-    advance_dma();
-  }
+  DMA_HandlerCallback[DTM_INTERFACE]();
 }
-#endif
+
+
 
 /**
 * @brief  This function handles GPIO interrupt request.
 * @param  None
 * @retval None
 */
-#ifdef SPI_INTERFACE
-extern uint16_t command_fifo_dma_len;
-extern uint32_t systick_counter_prev;
-
-void GPIO_Handler(void)
-{
-  if(GPIO_GetITPendingBit(SPI_CS_PIN) == SET) {
-    
-    /* Edge mode is the normal mode.
-     * Level mode is for SLEEP mode because:
-     * when in sleep mode, all the registers setting are lost
-     * the wake up occurs when the SPI_CS_PIN is low and this trigger also the irq.
-     * This irq will be lost if in edge sensitive mode, because
-     * once the BlueNRG-1 is woken up, the restore of the registers setting is done,
-     * and so the irq setting on edge detection, but the event is lost due to this delay.
-     * So, before go in SLEEP state, the sensitive is changed to the level.
-     * In this way, once the restore of the registers setting is done, the event is not lost.
-     */
-    if(READ_BIT(GPIO->IS, SPI_CS_PIN)) {     /* if level sensitive */
-      CLEAR_BIT(GPIO->IS, SPI_CS_PIN);       /* EDGE sensitive */
-      DEBUG_NOTES(EDGE_SENSITIVE);
-    }
-    GPIO_ClearITPendingBit(SPI_CS_PIN);
-    
-    /* CS pin rising edge - close SPI communication */
-    if(READ_BIT(GPIO->IEV, SPI_CS_PIN) != 0) {
-      DEBUG_NOTES(GPIO_CS_RISING);
-      CLEAR_BIT(GPIO->IEV, SPI_CS_PIN);
-      
-      if(SPI_STATE_FROM(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
-        GPIO_ResetBits(SPI_IRQ_PIN);
-        systick_counter_prev = 0;
-        SysTick_State(DISABLE);
-        SPI_STATE_TRANSACTION(SPI_PROT_TRANS_COMPLETE_STATE);
-        DEBUG_NOTES(SPI_PROT_TRANS_COMPLETE);
-        
-        /* Pass the number of data received in fifo_command */
-        advance_spi_dma((command_fifo_dma_len - DMA_GetCurrDataCounter(DMA_CH_SPI_RX)));
-      }
-    }
-    /* CS pin falling edge - start SPI communication */
-    else {
-      DEBUG_NOTES(GPIO_CS_FALLING);
-      SET_BIT(GPIO->IEV, SPI_CS_PIN);
-      
-      if(SPI_STATE_CHECK(SPI_PROT_CONFIGURED_EVENT_PEND_STATE)) {
-        SPI_STATE_TRANSACTION(SPI_PROT_WAITING_HEADER_STATE);
-      }
-      else if(SPI_STATE_CHECK(SPI_PROT_SLEEP_STATE) || SPI_STATE_CHECK(SPI_PROT_CONFIGURED_STATE)) {
-        SPI_ClearTXFIFO();
-        SPI_SendData(0xFF);
-        SPI_STATE_TRANSACTION(SPI_PROT_CONFIGURED_HOST_REQ_STATE);
-      }
-    }
-    
-  }
-  
-}
-#endif
 
 /* irq_count used for the aci_hal_transmitter_test_packets_process() command implementation */
 uint32_t irq_count = 0; 

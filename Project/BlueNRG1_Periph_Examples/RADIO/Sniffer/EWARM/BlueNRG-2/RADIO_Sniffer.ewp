@@ -73,11 +73,11 @@
         </option>
       <option>
           <name>OGProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -201,6 +201,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
         <state>USER_BUTTON=BUTTON_1</state>
@@ -1043,11 +1045,11 @@
         </option>
       <option>
           <name>OGProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>OGLastSavedByProductVersion</name>
-        <state>7.70.1.11471</state>
+        <state>8.40.1.21529</state>
         </option>
       <option>
           <name>GeneralEnableMisra</name>
@@ -1171,6 +1173,8 @@
         </option>
       <option>
           <name>CCDefines</name>
+        <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
+        <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
         <state>PACKET_ENCRYPTION</state>
         <state>BLUENRG2_DEVICE</state>
         <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
@@ -1946,6 +1950,9 @@
 <group>
     <name>Hal</name>
   <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\hal\src\vtimer.c</name>
+    </file>
+  <file>
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\hal\src\context_switch.s</name>
     </file>
   <file>
@@ -1963,6 +1970,9 @@
   </group>
 <group>
     <name>Library</name>
+  <file>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_timer.c</name>
+    </file>
   <file>
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_gpio.c</name>
     </file>

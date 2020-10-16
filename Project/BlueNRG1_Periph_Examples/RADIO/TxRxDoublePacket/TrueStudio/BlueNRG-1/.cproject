@@ -35,7 +35,9 @@
               </tool>
             <tool id="com.atollic.truestudio.exe.release.toolchain.gcc.290241006" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
                 <option id="com.atollic.truestudio.gcc.symbols.defined.1796500802" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
-                  <listOptionValue builtIn="false" value="USE_FULL_ASSERT"></listOptionValue>
+                  <listOptionValue builtIn="false" value="SMPS_INDUCTOR=SMPS_INDUCTOR_10uH"></listOptionValue>
+                <listOptionValue builtIn="false" value="LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="USE_FULL_ASSERT"></listOptionValue>
                 <listOptionValue builtIn="false" value="BLUENRG1_DEVICE"></listOptionValue>
                 <listOptionValue builtIn="false" value="HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ"></listOptionValue>
                 <listOptionValue builtIn="false" value="USER_BUTTON=BUTTON_1"></listOptionValue>
@@ -150,7 +152,9 @@
               </tool>
             <tool id="com.atollic.truestudio.exe.release.toolchain.gcc.290241006" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
                 <option id="com.atollic.truestudio.gcc.symbols.defined.1796500802" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
-                  <listOptionValue builtIn="false" value="USE_FULL_ASSERT"></listOptionValue>
+                  <listOptionValue builtIn="false" value="SMPS_INDUCTOR=SMPS_INDUCTOR_10uH"></listOptionValue>
+                <listOptionValue builtIn="false" value="LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ"></listOptionValue>
+                <listOptionValue builtIn="false" value="USE_FULL_ASSERT"></listOptionValue>
                 <listOptionValue builtIn="false" value="BLUENRG1_DEVICE"></listOptionValue>
                 <listOptionValue builtIn="false" value="HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ"></listOptionValue>
                 <listOptionValue builtIn="false" value="USER_BUTTON=BUTTON_1"></listOptionValue>

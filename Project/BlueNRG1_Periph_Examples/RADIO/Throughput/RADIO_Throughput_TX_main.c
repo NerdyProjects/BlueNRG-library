@@ -18,13 +18,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "main_common.h"
 #include "BlueNRG1_conf.h"
 #include "SDK_EVAL_Config.h"
 #include "hal_radio.h"
 #include "osal.h"
 #include "fifo.h"
 #include "clock.h"
+#include "main_common.h"
+#include "vtimer.h"
 #if ST_USE_OTA_RESET_MANAGER
 #include "radio_ota.h"
 #endif
@@ -44,9 +45,11 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define MAX_NUM_PACKET          1000    /* Number of packets used for the test */
-#define DATA_PACKET_LEN         20 //20 //255 //31    /* Number of packets used for the test */
+#define DATA_PACKET_LEN         20 //20 //255 //31    /* Length of packets used for the test */
 
 /* Private macro -------------------------------------------------------------*/
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
 /* Private variables ---------------------------------------------------------*/
 uint16_t packet_counter = 0;
 uint16_t crc_error_counter = 0;
@@ -132,9 +135,13 @@ uint8_t TxCallback(ActionPacket* p, ActionPacket* next)
     else if((p->status & IRQ_CRC_ERR) != 0) {
     }
     
-    MFT1->TNCNT1 = 0xFFFF;
     if(packet_counter != MAX_NUM_PACKET) {
       sendNewPacket = TRUE;
+    }
+    else
+    {
+      diff = (0xFFFF - time2) + timer_reload_store*65000;
+      time_cumulate += diff;
     }
   }
   /* Transmit complete */
@@ -142,7 +149,6 @@ uint8_t TxCallback(ActionPacket* p, ActionPacket* next)
 #ifdef UNIDIRECTIONAL_TEST
     time2 = MFT1->TNCNT1;
     timer_reload_store = timer_reload;
-    MFT1->TNCNT1 = 0xFFFF;
     packet_counter++;
     if(packet_counter != MAX_NUM_PACKET) {
       sendNewPacket = TRUE;
@@ -158,7 +164,8 @@ uint8_t TxCallback(ActionPacket* p, ActionPacket* next)
 *
 */
 int main(void)
-{  
+{
+  HAL_VTIMER_InitType VTIMER_InitStruct = {HS_STARTUP_TIME, INITIAL_CALIBRATION, CALIBRATION_INTERVAL};  
   uint8_t ret;
   
   /* System Init */
@@ -175,12 +182,10 @@ int main(void)
   /* Configure I/O communication channel */
   SdkEvalComUartInit(UART_BAUDRATE);
   
-  /* Radio configuration - HS_STARTUP_TIME, external LS clock, NULL, whitening enabled */
-#if LS_SOURCE==LS_SOURCE_INTERNAL_RO
-  RADIO_Init(HS_STARTUP_TIME, 1, NULL, ENABLE);
-#else
-  RADIO_Init(HS_STARTUP_TIME, 0, NULL, ENABLE);
-#endif
+  /* Radio configuration */
+  RADIO_Init(NULL, ENABLE);
+  /* Timer Init */
+  HAL_VTIMER_Init(&VTIMER_InitStruct);
     
   if(DATA_PACKET_LEN > (MAX_PACKET_LENGTH-HEADER_LENGTH)) {
     printf("DATA_PACKET_LEN too big %d\r\n", DATA_PACKET_LEN);
@@ -207,12 +212,13 @@ int main(void)
   
   /* Infinite loop */
   while(1) {
-    /* Perform calibration procedure */    
-    RADIO_CrystalCheck();
+    HAL_VTIMER_Tick();
     
     if(packet_counter == MAX_NUM_PACKET) {
       if(time_cumulate!=0) {
-        printf("%d TX packets. %d PCKT LEN. Average time: %.1f ms. Data throughput: %.1f kbps.\r\n", packet_counter, DATA_PACKET_LEN, (((float)time_cumulate)/1000.0/packet_counter), (((float)packet_counter*DATA_PACKET_LEN*8)*1000.0)/time_cumulate);
+        float avg = ((float)time_cumulate)/1000.0/packet_counter;
+        float tput = (((float)packet_counter*DATA_PACKET_LEN*8)*1000.0)/time_cumulate;
+        printf("%d TX packets. %d PCKT LEN. Average time: %d.%03d ms. Data throughput: %d.%03d kbps.\r\n", packet_counter, DATA_PACKET_LEN, PRINT_INT(avg), PRINT_FLOAT(avg), PRINT_INT(tput), PRINT_FLOAT(tput));
       }
       packet_counter = 0;
       timeout_error_counter = 0;
@@ -226,8 +232,12 @@ int main(void)
     
     if(sendNewPacket == TRUE) {
       sendNewPacket = FALSE;
-      diff = (0xFFFF - time2) + timer_reload_store*65000;
+      if(packet_counter != 0){
+        diff = (0xFFFF - time2) + timer_reload_store*65000;
+      }
       time_cumulate += diff;
+      timer_reload = 0;
+      MFT1->TNCNT1 = 0xFFFF;
 #ifdef UNIDIRECTIONAL_TEST
       ret = HAL_RADIO_SendPacket(channel, TX_WAKEUP_TIME, sendData, TxCallback);
 #else
@@ -236,8 +246,6 @@ int main(void)
       if(ret != SUCCESS_0) {
         printf("ERROR %d (%d)\r\n",ret, packet_counter);
       }
-      MFT1->TNCNT1 = 0xFFFF;
-      timer_reload = 0;
     }
   }
 }

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    main_common.h 
   * @author  RF Application Team
-* @version V1.0.1
-* @date    April-2018
+* @version V1.0.2
+* @date    April-2019
   * @brief   Library configuration file.
   ******************************************************************************
   * @attention
@@ -29,10 +29,32 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define BLE_ADV_ACCESS_ADDRESS  (uint32_t)(0x8E89BED6)
 #define FREQUENCY_CHANNEL       (uint8_t)(24)    // RF channel 22
 #define HS_STARTUP_TIME         (uint16_t)(0x0107)  /* High Speed start up time 642 us */
-#define TX_WAKEUP_TIME         (10000+500)      /* 10 ms + 500 us of guard time */
+#define TX_WAKEUP_TIME          (10000+700)      /* 10 ms + 700 us of guard time */
 #define RX_WAKEUP_TIME          10000            /* 10 ms */
 #define RX_TIMEOUT_OK           5000            /* 5 ms */
 #define RX_TIMEOUT_NOTOK        30000           /* 30 ms */

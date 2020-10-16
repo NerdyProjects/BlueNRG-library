@@ -76,6 +76,11 @@
     <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/osal.c</locationURI>
     </link>
   <link>
+      <name>Hal/vtimer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/hal/src/vtimer.c</locationURI>
+    </link>
+  <link>
       <name>Library/BlueNRG1_adc.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_adc.c</locationURI>
@@ -129,6 +134,11 @@
       <name>Library/BlueNRG1_sysCtrl.c</name>
     <type>1</type>
     <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</locationURI>
+    </link>
+  <link>
+      <name>Library/BlueNRG1_timer.c</name>
+    <type>1</type>
+    <locationURI>PARENT-6-PROJECT_LOC/Library/BlueNRG1_Periph_Driver/src/BlueNRG1_timer.c</locationURI>
     </link>
   <link>
       <name>Library/BlueNRG1_uart.c</name>

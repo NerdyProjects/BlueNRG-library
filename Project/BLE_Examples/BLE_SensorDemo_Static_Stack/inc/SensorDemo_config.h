@@ -4,6 +4,10 @@
 #include "bluenrg1_stack.h"
 #include "stack_user_cfg.h"
 
+#if OTA_EXTENDED_PACKET_LEN==1
+#include "ota_btl.h"
+#endif
+
 /* This file contains all the information needed to init the BlueNRG-1 stack. 
  * These constants and variables are used from the BlueNRG-1 stack to reserve RAM and FLASH 
  * according the application requests

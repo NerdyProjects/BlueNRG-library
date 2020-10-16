@@ -45,8 +45,6 @@
 #define PRINTF(...)
 #endif
 
-#define MAX_NUM_BONDED_DEVICES 1 //TBR
-
 #define SLAVE_LOCAL_NAME_LEN 6 
 
 /* discovery procedure mode context */
@@ -203,8 +201,6 @@ void set_connection(uint8_t device_type, uint8_t * device_address)
   //status = aci_gap_create_connection(le_scan_interval,le_scan_window,peer_address_type,peer_address,own_address_type,conn_interval_min,conn_interval_max,conn_latency,supervision_timeout,minimum_ce_length,maximum_ce_length);
   status = aci_gap_create_connection(0x4000,
                                      0x4000,
-                                     //discovery[0].device_found_address_type,
-                                     //discovery[0].device_found_address,
                                      device_type,
                                      device_address,
                                      0x02,
@@ -292,7 +288,6 @@ void APP_Tick(void)
     APP_FLAG_CLEAR(GET_BONDED_DEVICES);
 
     //aci_gap_get_bonded_devices
-    //status = aci_gap_get_bonded_devices(&num_of_addresses, bonded_device_entry_53);
     status = aci_gap_get_bonded_devices(&num_of_addresses, bonded_device_entry_53);
     if (status != BLE_STATUS_SUCCESS) {
       PRINTF("aci_gap_get_bonded_devices() failed:0x%02x\r\n", status);

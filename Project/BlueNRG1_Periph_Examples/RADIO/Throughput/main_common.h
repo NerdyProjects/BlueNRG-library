@@ -29,16 +29,46 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define ------------------------------------------------------------*/
+#define CALIBRATION_INTERVAL_CONF   1000
+
+#if LS_SOURCE==LS_SOURCE_INTERNAL_RO  
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        500
+
+/* Calibration must be done */
+#define INITIAL_CALIBRATION TRUE
+#define CALIBRATION_INTERVAL        CALIBRATION_INTERVAL_CONF
+
+#else
+
+/* Sleep clock accuracy. */
+#define SLEEP_CLOCK_ACCURACY        100
+
+/* No Calibration */
+#define INITIAL_CALIBRATION FALSE
+#define CALIBRATION_INTERVAL        0
+
+#endif
+
 #define BLE_ADV_ACCESS_ADDRESS  (uint32_t)(0x888888DF)
 #define FREQUENCY_CHANNEL       (uint8_t)(24)    // RF channel 22
 #define HS_STARTUP_TIME         (uint16_t)(1)   /* High Speed start up time min value */
 
 #ifdef UNIDIRECTIONAL_TEST
+#if HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ
+#define TX_WAKEUP_TIME           (225)
+#else
 #define TX_WAKEUP_TIME           (200)
+#endif
 #else
 #define TX_WAKEUP_TIME           (250)
 #endif
-#define RX_WAKEUP_TIME           (200)
+#if HS_SPEED_XTAL==HS_SPEED_XTAL_16MHZ
+#define RX_WAKEUP_TIME           (235)
+#else
+#define RX_WAKEUP_TIME           (210)
+#endif
 #define RX_TIMEOUT            100000      /* 100 ms */
 #define RX_TIMEOUT_ACK           150      /* 150 us */
 

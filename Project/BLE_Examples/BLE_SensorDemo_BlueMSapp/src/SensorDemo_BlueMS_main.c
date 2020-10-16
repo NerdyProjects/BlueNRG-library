@@ -4,7 +4,7 @@
 * Author             : RF Application Team
 * Version            : 1.1.0
 * Date               : 20-November-2017
-* Description        : Sensor Demo application for interacting with ST BlueMS app
+* Description        : Sensor Demo application for interacting with ST BLE Sensor app
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -17,7 +17,7 @@
 /**
  * @file SensorDemo_BlueMS_main.c
  * @brief This application contains an example which shows how implementing the Sensor Demo application
- * tailored for interacting with the ST BlueMS smartphone app.
+ * tailored for interacting with ST BLE Sensor smartphone app (previously known as ST BlueMS).
  * The device sends periodically, to the BlueMS APP, the data collected from the motion sensors: accelerometer and gyroscope.
  * And from the environmental sensors: pressure sensor and temperature sensor.
  * The usage is similar to the firmware example BLE_Examples/SensorDemo.
@@ -38,8 +38,8 @@
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
   -# Open the KEIL uVision 5 for ARM and select Project->Open Project menu. 
   -# Open the KEIL project
-     <tt> ...\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\MDK-ARM\\BlueNRG-1\\BLE_SensorDemo_BlueMSapp.uvprojx </tt> or
-     <tt> ...\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\MDK-ARM\\BlueNRG-2\\BLE_SensorDemo_BlueMSapp.uvprojx </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\MDK-ARM\\BlueNRG-1\\BLE_SensorDemo_BlueMSapp.uvprojx </tt> or
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\MDK-ARM\\BlueNRG-2\\BLE_SensorDemo_BlueMSapp.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -50,8 +50,8 @@
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
   -# Open the Embedded Workbench for ARM and select File->Open->Workspace menu. 
   -# Open the IAR project
-     <tt> ...\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\EWARM\\BlueNRG-1\\BLE_SensorDemo_BlueMSapp.eww </tt> or
-     <tt> ...\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\EWARM\\BlueNRG-2\\BLE_SensorDemo_BlueMSapp.eww </tt>
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\EWARM\\BlueNRG-1\\BLE_SensorDemo_BlueMSapp.eww </tt> or
+     <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_BlueMSapp\\EWARM\\BlueNRG-2\\BLE_SensorDemo_BlueMSapp.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
   -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
@@ -59,13 +59,17 @@
   -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
+- \c HigherApp_OTA - Release configuration for Higher Application with OTA Service
+- \c LowerApp_OTA - Release configuration for Lower Application with OTA Service
 - \c Release - Release configuration
+- \c Use_OTA_ServiceManager - Release configuration for Application using OTA Service Manager
 
 
 * \section Board_supported Boards supported
 - \c STEVAL-IDB007V1
 - \c STEVAL-IDB007V2
 - \c STEVAL-IDB008V1
+- \c STEVAL-IDB008V1M
 - \c STEVAL-IDB008V2
 - \c STEVAL-IDB009V1
 
@@ -105,35 +109,40 @@
                         
 * \section Pin_settings Pin settings
 @table
-|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-----------------------------------------------------------------------------------------------------------------------------
-|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
-|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|            |                                                           Release                                                           ||||||                                                        HigherApp_OTA                                                        ||||||                                                                     Use_OTA_ServiceManager                                                                      ||||||                                                        LowerApp_OTA                                                         ||||||
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  PIN name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |      STEVAL-IDB007V1     |      STEVAL-IDB007V2     |      STEVAL-IDB008V1     |     STEVAL-IDB008V1M     |      STEVAL-IDB008V2     |      STEVAL-IDB009V1     |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|    ADC1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    ADC2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     GND    |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |           N.A.           |           N.A.           |           N.A.           |         Not Used         |           N.A.           |           N.A.           |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|     IO0    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO1    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO11    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO12    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO13    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO14    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO15    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO16    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO17    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO18    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO19    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    IO20    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO21    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO22    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO23    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO24    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|    IO25    |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |           N.A.           |           N.A.           |           N.A.           |           N.A.           |           N.A.           |         Not Used         |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |
+|     IO3    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO5    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO6    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO7    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     IO8    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|   RESETN   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |           N.A.           |           N.A.           |           N.A.           |         Not Used         |           N.A.           |           N.A.           |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
+|    TEST1   |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|    VBLUE   |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |           N.A.           |           N.A.           |           N.A.           |         Not Used         |           N.A.           |           N.A.           |        N.A.        |        N.A.        |        N.A.        |      Not Used      |        N.A.        |        N.A.        |
 
 @endtable 
 
@@ -149,23 +158,27 @@
 
 * \section LEDs_description LEDs description
 @table
-|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
-----------------------------------------------------------------------------------------------------------------------------
-|     DL1    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |
-|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|     DL3    |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |
-|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|            |                                                           Release                                                           ||||||                                                        HigherApp_OTA                                                        ||||||                                                                     Use_OTA_ServiceManager                                                                      ||||||                                                        LowerApp_OTA                                                         ||||||
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LED name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |      STEVAL-IDB007V1     |      STEVAL-IDB007V2     |      STEVAL-IDB008V1     |     STEVAL-IDB008V1M     |      STEVAL-IDB008V2     |      STEVAL-IDB009V1     |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|     DL1    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |       Activity led       |       Activity led       |       Activity led       |       Activity led       |       Activity led       |       Activity led       |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |    Activity led    |
+|     DL2    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|     DL3    |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |         Error led        |         Error led        |         Error led        |         Error led        |         Error led        |         Error led        |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |      Error led     |
+|     DL4    |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |         Not Used         |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
 
 @endtable
 
 
 * \section Buttons_description Buttons description
 @table
-|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
---------------------------------------------------------------------------------------------------------------------------------
-|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
-|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |
+|                |                                                           Release                                                           ||||||                                                        HigherApp_OTA                                                        ||||||                                                                                       Use_OTA_ServiceManager                                                                                        ||||||                                                        LowerApp_OTA                                                         ||||||
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   BUTTON name  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |         STEVAL-IDB007V1        |         STEVAL-IDB007V2        |         STEVAL-IDB008V1        |        STEVAL-IDB008V1M        |         STEVAL-IDB008V2        |         STEVAL-IDB009V1        |   STEVAL-IDB007V1  |   STEVAL-IDB007V2  |   STEVAL-IDB008V1  |  STEVAL-IDB008V1M  |   STEVAL-IDB008V2  |   STEVAL-IDB009V1  |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|      PUSH1     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |   Jump to OTA Service manager  |   Jump to OTA Service manager  |   Jump to OTA Service manager  |   Jump to OTA Service manager  |   Jump to OTA Service manager  |   Jump to OTA Service manager  |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      PUSH2     |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |            Not Used            |            Not Used            |            Not Used            |            Not Used            |            Not Used            |            Not Used            |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |      Not Used      |
+|      RESET     |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |         Reset BlueNRG1         |         Reset BlueNRG1         |         Reset BlueNRG2         |         Reset BlueNRG2         |         Reset BlueNRG2         |         Reset BlueNRG2         |   Reset BlueNRG1   |   Reset BlueNRG1   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |   Reset BlueNRG2   |
 
 @endtable
 
@@ -173,6 +186,13 @@
 
 This is a demonstration example of the Sensor Demo application version tailored for interacting with the ST BlueMS smarthphone application. 
 Refer to the related documentation for more details.
+
+This is a demonstration example of the BLE Sensor Demo application version tailored for interacting with the ST BLE Sensor smarthphone application (previously known as ST BlueMS).
+This  demo application allows to configure a BlueNRG-1/2 kit platform with a demo application able to interact with the ST BLE Sensor application and provide it a set of sensor data, which user can log to different cloud providers.
+
+NOTEs:
+     - OTA service support for lower or higher application is enabled, respectively, through ST_OTA_LOWER_APPLICATION=1 or ST_OTA_HIGHER_APPLICATION=1 (preprocessor, linker) options and files: OTA_btl.[ch] (refer to LowerApp_OTA and HigherApp_OTA IAR workspaces).
+     - OTA service manager support is enabled, respectively, through ST_USE_OTA_SERVICE_MANAGER_APPLICATION (preprocessor, linker) options and files: OTA_btl.[ch] (refer to Use_OTA_ServiceManager IAR workspace).
 
 **/
    
@@ -196,6 +216,7 @@ Refer to the related documentation for more details.
 #include "sensor.h"
 #include "SensorDemo_config.h"
 #include "gatt_db.h"
+#include "OTA_btl.h"  
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -214,8 +235,6 @@ Refer to the related documentation for more details.
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Set the Application Service Max number of attributes records with init parameters coming from application *.config.h file */
-uint8_t Services_Max_Attribute_Records[NUMBER_OF_APPLICATION_SERVICES] = {MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_1, MAX_NUMBER_ATTRIBUTES_RECORDS_SERVICE_2};
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -246,7 +265,13 @@ int main(void)
   SdkEvalLedOn(LED1);
   SdkEvalLedOff(LED3);
   
-  PRINTF("BlueNRG-1 BLE Sensor Demo Application (version: %s)\r\n", BLE_SENSOR_VERSION_STRING); 
+   PRINTF("BlueNRG-1 BLE Sensor Demo Application (version: %s)\r\n", BLE_SENSOR_VERSION_STRING); 
+  
+#if ST_USE_OTA_SERVICE_MANAGER_APPLICATION
+  /* Initialize the button: to be done before Sensor_DeviceInit for avoiding to 
+     overwrite pressure/temperature sensor IO configuration when using BUTTON_2 (IO5) */
+  SdkEvalPushButtonInit(USER_BUTTON);
+#endif /* ST_USE_OTA_SERVICE_MANAGER_APPLICATION */
   
   /* Sensor Device Init */
   ret = Sensor_DeviceInit();
@@ -254,6 +279,7 @@ int main(void)
     SdkEvalLedOn(LED3);
     while(1);
   }
+ 
  
   while(1)
   {
@@ -264,8 +290,60 @@ int main(void)
     APP_Tick();
     
     /* Power Save management */
-    BlueNRG_Sleep(SLEEPMODE_NOTIMER, 0, 0);
+    BlueNRG_Sleep(SLEEPMODE_NOTIMER, 0, 0); 
+#if ST_OTA_FIRMWARE_UPGRADE_SUPPORT
+    /* Check if the OTA firmware upgrade session has been completed */
+    if (OTA_Tick() == 1)
+    {
+      /* Jump to the new application */
+      OTA_Jump_To_New_Application();
+    }
+#endif /* ST_OTA_FIRMWARE_UPGRADE_SUPPORT */
+
+#if ST_USE_OTA_SERVICE_MANAGER_APPLICATION
+    if (SdkEvalPushButtonGetState(USER_BUTTON) == RESET)
+    {
+      OTA_Jump_To_Service_Manager_Application();
+    }
+#endif /* ST_USE_OTA_SERVICE_MANAGER_APPLICATION */
   }   
+}
+
+/* Hardware Error event. 
+   This event is used to notify the Host that a hardware failure has occurred in the Controller. 
+   Hardware_Code Values:
+   - 0x01: Radio state error
+   - 0x02: Timer overrun error
+   - 0x03: Internal queue overflow error
+   After this event is recommended to force device reset. */
+
+void hci_hardware_error_event(uint8_t Hardware_Code)
+{
+   NVIC_SystemReset();
+}
+
+/**
+  * This event is generated to report firmware error informations.
+  * FW_Error_Type possible values: 
+  * Values:
+  - 0x01: L2CAP recombination failure
+  - 0x02: GATT unexpected response
+  - 0x03: GATT unexpected request
+    After this event with error type (0x01, 0x02, 0x3) it is recommended to disconnect. 
+*/
+void aci_hal_fw_error_event(uint8_t FW_Error_Type,
+                            uint8_t Data_Length,
+                            uint8_t Data[])
+{
+  if (FW_Error_Type <= 0x03)
+  {
+    uint16_t connHandle;
+    
+    /* Data field is the connection handle where error has occurred */
+    connHandle = LE_TO_HOST_16(Data);
+    
+    aci_gap_terminate(connHandle, BLE_ERROR_TERMINATED_REMOTE_USER); 
+  }
 }
 
 /****************** BlueNRG-1 Sleep Management Callback ********************************/

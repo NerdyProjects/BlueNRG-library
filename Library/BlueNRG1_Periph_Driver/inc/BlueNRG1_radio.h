@@ -2,8 +2,7 @@
   ******************************************************************************
   * @file    BlueNRG1_radio.h
   * @author  RF Application Team
-  * @version V1.2.0
-  * @date    03-April-2018
+  * @date    Jan-2020
   * @brief   This file contains all the functions prototypes for the radio firmware 
   *          library.
   ******************************************************************************
@@ -16,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2017 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2020 STMicroelectronics</center></h2>
   ******************************************************************************
   */
   
@@ -29,7 +28,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
@@ -46,7 +45,7 @@
   */
 
 #define HEADER_LENGTH           2
-#ifdef BLUENRG2_DEVICE
+#if defined(BLUENRG2_DEVICE)
 #define MAX_PACKET_LENGTH       (255+HEADER_LENGTH) // 255 (-4 if encryption)
 #else
 #define MAX_PACKET_LENGTH       (38+HEADER_LENGTH)  // 31 in data channel, 38 in adv. channel (-4 if encryption)
@@ -61,20 +60,11 @@
 #define COMMAND_DISALLOWED      0xC5
 #define NULL_0                  0
 #define BLUE_IDLE_0             0  
-#define BLUE_BUSY_NOWAKEUP_T1   1 
-#define BLUE_BUSY_NOWAKEUP_T2   2 
-#define BLUE_BUSY_WAKEUP        3 
 #define TIMESTAMP_POSITION_ACCESSADDRESS    0x40 
 #define TIMESTAMP_POSITION_LASTBIT          0x80 /*C0*/  
 #define HOT_ANA_CONFIG_TABLE_LENGTH         64
-#define CONFIG_ERROR_EN                     0x10
-#define SCA_DEFAULTVALUE                    488
 
 #define STATEMACHINE_COUNT   8
-
-#define ANALOG_HW_OFFSET        (86)  /* subtrack 2*86 in the 1st packet for XC oscillator */  
-#define TIMING_ERROR_CORRECTION (69)  /* subtrack 2*69 in all packet except 1st for XC oscillator */
-
   
 /** @defgroup Radio_Interrupt_Status_Bits  Interrupt Status bits
   * @{
@@ -183,35 +173,17 @@ typedef struct ActionPacket ActionPacket;
 
 typedef struct {
   uint32_t *hot_ana_config_table;   /**< Set to NULL */
-  uint8_t ls_source;                /**< Source for the 32 kHz slow speed clock: 1: internal RO; 0: external crystal */
-  uint16_t hs_startup_time ;        /**< Start up time of the high speed (16 or 32 MHz) crystal oscillator in units of 625/256 us (~2.44 us)*/
 } config_table_t;
 
-
-typedef struct {
-    int32_t freq;    
-    int32_t period;    
-    struct {
-      uint32_t  Time_mT        : 24;
-      uint32_t  started_flag   :  8;
-    } calibr;    
-} Clk32Context_t;
 
 typedef struct {
     uint32_t back2backTime;
     uint8_t forceRadiotoStop;
     uint32_t rssiLevel[2];
-    int32_t wakeupTime;
-    uint16_t period_slow_patch;
-    int32_t freq_global_debug;
-    int32_t period_global_debug;
     int32_t hot_ana_config_table_a[HOT_ANA_CONFIG_TABLE_LENGTH>>2];
-    Clk32Context_t Clk32Context;
     config_table_t hardware_config;
    // uint8_t tone_start_stop_flag;
     ActionPacket* current_action_packet;    
-    uint8_t powerUpfirstPacket;
-
 }RadioGlobalParameters_t;
 
 extern RadioGlobalParameters_t globalParameters;
@@ -269,11 +241,11 @@ struct ActionPacket
   * @{
   */
 
-void RADIO_Init(uint16_t hs_startup_time, uint8_t low_speed_osc, uint32_t* hot_table, FunctionalState whitening);
+void RADIO_Init(uint32_t* hot_table, FunctionalState whitening);
 uint8_t RADIO_GetStatus(uint32_t *time);
 void RADIO_SetChannelMap(uint8_t StateMachineNo,uint8_t *chan_remap);
 void RADIO_SetChannel(uint8_t StateMachineNo, uint8_t channel,uint8_t channel_increment); 
-void RADIO_SetTxAttributes(uint8_t StateMachineNo, uint32_t NetworkID, uint32_t crc_init, uint32_t sca);
+void RADIO_SetTxAttributes(uint8_t StateMachineNo, uint32_t NetworkID, uint32_t crc_init);
 void RADIO_SetBackToBackTime(uint32_t back_to_back_time);  
 void RADIO_SetTxPower(uint8_t PowerLevel);    
 void RADIO_IRQHandler(void);
@@ -306,4 +278,4 @@ void RADIO_EncryptPlainData(uint8_t *Key, uint8_t *plainData, uint8_t *cypherDat
 
 #endif /*BLUENRG1_RADIO_H */
 
-/******************* (C) COPYRIGHT 2017 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2020 STMicroelectronics *****END OF FILE****/

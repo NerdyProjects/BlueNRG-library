@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
   * @file    BlueNRG1_adc.h
-  * @author  VMA Application Team
-  * @version V2.4.0
-  * @date    4-May-2018
+* @author  RF Application Team
+* @version V2.6.0
+* @date  30-January-2019
   * @brief   This file contains all the functions prototypes for the ADC firmware 
   *          library.
   ******************************************************************************
@@ -29,7 +29,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "BlueNRG_x_device.h"
+#include "bluenrg_x_device.h"
 
 /** @addtogroup BLUENRG1_Peripheral_Driver BLUENRG1 Peripheral Driver
   * @{
@@ -227,6 +227,9 @@ float ADC_ConvertBatterySensor(int16_t raw_value, uint8_t vRef);
 float ADC_ConvertTemperatureSensor(int16_t raw_value, uint8_t vRef, uint8_t attenuation);
 
 uint16_t ADC_GetRawData(void);
+
+float ADC_CompensateOutputValue(float value);
+uint8_t ADC_SwCalibration(void);
 
 /**
   * @}

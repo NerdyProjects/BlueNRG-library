@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
+#include "SDK_EVAL_Com.h"
 #include "sleep.h"
 #include "bluenrg1_stack.h"
 
@@ -101,12 +102,8 @@ void SysTick_Handler(void)
 * @retval None
 */
 void UART_Handler(void)
-{  
-  if (UART_GetITStatus(UART_IT_RX) != RESET)
-  {
-    /* Clear the interrupt */
-    UART_ClearITPendingBit(UART_IT_RX);
-  }
+{
+  SdkEvalComIOUartIrqHandler();
 }
 
 void Blue_Handler(void)
