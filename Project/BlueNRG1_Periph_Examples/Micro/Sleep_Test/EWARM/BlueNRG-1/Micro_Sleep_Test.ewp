@@ -1152,7 +1152,7 @@
     <group>
         <name>Startup</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
         </file>
     </group>
     <group>

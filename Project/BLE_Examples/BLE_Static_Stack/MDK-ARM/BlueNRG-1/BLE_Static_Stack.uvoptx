@@ -8,7 +8,7 @@
   <Extensions>
     <cExt>*.c</cExt>
     <aExt>*.s*; *.src; *.a*</aExt>
-    <oExt>*.obj; *.o</oExt>
+    <oExt>*.obj</oExt>
     <lExt>*.lib</lExt>
     <tExt>*.txt; *.h; *.inc</tExt>
     <pExt>*.plm</pExt>
@@ -119,6 +119,11 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGDARM</Key>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -130,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMDBGFLAGS</Key>
-          <Name></Name>
+          <Name>-T0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -140,29 +145,28 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U53FF71065177485723260787 -O198 -SF1800 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1.FLM -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM)</Name>
+          <Name>-U55FF74064980555706421787 -O9455 -S0 -C0 -A0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC16000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1 -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>UL2CM3(-S0 -C0 -P0 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1 -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM))</Name>
+          <Name>UL2CM3(-S0 -C0 -P0 )  -FN1 -FC1000 -FD200002CC -FF0STBlueNRG -FL028000 -FS010040000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
-      <MemoryWindow1>
-        <Mm>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
           <WinNumber>1</WinNumber>
-          <SubType>0</SubType>
-          <ItemText>0x10040000</ItemText>
-          <AccSizeX>0</AccSizeX>
-        </Mm>
-      </MemoryWindow1>
+          <ItemText>cnt_time</ItemText>
+        </Ww>
+      </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
       <DebugFlag>
         <trace>0</trace>
-        <periodic>0</periodic>
+        <periodic>1</periodic>
         <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
@@ -300,28 +304,60 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGDARM</Key>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>ARMRTXEVENTFLAGS</Key>
+          <Name>-L70 -Z18 -C0 -M0 -T1</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>DLGTARM</Key>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>ARMDBGFLAGS</Key>
+          <Name>-T0</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>DLGUARM</Key>
+          <Name>(105=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U53FF71065177485723260787 -O198 -SF1800 -C0 -A0 -I0 -HNlocalhost -HP7184 -P2 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1.FLM -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM)</Name>
+          <Name>-U55FF74064980555706421787 -O9455 -S0 -C0 -A0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC16000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1 -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>UL2CM3(-S0 -C0 -P0 -FD200002CC -FC1000 -FN1 -FF0STBlueNRG1 -FS010040000 -FL028000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG1.FLM))</Name>
+          <Name>UL2CM3(-S0 -C0 -P0 )  -FN1 -FC1000 -FD200002CC -FF0STBlueNRG -FL028000 -FS010040000 -FP0($$Device:BlueNRG-1$Flash\STBlueNRG.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>cnt_time</ItemText>
+        </Ww>
+      </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
       <DebugFlag>
         <trace>0</trace>
-        <periodic>0</periodic>
-        <aLwin>0</aLwin>
+        <periodic>1</periodic>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
         <aPa>0</aPa>
-        <viewmode>0</viewmode>
+        <viewmode>1</viewmode>
         <vrSel>0</vrSel>
         <aSym>0</aSym>
         <aTbox>0</aTbox>
@@ -356,32 +392,32 @@
   </Target>
 
   <Group>
-    <GroupName>BlueNRG1_Periph_Driver</GroupName>
-    <tvExp>1</tvExp>
+    <GroupName>BLE_Stack</GroupName>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>1</GroupNumber>
       <FileNumber>1</FileNumber>
-      <FileType>1</FileType>
+      <FileType>4</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_flash.c</PathWithFileName>
-      <FilenameWithoutPath>BlueNRG1_flash.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/Bluetooth_LE/library/libbluenrg1_stack.a</PathWithFileName>
+      <FilenameWithoutPath>libbluenrg1_stack.a</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>1</GroupNumber>
       <FileNumber>2</FileNumber>
-      <FileType>1</FileType>
+      <FileType>4</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_pka.c</PathWithFileName>
-      <FilenameWithoutPath>BlueNRG1_pka.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/cryptolib/libcrypto.a</PathWithFileName>
+      <FilenameWithoutPath>libcrypto.a</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -392,75 +428,75 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_sysCtrl.c</PathWithFileName>
-      <FilenameWithoutPath>BlueNRG1_sysCtrl.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/Bluetooth_LE/src/stack_dle_api_stubs.c</PathWithFileName>
+      <FilenameWithoutPath>stack_dle_api_stubs.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-  </Group>
-
-  <Group>
-    <GroupName>Startup</GroupName>
-    <tvExp>1</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>2</GroupNumber>
+      <GroupNumber>1</GroupNumber>
       <FileNumber>4</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</PathWithFileName>
-      <FilenameWithoutPath>system_bluenrg1.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/Bluetooth_LE/src/stack_user_cfg.c</PathWithFileName>
+      <FilenameWithoutPath>stack_user_cfg.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
   </Group>
 
   <Group>
-    <GroupName>User</GroupName>
-    <tvExp>1</tvExp>
+    <GroupName>hal</GroupName>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>3</GroupNumber>
+      <GroupNumber>2</GroupNumber>
       <FileNumber>5</FileNumber>
-      <FileType>1</FileType>
+      <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\src\bluenrg1_cmd_if.c</PathWithFileName>
-      <FilenameWithoutPath>bluenrg1_cmd_if.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/hal/src/context_switch.s</PathWithFileName>
+      <FilenameWithoutPath>context_switch.s</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
-      <GroupNumber>3</GroupNumber>
+      <GroupNumber>2</GroupNumber>
       <FileNumber>6</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\src\bluenrg1_ev_if.c</PathWithFileName>
-      <FilenameWithoutPath>bluenrg1_ev_if.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/hal/src/miscutil.c</PathWithFileName>
+      <FilenameWithoutPath>miscutil.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
-      <GroupNumber>3</GroupNumber>
+      <GroupNumber>2</GroupNumber>
       <FileNumber>7</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\src\bluenrg1_it_stub.c</PathWithFileName>
-      <FilenameWithoutPath>bluenrg1_it_stub.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/hal/src/osal.c</PathWithFileName>
+      <FilenameWithoutPath>osal.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+  </Group>
+
+  <Group>
+    <GroupName>Library</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>8</FileNumber>
@@ -468,8 +504,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\src\Reset_Manager.c</PathWithFileName>
-      <FilenameWithoutPath>Reset_Manager.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_flash.c</PathWithFileName>
+      <FilenameWithoutPath>BlueNRG1_flash.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -480,31 +516,31 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\src\OTA_ResetManager_main.c</PathWithFileName>
-      <FilenameWithoutPath>OTA_ResetManager_main.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_pka.c</PathWithFileName>
+      <FilenameWithoutPath>BlueNRG1_pka.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>10</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</PathWithFileName>
+      <FilenameWithoutPath>BlueNRG1_sysCtrl.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
   </Group>
 
   <Group>
-    <GroupName>Hal</GroupName>
-    <tvExp>1</tvExp>
+    <GroupName>Startup</GroupName>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>4</GroupNumber>
-      <FileNumber>10</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\hal\src\context_switch.s</PathWithFileName>
-      <FilenameWithoutPath>context_switch.s</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
     <File>
       <GroupNumber>4</GroupNumber>
       <FileNumber>11</FileNumber>
@@ -512,40 +548,40 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\hal\src\osal.c</PathWithFileName>
-      <FilenameWithoutPath>osal.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>4</GroupNumber>
-      <FileNumber>12</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\hal\src\miscutil.c</PathWithFileName>
-      <FilenameWithoutPath>miscutil.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</PathWithFileName>
+      <FilenameWithoutPath>system_BlueNRG1.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
   </Group>
 
   <Group>
-    <GroupName>Stack</GroupName>
-    <tvExp>1</tvExp>
+    <GroupName>User</GroupName>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>13</FileNumber>
-      <FileType>4</FileType>
+      <FileNumber>12</FileNumber>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Bluetooth_LE\library\libbluenrg1_stack.a</PathWithFileName>
-      <FilenameWithoutPath>libbluenrg1_stack.a</FilenameWithoutPath>
+      <PathWithFileName>../../src/bluenrg1_cmd_if.c</PathWithFileName>
+      <FilenameWithoutPath>bluenrg1_cmd_if.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>5</GroupNumber>
+      <FileNumber>13</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../../src/bluenrg1_ev_if.c</PathWithFileName>
+      <FilenameWithoutPath>bluenrg1_ev_if.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -556,20 +592,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Bluetooth_LE\src\stack_user_cfg.c</PathWithFileName>
-      <FilenameWithoutPath>stack_user_cfg.c</FilenameWithoutPath>
+      <PathWithFileName>../../src/bluenrg1_it_stub.c</PathWithFileName>
+      <FilenameWithoutPath>bluenrg1_it_stub.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
       <FileNumber>15</FileNumber>
-      <FileType>4</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\cryptolib\libcrypto.a</PathWithFileName>
-      <FilenameWithoutPath>libcrypto.a</FilenameWithoutPath>
+      <PathWithFileName>../../src/OTA_ResetManager_main.c</PathWithFileName>
+      <FilenameWithoutPath>OTA_ResetManager_main.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -580,8 +616,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Bluetooth_LE\src\stack_dle_api_stubs.c</PathWithFileName>
-      <FilenameWithoutPath>stack_dle_api_stubs.c</FilenameWithoutPath>
+      <PathWithFileName>../../src/Reset_Manager.c</PathWithFileName>
+      <FilenameWithoutPath>Reset_Manager.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

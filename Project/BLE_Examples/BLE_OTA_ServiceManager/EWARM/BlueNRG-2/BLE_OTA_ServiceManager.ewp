@@ -32,11 +32,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state>Automatic choice of formatter.</state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>Automatic choice of formatter.</state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1190,7 +1190,7 @@
     <group>
         <name>Startup</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
         </file>
     </group>
     <group>

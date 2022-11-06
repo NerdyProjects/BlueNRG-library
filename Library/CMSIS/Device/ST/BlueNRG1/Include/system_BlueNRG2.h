@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    system_bluenrg2.h
+  * @file    system_BlueNRG2.h
   * @author  AMS RF-Application Team
   * @version V1.1.0
   * @date    6-April-2018
@@ -38,7 +38,7 @@
 #include "compiler.h"
 #include "hal_types.h"
 #include <core_cm0.h>
-#include "system_bluenrg.h"
+#include "system_BlueNRG.h"
 
 
 /** @addtogroup system_bluenrg2_Exported_Constants Exported Constants

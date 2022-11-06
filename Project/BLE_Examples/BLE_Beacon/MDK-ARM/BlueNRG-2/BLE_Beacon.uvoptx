@@ -756,8 +756,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</PathWithFileName>
-      <FilenameWithoutPath>system_bluenrg1.c</FilenameWithoutPath>
+      <PathWithFileName>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</PathWithFileName>
+      <FilenameWithoutPath>system_BlueNRG1.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

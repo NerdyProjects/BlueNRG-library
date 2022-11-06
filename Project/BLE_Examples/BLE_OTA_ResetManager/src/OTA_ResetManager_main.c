@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : OTA_ResetManager_main.c
 * Author             : RF Application Team
 * Version            : 1.1.0
@@ -29,9 +29,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\MDK-ARM\\BlueNRG-2\\BLE_OTA_ResetManager.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -41,9 +41,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ResetManager\\EWARM\\BlueNRG-2\\BLE_OTA_ResetManager.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -177,7 +177,7 @@ NOTEs
 **/
    
 /** @addtogroup BlueNRG1_demonstrations_applications
-* BlueNRG-1 OTA Reset manager \see OTA_ResetManager_main.c for documentation.
+* BlueNRG-1,2 OTA Reset manager \see OTA_ResetManager_main.c for documentation.
 *
 *@{
 */
@@ -251,7 +251,8 @@ static void OTA_Erase_Storage_Area(uint16_t startPageNumber, uint16_t endPageNum
     /* Write the ERASE command */
     FLASH->COMMAND = FLASH_ERASE;
 		
-    FLASH_WaitCmdDone();
+    //FLASH_WaitCmdDone();
+		while(FLASH->IRQRAW_b.CMDDONE != SET);
   }
 }
 

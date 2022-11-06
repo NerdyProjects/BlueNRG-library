@@ -31,7 +31,7 @@
 
 #ifndef SENSOR_EMULATION
 #include "lsm6ds3.h"
-#include "lsm6ds3_hal.h"
+#include "LSM6DS3_hal.h"
 #include "gatt_db.h"
 #endif
 
@@ -128,7 +128,7 @@ void GPIO_Handler(void)
 /*                 BlueNRG-1 Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (system_bluenrg1.c).                                               */
+/*  file (system_BlueNRG1.c).                                               */
 /******************************************************************************/
 /**
 * @brief  This function handles UART interrupt request.

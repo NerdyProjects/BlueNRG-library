@@ -13,7 +13,7 @@
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 /** @addtogroup BlueNRG1_demonstrations_applications
- * BlueNRG-1 Security Central \see C_main.c for documentation.
+ * BlueNRG-1,2 Security Central \see C_main.c for documentation.
  *
  *@{
  */
@@ -95,7 +95,7 @@ int main(void)
   /* Configure I/O communication channel  */
   SdkEvalComIOConfig(SdkEvalComIOProcessInputData);
  
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     PRINTF("Error in BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
@@ -118,7 +118,7 @@ int main(void)
   SdkEvalPushButtonInit(USER_BUTTON);
   user_set_wakeup_source(USER_BUTTON);
   
-  PRINTF("BlueNRG-1 BLE Security Central Application (version: %s, security mode: %s, button: %d)\r\n", BLE_APPLICATION_VERSION_STRING,Security_Configuration, USER_BUTTON);
+  PRINTF("BlueNRG-1,2 BLE Security Central Application (version: %s, security mode: %s, button: %d)\r\n", BLE_APPLICATION_VERSION_STRING,Security_Configuration, USER_BUTTON);
    
   /* Start Master Device Discovery procedure */
   if (deviceDiscovery() != BLE_STATUS_SUCCESS) {

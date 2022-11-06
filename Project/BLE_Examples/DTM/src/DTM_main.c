@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : DTM_main.c
 * Author             : RF Application Team
 * Version            : 1.1.0
@@ -20,16 +20,16 @@
  * 
 
 
-* \section ATOLLIC_project ATOLLIC project
-  To use the project with ATOLLIC TrueSTUDIO for ARM, please follow the instructions below:
-  -# Open the ATOLLIC TrueSTUDIO for ARM and select File->Import... Project menu. 
+* \section WiSE-Studio_project WiSE-Studio project
+  To use the project with WiSE-Studio , please follow the instructions below:
+  -# Open the WiSE-Studio  and select File->Import. 
   -# Select Existing Projects into Workspace. 
-  -# Select the ATOLLIC project
-  -# Select desired configuration to build from Project->Manage Configurations
-  -# Select Project->Rebuild Project. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Go to Project Explorer section
+  -# Select desired configuration to build from Project->Project->Build Project.
+  -# Select Project->Rebuild All. This will recompile and link the entire application
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section KEIL_project KEIL project
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
@@ -39,9 +39,9 @@
      <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\MDK-ARM\\BlueNRG-2\\DTM.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -51,9 +51,9 @@
      <tt> C:\\Users\\{username}\\ST\\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\DTM\\EWARM\\BlueNRG-2\\DTM.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c SPI - Network coprocessor configuration: SPI mode
@@ -219,7 +219,7 @@ If the DTM Updater support is not necessary, the DTM Updater code can be removed
 **/
    
 /** @addtogroup BlueNRG1_demonstrations_applications
- *  BlueNRG-1 DTM application \see DTM_main.c for documentation.
+ *  BlueNRG-1,2 DTM application \see DTM_main.c for documentation.
  *
  *@{
  */
@@ -268,8 +268,10 @@ void aci_blue_crash_info_event(uint8_t Crash_Type,
  ******************************************************************************
  * The DTM project memory layout is as follows:
  * 
- * ------------- 0x10067FFF
- *             
+ * ------------- 0x10068000 (BlueNRG-1); 0x10080000 (BlueNRG-1)
+ *      NVM         
+ * ------------- 0x10067000 (BlueNRG-1); 0x1007F000 (BlueNRG-2)
+ *
  *      DTM
  * 
  * ------------- 0x10042000 (MEMORY_FLASH_APP_OFFSET)
@@ -384,7 +386,7 @@ int main(void)
   }
 
   while(1) {
-    /* BlueNRG-1 stack tick */
+    /* BlueNRG-1,2 stack tick */
     BURST_Tick();
     BTLE_StackTick();
     transport_layer_tick();

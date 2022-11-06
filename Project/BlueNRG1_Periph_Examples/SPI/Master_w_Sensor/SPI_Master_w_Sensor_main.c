@@ -20,7 +20,7 @@
 #include "BlueNRG1_conf.h"
 #include "BlueNRG1_it.h"
 #include "SDK_EVAL_Config.h"
-#include "LSM6DS3.h"
+#include "lsm6ds3.h"
 
 /** @addtogroup BlueNRG1_StdPeriph_Examples BlueNRG1 Standard Peripheral Examples
 * @{

@@ -228,6 +228,7 @@
                     <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
                     <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
                     <state>SAVE_CONTEXT_ON_CSTACK=0</state>
+                    <state>USER_BUTTON=BUTTON_1</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -357,7 +358,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Include</state>
-                    <state> $PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\layers_inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\Utils\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\OTA\inc</state>
@@ -697,7 +698,7 @@
             <archiveVersion>1</archiveVersion>
             <data>
                 <prebuild></prebuild>
-                <postbuild></postbuild>
+                <postbuild>ielftool.exe --bin --verbose "$TARGET_PATH$" "$TARGET_DIR$\BLE_Beacon_FreeRTOS.bin"</postbuild>
             </data>
         </settings>
         <settings>
@@ -1206,7 +1207,7 @@
     <group>
         <name>Startup</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
         </file>
     </group>
     <group>

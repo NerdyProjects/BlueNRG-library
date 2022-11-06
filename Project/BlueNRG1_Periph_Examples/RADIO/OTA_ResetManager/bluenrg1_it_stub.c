@@ -1,5 +1,5 @@
 #include "bluenrg1_it_stub.h"
-#include "bluenrg1_radio.h"
+#include "BlueNRG1_radio.h"
 #include "clock.h"
 
 extern const intvec_elem __vector_table[];

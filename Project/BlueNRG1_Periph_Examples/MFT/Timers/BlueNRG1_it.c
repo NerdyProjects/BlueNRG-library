@@ -80,7 +80,7 @@ void SVC_Handler(void)
 /*                 BlueNRG-1 Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (system_bluenrg1.c).                                               */
+/*  file (system_BlueNRG1.c).                                               */
 /******************************************************************************/
 
 
@@ -95,7 +95,7 @@ void MFT1B_Handler(void)
   {
     SdkEvalLedToggle(LED1);
     /* Set the counter at 500 ms */
-    MFT_SetCounter2(MFT1, 50000);
+    MFT_SetCounter2(MFT1, MFT1_COUNTER_USER);
     
     /** Clear MFT2 pending interrupt A */
     MFT_ClearIT(MFT1, MFT_IT_TND);
@@ -113,7 +113,7 @@ void MFT2B_Handler(void)
   {
     SdkEvalLedToggle(LED2);
     /* Set the counter at 250 ms */
-    MFT_SetCounter2(MFT2, 25000);
+    MFT_SetCounter2(MFT2, MFT2_COUNTER_USER);
     
     /** Clear MFT2 pending interrupt A */
     MFT_ClearIT(MFT2, MFT_IT_TND);   

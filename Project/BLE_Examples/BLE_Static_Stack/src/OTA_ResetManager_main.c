@@ -3,7 +3,7 @@
 * Author             : AMS - VMA RF application team
 * Version            : V1.1.0
 * Date               : 15-January-2016
-* Description        : BlueNRG-1 OTA Reset manager file
+* Description        : BlueNRG-1,2 OTA Reset manager file
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -13,7 +13,7 @@
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 /** @addtogroup BlueNRG1_demonstrations_applications
-* BlueNRG-1 OTA Reset manager \see OTA_ResetManager_main.c for documentation.
+* BlueNRG-1,2 OTA Reset manager \see OTA_ResetManager_main.c for documentation.
 *
 *@{
 */

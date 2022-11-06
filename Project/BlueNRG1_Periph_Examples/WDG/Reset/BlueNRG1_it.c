@@ -86,7 +86,7 @@ void SysTick_Handler(void)
 /*                 BlueNRG-1 Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (system_bluenrg1.c).                                               */
+/*  file (system_BlueNRG1.c).                                               */
 /******************************************************************************/
 
 

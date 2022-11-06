@@ -37,6 +37,20 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+#define THRESH_1MS_UP 		(33000)
+#define THRESH_1MS_DOWN 	(31000)
+#define THRESH_100US_UP 	(3300)
+#define THRESH_100US_DOWN 	(3100)
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+#define THRESH_1MS_UP 		(16500)
+#define THRESH_1MS_DOWN 	(15500)
+#define THRESH_100US_UP 	(1650)
+#define THRESH_100US_DOWN 	(1550)
+#endif
+
+
 /* Private variables ---------------------------------------------------------*/
 uint8_t status_a = 0;
 uint8_t status_b = 0;
@@ -93,7 +107,7 @@ void SysTick_Handler(void)
 /*                 BlueNRG-1 Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (system_bluenrg1.c).                                               */
+/*  file (system_BlueNRG1.c).                                               */
 /******************************************************************************/
 
 /**
@@ -131,7 +145,7 @@ void MFT1A_Handler(void)
        * with a target period of 1 ms, and a tick counter of 62.5 ns,
        * then the target counter is 16000.
        */
-      if ((period_counter_a > 15500) && (period_counter_a < 16500)) {
+      if ((period_counter_a > THRESH_1MS_DOWN) && (period_counter_a < THRESH_1MS_UP)) {
         fA_found = SET;
       }
       else {
@@ -170,7 +184,7 @@ void MFT1A_Handler(void)
        * with a target period of 100 us, and a tick counter of 62.5 ns,
        * then the target counter is 1600.
        */
-      if ((period_counter_b > 1550) && (period_counter_b < 1650)) {
+      if ((period_counter_b > THRESH_100US_DOWN) && (period_counter_b < THRESH_100US_UP)) {
         fB_found = SET;
       }
       else {

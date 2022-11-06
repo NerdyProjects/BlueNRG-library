@@ -4,27 +4,28 @@
   <project>
     <path>$WS_DIR$\BLE_SensorDemo_Static_Stack.ewp</path>
   </project>
-  <batchBuild>
+<batchBuild>
     <batchDefinition>
       <name>BUILD_ALL</name>
-      <member>
+    <member>
         <project>BLE_SensorDemo</project>
-        <configuration>HigherApp_OTA</configuration>
+      <configuration>HigherApp_OTA</configuration>
       </member>
-      <member>
+    <member>
         <project>BLE_SensorDemo</project>
-        <configuration>LowerApp_OTA</configuration>
+      <configuration>LowerApp_OTA</configuration>
       </member>
-      <member>
+    <member>
         <project>BLE_SensorDemo</project>
-        <configuration>Release</configuration>
+      <configuration>Release</configuration>
       </member>
-      <member>
+    <member>
         <project>BLE_SensorDemo</project>
-        <configuration>Use_OTA_ServiceManager</configuration>
+      <configuration>Use_OTA_ServiceManager</configuration>
       </member>
     </batchDefinition>
   </batchBuild>
 </workspace>
+
 
 

@@ -558,9 +558,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1140,9 +1140,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1722,9 +1722,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2304,9 +2304,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>

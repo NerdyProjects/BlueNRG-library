@@ -349,7 +349,7 @@
         </option>
       <option>
           <name>CCOptLevelSlave</name>
-        <state>0</state>
+        <state>3</state>
         </option>
       <option>
           <name>CompilerMisraRules98</name>
@@ -1056,7 +1056,7 @@
       <name>$PROJ_DIR$\..\..\..\..\..\..\Library\hal\src\context_switch.s</name>
     </file>
   <file>
-      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
     </file>
   </group>
 <group>

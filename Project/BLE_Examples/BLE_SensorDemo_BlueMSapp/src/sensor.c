@@ -25,7 +25,7 @@
 #include "gatt_db.h"
 #include "LPS25HB.h"
 #include "lsm6ds3.h"
-#include "lsm6ds3_hal.h"
+#include "LSM6DS3_hal.h"
 #include "OTA_btl.h"   
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

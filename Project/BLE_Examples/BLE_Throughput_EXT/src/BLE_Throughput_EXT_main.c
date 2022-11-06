@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : BLE_Throughput_EXT_main.c
 * Author             : RF Application Team
 * Version            : 1.1.0
@@ -23,16 +23,16 @@
  * Bidirectional communication (server: notification and client: write withour response) can be turned on /off.
  * 
 
-* \section ATOLLIC_project ATOLLIC project
-  To use the project with ATOLLIC TrueSTUDIO for ARM, please follow the instructions below:
-  -# Open the ATOLLIC TrueSTUDIO for ARM and select File->Import... Project menu. 
+* \section WiSE-Studio_project WiSE-Studio project
+  To use the project with WiSE-Studio , please follow the instructions below:
+  -# Open the WiSE-Studio  and select File->Import. 
   -# Select Existing Projects into Workspace. 
-  -# Select the ATOLLIC project
-  -# Select desired configuration to build from Project->Manage Configurations
-  -# Select Project->Rebuild Project. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# Go to Project Explorer section
+  -# Select desired configuration to build from Project->Project->Build Project.
+  -# Select Project->Rebuild All. This will recompile and link the entire application
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher Utility, put the board in bootloader mode and download the built binary image.
+  -# Alternatively, open the Flasher Utility, put the board in bootloader mode and download the built binary image.
 
 * \section KEIL_project KEIL project
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
@@ -41,9 +41,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Throughput_EXT\\MDK-ARM\\BlueNRG-2\\BLE_Throughput_EXT.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher Utility, put the board in bootloader mode and download the built binary image.
+  -# Alternatively, open the Flasher Utility, put the board in bootloader mode and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -52,9 +52,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Throughput_EXT\\EWARM\\BlueNRG-2\\BLE_Throughput_EXT.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher Utility, put the board in bootloader mode and download the built binary image.
+  -# Alternatively, open the Flasher Utility, put the board in bootloader mode and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Client - Client role configuration for throughput test
@@ -221,7 +221,7 @@ NOTES:
 **/
     
 /** @addtogroup BlueNRG1_demonstrations_applications
- * BlueNRG-1 extended packet length throughput demo \see BLE_Throughput_EXT_main.c for documentation.
+ * BlueNRG-2 extended packet length throughput demo \see BLE_Throughput_EXT_main.c for documentation.
  *
  *@{
  */
@@ -267,7 +267,7 @@ int main(void)
        where user received data should be processed */
     SdkEvalComIOConfig(Process_InputData);
 
-    /* BlueNRG-1 stack init */
+    /* BLE stack init */
     ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
     if (ret != BLE_STATUS_SUCCESS)
     {
@@ -278,9 +278,9 @@ int main(void)
     }
 
 #if SERVER
-    printf("BlueNRG-1 BLE Throughput Server Application (version: %s)\r\n", BLE_THROUGHPUT_VERSION_STRING);
+    printf("BlueNRG-2 BLE Throughput Server Application (version: %s)\r\n", BLE_THROUGHPUT_VERSION_STRING);
 #else
-    printf("BlueNRG-1 BLE Throughput Client Application (version: %s)\r\n", BLE_THROUGHPUT_VERSION_STRING);
+    printf("BlueNRG-2 BLE Throughput Client Application (version: %s)\r\n", BLE_THROUGHPUT_VERSION_STRING);
 #endif
 
     /* Init Throughput test */
@@ -297,7 +297,7 @@ int main(void)
     while(1)
     {
         NVIC_DisableIRQ(UART_IRQn);
-        /* BlueNRG-1 stack tick */
+        /* BLE stack tick */
         BTLE_StackTick();
         NVIC_EnableIRQ(UART_IRQn);
 

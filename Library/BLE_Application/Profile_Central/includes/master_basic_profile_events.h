@@ -5,7 +5,7 @@
   * @author  AMG - RF Application team
   * @version V1.2.0
   * @date    04-Decemberr-2016
-  * @brief   Header file for BlueNRG-1 master/central library events.
+  * @brief   Header file for BlueNRG-1,2 master/central library events.
   ******************************************************************************
   * @attention
   *

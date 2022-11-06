@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : OTA_ServiceManager_main.c
 * Author             : RF Application Team
 * Version            : 1.1.0
@@ -28,9 +28,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ServiceManager\\MDK-ARM\\BlueNRG-2\\BLE_OTA_ServiceManager.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -40,9 +40,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_OTA_ServiceManager\\EWARM\\BlueNRG-2\\OTA_ServiceManager.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -180,7 +180,7 @@
 **/
    
 /** @addtogroup BlueNRG1_demonstrations_applications
-* BlueNRG-1 OTA Service manager \see OTA_ServiceManager_main.c for documentation.
+* BlueNRG-1,2 OTA Service manager \see OTA_ServiceManager_main.c for documentation.
 *
 *@{
 */
@@ -201,7 +201,7 @@
 #include "ble_const.h"
 #include "SDK_EVAL_Config.h"
 #include "OTA_btl.h" 
-#include "BluenRG1_flash.h"
+#include "BlueNRG1_flash.h"
 #include "bluenrg1_it_stub.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -340,14 +340,14 @@ int main(void)
   /* Erase the storage area from start page to end page */
   OTA_Erase_Flash(APP_WITH_OTA_SERVICE_PAGE_NUMBER_START,APP_WITH_OTA_SERVICE_PAGE_NUMBER_END);
   
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     PRINTF("Error in BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
     while(1);
   }
   
-  PRINTF("\r\nBlueNRG-1 BLE OTA Service Manager (version: %s)\r\n", BLE_OTA_SERVICE_MANAGER_VERSION_STRING); 
+  PRINTF("\r\nBlueNRG-1,2 BLE OTA Service Manager (version: %s)\r\n", BLE_OTA_SERVICE_MANAGER_VERSION_STRING); 
   
   /* Init OTA Service Manager Device */
   ret = OTA_ServiceManager_DeviceInit();
@@ -358,7 +358,7 @@ int main(void)
   
   while(1)
   {
-    /* BlueNRG-1 stack tick */
+    /* BlueNRG-1,2 stack tick */
     BTLE_StackTick();
     
     /* Application tick */
@@ -412,7 +412,7 @@ void aci_hal_fw_error_event(uint8_t FW_Error_Type,
   }
 }
 
-/****************** BlueNRG-1 Sleep Management Callback ********************************/
+/****************** BlueNRG-1,2 Sleep Management Callback ********************************/
 
 SleepModes App_SleepMode_Check(SleepModes sleepMode)
 {

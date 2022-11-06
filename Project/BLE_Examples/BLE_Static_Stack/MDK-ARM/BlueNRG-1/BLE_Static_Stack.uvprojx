@@ -83,13 +83,13 @@
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>fromelf.exe --bin Release\Objects\BLE_Static_Stack.axf --output Release\Objects\BLE_Static_Stack.bin</UserProg1Name>
-            <UserProg2Name>..\..\..\..\..\Utility\create_sym_lib.exe --symbols ..\..\sym_export.txt --rename BlueNRG_Stack_Initialization=BlueNRG_Stack_Initialization_nocallbacks Release\Objects\BLE_Static_Stack.axf Release\libbluenrg1_static_stack.a</UserProg2Name>
+            <UserProg2Name>..\..\..\..\..\Utility\create_sym_lib.exe --symbols ..\..\sym_export.txt --rename BlueNRG_Stack_Initialization=BlueNRG_Stack_Initialization_nocallbacks !L ..\..\..\..\..\Library\Bluetooth_LE\library\static_stack\libbluenrg1_static_stack.a</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -188,7 +188,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -335,10 +335,10 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
-              <Define>APP_OFFSET=0x1B000 BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</Define>
+              <MiscControls>--wchar32</MiscControls>
+              <Define>APP_OFFSET=0x1B000 BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\Bluetooth_LE\library\static_stack</IncludePath>
+              <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\Bluetooth_LE\library\static_stack</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -369,10 +369,10 @@
             <TextAddressRange>0x10040000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\BlueNRG1.sct</ScatterFile>
+            <ScatterFile>BlueNRG1.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B000"</Misc>
+            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B000 "</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -380,22 +380,67 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>BlueNRG1_Periph_Driver</GroupName>
+          <GroupName>BLE_Stack</GroupName>
+          <Files>
+            <File>
+              <FileName>libbluenrg1_stack.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/library/libbluenrg1_stack.a</FilePath>
+            </File>
+            <File>
+              <FileName>libcrypto.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>../../../../../Library/cryptolib/libcrypto.a</FilePath>
+            </File>
+            <File>
+              <FileName>stack_dle_api_stubs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/src/stack_dle_api_stubs.c</FilePath>
+            </File>
+            <File>
+              <FileName>stack_user_cfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/src/stack_user_cfg.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>hal</GroupName>
+          <Files>
+            <File>
+              <FileName>context_switch.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../Library/hal/src/context_switch.s</FilePath>
+            </File>
+            <File>
+              <FileName>miscutil.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/hal/src/miscutil.c</FilePath>
+            </File>
+            <File>
+              <FileName>osal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/hal/src/osal.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Library</GroupName>
           <Files>
             <File>
               <FileName>BlueNRG1_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_flash.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_flash.c</FilePath>
             </File>
             <File>
               <FileName>BlueNRG1_pka.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_pka.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_pka.c</FilePath>
             </File>
             <File>
               <FileName>BlueNRG1_sysCtrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_sysCtrl.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -403,9 +448,9 @@
           <GroupName>Startup</GroupName>
           <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</FilePath>
+              <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -415,27 +460,22 @@
             <File>
               <FileName>bluenrg1_cmd_if.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_cmd_if.c</FilePath>
+              <FilePath>../../src/bluenrg1_cmd_if.c</FilePath>
             </File>
             <File>
               <FileName>bluenrg1_ev_if.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_ev_if.c</FilePath>
+              <FilePath>../../src/bluenrg1_ev_if.c</FilePath>
             </File>
             <File>
               <FileName>bluenrg1_it_stub.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_it_stub.c</FilePath>
-            </File>
-            <File>
-              <FileName>Reset_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\Reset_Manager.c</FilePath>
+              <FilePath>../../src/bluenrg1_it_stub.c</FilePath>
             </File>
             <File>
               <FileName>OTA_ResetManager_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\OTA_ResetManager_main.c</FilePath>
+              <FilePath>../../src/OTA_ResetManager_main.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -444,11 +484,11 @@
                   <RVCTOtherData>0</RVCTOtherData>
                   <ModuleSelection>0</ModuleSelection>
                   <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
+                  <AlwaysBuild>0</AlwaysBuild>
+                  <GenerateAssemblyFile>0</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>0</AssembleAssemblyFile>
+                  <PublicsOnly>0</PublicsOnly>
+                  <StopOnExitCode>3</StopOnExitCode>
                   <CustomArgument></CustomArgument>
                   <IncludeLibraryModules></IncludeLibraryModules>
                   <ComprImg>1</ComprImg>
@@ -488,50 +528,10 @@
                 </FileArmAds>
               </FileOption>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Hal</GroupName>
-          <Files>
             <File>
-              <FileName>context_switch.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\context_switch.s</FilePath>
-            </File>
-            <File>
-              <FileName>osal.c</FileName>
+              <FileName>Reset_Manager.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\osal.c</FilePath>
-            </File>
-            <File>
-              <FileName>miscutil.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\miscutil.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Stack</GroupName>
-          <Files>
-            <File>
-              <FileName>libbluenrg1_stack.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\library\libbluenrg1_stack.a</FilePath>
-            </File>
-            <File>
-              <FileName>stack_user_cfg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\src\stack_user_cfg.c</FilePath>
-            </File>
-            <File>
-              <FileName>libcrypto.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\..\..\..\Library\cryptolib\libcrypto.a</FilePath>
-            </File>
-            <File>
-              <FileName>stack_dle_api_stubs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\src\stack_dle_api_stubs.c</FilePath>
+              <FilePath>../../src/Reset_Manager.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -614,13 +614,13 @@
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>fromelf.exe --bin OTA_BTL_ResetManager\Objects\BLE_Static_Stack_OTA_BTL_ResetManager.axf --output OTA_BTL_ResetManager\Objects\BLE_Static_Stack_OTA_BTL_ResetManager.bin</UserProg1Name>
-            <UserProg2Name>..\..\..\..\..\Utility\create_sym_lib.exe --symbols ..\..\sym_export.txt --rename BlueNRG_Stack_Initialization=BlueNRG_Stack_Initialization_nocallbacks OTA_BTL_ResetManager\Objects\BLE_Static_Stack_OTA_BTL_ResetManager.axf OTA_BTL_ResetManager\libbluenrg1_static_stack_with_resetmanager.a</UserProg2Name>
+            <UserProg2Name>..\..\..\..\..\Utility\create_sym_lib.exe --symbols ..\..\sym_export.txt --rename BlueNRG_Stack_Initialization=BlueNRG_Stack_Initialization_nocallbacks !L ..\..\..\..\..\Library\Bluetooth_LE\library\static_stack\libbluenrg1_static_stack_with_resetmanager.a</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -669,7 +669,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -719,7 +719,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -866,10 +866,10 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
-              <Define>RESET_MANAGER_SIZE=0x1B000 BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</Define>
+              <MiscControls>--wchar32</MiscControls>
+              <Define>BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION RESET_MANAGER_SIZE=0x1B000 BLUENRG1_DEVICE HS_SPEED_XTAL=HS_SPEED_XTAL_16MHZ USER_BUTTON=BUTTON_1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\OTA\inc;..\..\..\..\..\Library\Bluetooth_LE\library\static_stack</IncludePath>
+              <IncludePath>..\..\inc;..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc;..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include;..\..\..\..\..\Library\CMSIS\Include;..\..\..\..\..\Library\Bluetooth_LE\inc;..\..\..\..\..\Library\BLE_Application\layers_inc;..\..\..\..\..\Library\BLE_Application\Utils\inc;..\..\..\..\..\Library\SDK_Eval_BlueNRG1\inc;..\..\..\..\..\Library\BLE_Application\OTA\inc;..\..\..\..\..\Library\hal\inc;..\..\..\..\..\Library\Bluetooth_LE\library\static_stack</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -900,10 +900,10 @@
             <TextAddressRange>0x10040000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\BlueNRG1.sct</ScatterFile>
+            <ScatterFile>BlueNRG1.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B000"</Misc>
+            <Misc>--predefine="-DMEMORY_FLASH_APP_SIZE=0x1B000 "</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -911,22 +911,67 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>BlueNRG1_Periph_Driver</GroupName>
+          <GroupName>BLE_Stack</GroupName>
+          <Files>
+            <File>
+              <FileName>libbluenrg1_stack.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/library/libbluenrg1_stack.a</FilePath>
+            </File>
+            <File>
+              <FileName>libcrypto.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>../../../../../Library/cryptolib/libcrypto.a</FilePath>
+            </File>
+            <File>
+              <FileName>stack_dle_api_stubs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/src/stack_dle_api_stubs.c</FilePath>
+            </File>
+            <File>
+              <FileName>stack_user_cfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/Bluetooth_LE/src/stack_user_cfg.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>hal</GroupName>
+          <Files>
+            <File>
+              <FileName>context_switch.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../Library/hal/src/context_switch.s</FilePath>
+            </File>
+            <File>
+              <FileName>miscutil.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/hal/src/miscutil.c</FilePath>
+            </File>
+            <File>
+              <FileName>osal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../Library/hal/src/osal.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Library</GroupName>
           <Files>
             <File>
               <FileName>BlueNRG1_flash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_flash.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_flash.c</FilePath>
             </File>
             <File>
               <FileName>BlueNRG1_pka.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_pka.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_pka.c</FilePath>
             </File>
             <File>
               <FileName>BlueNRG1_sysCtrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\BlueNRG1_Periph_Driver\src\BlueNRG1_sysCtrl.c</FilePath>
+              <FilePath>../../../../../Library/BlueNRG1_Periph_Driver/src/BlueNRG1_sysCtrl.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -934,9 +979,9 @@
           <GroupName>Startup</GroupName>
           <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</FilePath>
+              <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -946,22 +991,27 @@
             <File>
               <FileName>bluenrg1_cmd_if.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_cmd_if.c</FilePath>
+              <FilePath>../../src/bluenrg1_cmd_if.c</FilePath>
             </File>
             <File>
               <FileName>bluenrg1_ev_if.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_ev_if.c</FilePath>
+              <FilePath>../../src/bluenrg1_ev_if.c</FilePath>
             </File>
             <File>
               <FileName>bluenrg1_it_stub.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\bluenrg1_it_stub.c</FilePath>
+              <FilePath>../../src/bluenrg1_it_stub.c</FilePath>
+            </File>
+            <File>
+              <FileName>OTA_ResetManager_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../src/OTA_ResetManager_main.c</FilePath>
             </File>
             <File>
               <FileName>Reset_Manager.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\Reset_Manager.c</FilePath>
+              <FilePath>../../src/Reset_Manager.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -970,11 +1020,11 @@
                   <RVCTOtherData>0</RVCTOtherData>
                   <ModuleSelection>0</ModuleSelection>
                   <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
+                  <AlwaysBuild>0</AlwaysBuild>
+                  <GenerateAssemblyFile>0</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>0</AssembleAssemblyFile>
+                  <PublicsOnly>0</PublicsOnly>
+                  <StopOnExitCode>3</StopOnExitCode>
                   <CustomArgument></CustomArgument>
                   <IncludeLibraryModules></IncludeLibraryModules>
                   <ComprImg>1</ComprImg>
@@ -1013,56 +1063,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>OTA_ResetManager_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\OTA_ResetManager_main.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Hal</GroupName>
-          <Files>
-            <File>
-              <FileName>context_switch.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\context_switch.s</FilePath>
-            </File>
-            <File>
-              <FileName>osal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\osal.c</FilePath>
-            </File>
-            <File>
-              <FileName>miscutil.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\hal\src\miscutil.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Stack</GroupName>
-          <Files>
-            <File>
-              <FileName>libbluenrg1_stack.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\library\libbluenrg1_stack.a</FilePath>
-            </File>
-            <File>
-              <FileName>stack_user_cfg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\src\stack_user_cfg.c</FilePath>
-            </File>
-            <File>
-              <FileName>libcrypto.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\..\..\..\Library\cryptolib\libcrypto.a</FilePath>
-            </File>
-            <File>
-              <FileName>stack_dle_api_stubs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\Library\Bluetooth_LE\src\stack_dle_api_stubs.c</FilePath>
             </File>
           </Files>
         </Group>

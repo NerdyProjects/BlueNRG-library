@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : BLE_Beacon_Flash_main.c
 * Author             : RF Application Team
 * Version            : 1.0.0
@@ -21,16 +21,16 @@
  * by synchronizing them with the planned BLE radio operations
  * 
 
-* \section ATOLLIC_project ATOLLIC project
-  To use the project with ATOLLIC TrueSTUDIO for ARM, please follow the instructions below:
-  -# Open the ATOLLIC TrueSTUDIO for ARM and select File->Import... Project menu. 
+* \section WiSE-Studio_project WiSE-Studio project
+  To use the project with WiSE-Studio , please follow the instructions below:
+  -# Open the WiSE-Studio  and select File->Import. 
   -# Select Existing Projects into Workspace. 
-  -# Select the ATOLLIC project
-  -# Select desired configuration to build from Project->Manage Configurations
-  -# Select Project->Rebuild Project. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Go to Project Explorer section
+  -# Select desired configuration to build from Project->Project->Build Project.
+  -# Select Project->Rebuild All. This will recompile and link the entire application
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section KEIL_project KEIL project
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
@@ -40,9 +40,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Beacon_FlashManagement\\MDK-ARM\\BlueNRG-2\\BLE_Beacon_FlashManagement.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -52,9 +52,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Beacon_FlashManagement\\EWARM\\BlueNRG-2\\BLE_Beacon_FlashManagement.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -198,7 +198,7 @@ It is possible to check the Flash activity by reading the Flash memory at the ad
 **/
    
 /** @addtogroup BlueNRG1_demonstrations_applications
- *  BlueNRG-1 Beacon demo \see BLE_Beacon_Flash_main.c for documentation.
+ *  BlueNRG-1,2 Beacon demo \see BLE_Beacon_Flash_main.c for documentation.
  *
  *@{
  */
@@ -376,7 +376,7 @@ int main(void)
   /* System Init */
   SystemInit();
   
-  /* Identify BlueNRG-1 platform */
+  /* Identify BlueNRG-1,2 platform */
   SdkEvalIdentification();
 
   /* Init the UART peripheral */
@@ -385,14 +385,14 @@ int main(void)
   /* Erase a page of the Flash memory */
   FLASH_ErasePage((BLE_BEACON_TEST_PAGE_ADDRESS-_MEMORY_FLASH_BEGIN_)/_MEMORY_BYTES_PER_PAGE_);
   
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     printf("Error in BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
     while(1);
   }
   
-  /* Init the BlueNRG-1 device */
+  /* Init the BlueNRG-1,2 device */
   Device_Init();
   
   /* Enable the callback end_of_radio_activity_event for advertising */
@@ -401,11 +401,11 @@ int main(void)
   /* Start Beacon Non Connectable Mode*/
   Start_Beaconing();
   
-  printf("BlueNRG-1 BLE Beacon Application (version: %s)\r\n", BLE_BEACON_VERSION_STRING); 
+  printf("BlueNRG-1,2 BLE Beacon Application (version: %s)\r\n", BLE_BEACON_VERSION_STRING); 
   
   while(1) 
   {
-    /* BlueNRG-1 stack tick */
+    /* BlueNRG-1,2 stack tick */
     BTLE_StackTick();
     
     /* Flash operation */
@@ -466,7 +466,7 @@ void hci_hardware_error_event(uint8_t Hardware_Code)
 }
 
 
-/****************** BlueNRG-1 Sleep Management Callback ********************************/
+/****************** BlueNRG-1,2 Sleep Management Callback ********************************/
 
 SleepModes App_SleepMode_Check(SleepModes sleepMode)
 {

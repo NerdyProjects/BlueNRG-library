@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    BlueNRG_x_device.h
+  * @file    bluenrg_x_device.h
   * @author  VMA Application Team
   * @version V1.0.0
   * @date    23-January-2017

@@ -210,7 +210,7 @@ int main(void)
       for(uint8_t i = 0; i< NSLAVES; i++) {
         printf("%8d,%8d,%8d,",(int)request_counter_test[i], (int)pkt_counter_test[i], (int)(request_counter_test[i]-pkt_counter_test[i]));
       }      
-      printf("\r");
+      printf(" \r");
     }
   }   
 }

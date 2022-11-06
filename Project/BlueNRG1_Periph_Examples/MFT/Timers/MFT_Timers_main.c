@@ -93,19 +93,23 @@ void MFT_Configuration(void)
   MFT_StructInit(&timer_init);
   
   timer_init.MFT_Mode = MFT_MODE_1;
-  timer_init.MFT_Prescaler = 160-1;      /* 10 us clock */
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+	timer_init.MFT_Prescaler = 160-1;      /* 5 us clock */
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+	timer_init.MFT_Prescaler = 80-1;       /* 5 us clock */
+#endif
   
   /* MFT1 configuration */
   timer_init.MFT_Clock2 = MFT_PRESCALED_CLK;
   MFT_Init(MFT1, &timer_init);
-  /* Set the counter at 500 ms */
-  MFT_SetCounter2(MFT1, 50000);
+  /* Set the counter at 150 ms */
+  MFT_SetCounter2(MFT1, MFT1_COUNTER_USER);
   
   /* MFT2 configuration */
   timer_init.MFT_Clock2 = MFT_PRESCALED_CLK;
   MFT_Init(MFT2, &timer_init);
-  /* Set the counter at 250 ms */
-  MFT_SetCounter2(MFT2, 25000);
+  /* Set the counter at 125 ms */
+  MFT_SetCounter2(MFT2, MFT2_COUNTER_USER);
     
   /* Enable MFT2 Interrupt 1 */
   NVIC_InitStructure.NVIC_IRQChannel = MFT1B_IRQn;

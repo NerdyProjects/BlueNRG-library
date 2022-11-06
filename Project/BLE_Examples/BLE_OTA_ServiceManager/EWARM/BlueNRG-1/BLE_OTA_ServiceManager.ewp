@@ -749,7 +749,7 @@
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state>MEMORY_FLASH_APP_SIZE=0x11000</state>
+                    <state>MEMORY_FLASH_APP_SIZE=0x11800</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -1187,7 +1187,7 @@
     <group>
         <name>Startup</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
         </file>
     </group>
     <group>

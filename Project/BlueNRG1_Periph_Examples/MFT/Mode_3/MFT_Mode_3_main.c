@@ -125,7 +125,13 @@ void MFT_Configuration()
   /* Counter 2 is preset and reloaded to 5 (timer period = TnCRB * 2 * 10 ms = 100 ms */
   timer_init.MFT_Mode = MFT_MODE_3;
   timer_init.MFT_Clock1 = MFT_PRESCALED_CLK;
-  timer_init.MFT_Prescaler = 16 - 1;            /* 1 us tick at 16 MHz system clock */
+
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+	timer_init.MFT_Prescaler = 160-1;      /* 5 us clock */
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+	timer_init.MFT_Prescaler = 80-1;      /* 5 us clock */
+#endif
+
   timer_init.MFT_Clock2 = MFT_EXTERNAL_EVENT;
   timer_init.MFT_CRA = 5000 - 1;
   timer_init.MFT_CRB = 5 - 1;

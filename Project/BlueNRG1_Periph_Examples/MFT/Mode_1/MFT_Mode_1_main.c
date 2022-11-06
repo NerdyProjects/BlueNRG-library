@@ -129,20 +129,25 @@ void MFT_Configuration(void)
   MFT_StructInit(&timer_init);
   
   timer_init.MFT_Mode = MFT_MODE_1;
-  timer_init.MFT_Prescaler = 160-1;      /* 10 us clock */
   
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+	timer_init.MFT_Prescaler = 160-1;      /* 5 us clock */
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+	timer_init.MFT_Prescaler = 80-1;       /* 5 us clock */
+#endif
+
   /* MFT1 configuration */
   timer_init.MFT_Clock1 = MFT_PRESCALED_CLK;
   timer_init.MFT_Clock2 = MFT_NO_CLK;
-  timer_init.MFT_CRA = 25000 - 1;       /* 250 ms positive duration */
-  timer_init.MFT_CRB = 50000 - 1;       /* 500 ms negative duration */
+  timer_init.MFT_CRA = 15000 - 1;       /* 75 ms positive duration */
+  timer_init.MFT_CRB = 20000 - 1;       /* 100 ms negative duration */
   MFT_Init(MFT1, &timer_init);
   
   /* MFT2 configuration */
   timer_init.MFT_Clock1 = MFT_PRESCALED_CLK;
   timer_init.MFT_Clock2 = MFT_NO_CLK;
-  timer_init.MFT_CRA = 5000 - 1;        /* 50 ms positive duration */
-  timer_init.MFT_CRB = 10000 - 1;       /* 100 ms negative duration */
+  timer_init.MFT_CRA = 5000 - 1;        /* 25 ms positive duration */
+  timer_init.MFT_CRB = 10000 - 1;       /* 50 ms negative duration */
   MFT_Init(MFT2, &timer_init);
     
   /* Enable MFT2 Interrupt 1 */

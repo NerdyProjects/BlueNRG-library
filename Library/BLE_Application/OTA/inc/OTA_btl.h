@@ -69,9 +69,9 @@
 #define SERVICE_MANAGER_OFFSET     (0x0)
 
 #ifdef BLUENRG2_DEVICE
-#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(70 * 1024) /* BlueNRG-2, BLE stack v2.1 with modular approach */
+#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(70 * 1024) /* BlueNRG-2, BLE stack v2.1e with modular approach */
 #else
-#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(68 * 1024) /* BlueNRG-1, BLE stack v2.1 with modular approach */
+#define SERVICE_MANAGER_SIZE       PAGE_SIZE_ROUND(70 * 1024) /* BlueNRG-1, BLE stack v2.1e with modular approach */
 #endif 
 
 #define SM_APP_OFFSET              (SERVICE_MANAGER_OFFSET + SERVICE_MANAGER_SIZE)

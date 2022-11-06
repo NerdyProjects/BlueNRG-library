@@ -41,6 +41,10 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
+#define MFT1_COUNTER_USER	(50000)
+#define MFT2_COUNTER_USER	(25000)
+
+
 /* Uncomment the line below to expanse the "assert_param" macro in the 
    Standard Peripheral Library drivers code */
 

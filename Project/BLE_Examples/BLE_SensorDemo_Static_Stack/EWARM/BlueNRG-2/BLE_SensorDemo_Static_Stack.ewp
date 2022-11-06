@@ -32,11 +32,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state>Automatic choice of formatter.</state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>Automatic choice of formatter.</state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -224,12 +224,13 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>BLUENRG2_DEVICE</state>
-                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
                     <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
                     <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
                     <state>NO_SMART_POWER_MANAGEMENT</state>
                     <state>BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</state>
+                    <state>BLUENRG2_DEVICE</state>
+                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
+                    <state>USER_BUTTON=BUTTON_1</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -245,15 +246,15 @@
                 </option>
                 <option>
                     <name>CCListCFile</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCListCMnemonics</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCListCMessages</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCListAssFile</name>
@@ -359,7 +360,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Include</state>
-                    <state> $PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\layers_inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\Utils\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\OTA\inc</state>
@@ -694,7 +695,7 @@
             <archiveVersion>1</archiveVersion>
             <data>
                 <prebuild></prebuild>
-                <postbuild></postbuild>
+                <postbuild>ielftool.exe --bin --verbose "$TARGET_PATH$" "$TARGET_DIR$\BLE_SensorDemo_Static_Stack.bin"</postbuild>
             </data>
         </settings>
         <settings>
@@ -750,8 +751,8 @@
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state>MEMORY_FLASH_APP_OFFSET=0x1B000</state>
-                    <state>MEMORY_RAM_APP_OFFSET=0x408</state>
+                    <state>MEMORY_FLASH_APP_OFFSET=0x1B800</state>
+                    <state>MEMORY_RAM_APP_OFFSET=0x470</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -1103,11 +1104,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state>Automatic choice of formatter, without multibyte support.</state>
+                    <state>Automatic choice of formatter.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>Automatic choice of formatter, without multibyte support.</state>
+                    <state>Automatic choice of formatter.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1295,15 +1296,15 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>BLUENRG2_DEVICE</state>
-                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
                     <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
                     <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
                     <state>NO_SMART_POWER_MANAGEMENT</state>
                     <state>BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</state>
                     <state>ST_OTA_LOWER_APPLICATION=1</state>
                     <state>RESET_MANAGER_SIZE=0x1B000</state>
-                    <state>OTA_EXTENDED_PACKET_LEN=1</state>
+                    <state>BLUENRG2_DEVICE</state>
+                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
+                    <state>USER_BUTTON=BUTTON_1</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1433,7 +1434,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Include</state>
-                    <state> $PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\layers_inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\Utils\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\OTA\inc</state>
@@ -1729,7 +1730,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>3</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -1737,7 +1738,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>BLE_SensorDemo_Static_Stack_LowerApp_OTA.bin</state>
+                    <state>BLE_SensorDemo_Static_Stack_LowerApp_OTA.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1768,7 +1769,7 @@
             <archiveVersion>1</archiveVersion>
             <data>
                 <prebuild></prebuild>
-                <postbuild></postbuild>
+                <postbuild>ielftool.exe --bin --verbose "$TARGET_PATH$" "$TARGET_DIR$\BLE_SensorDemo_Static_Stack_LowerApp_OTA.bin"</postbuild>
             </data>
         </settings>
         <settings>
@@ -1825,8 +1826,8 @@
                 <option>
                     <name>IlinkConfigDefines</name>
                     <state>ST_OTA_LOWER_APPLICATION=1</state>
-                    <state>RESET_MANAGER_SIZE=0x1B000</state>
-                    <state>MEMORY_RAM_APP_OFFSET=0x408</state>
+                    <state>RESET_MANAGER_SIZE=0x1B800</state>
+                    <state>MEMORY_RAM_APP_OFFSET=0x470</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -2370,14 +2371,15 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>BLUENRG2_DEVICE</state>
-                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
                     <state>LS_SOURCE=LS_SOURCE_EXTERNAL_32KHZ</state>
                     <state>SMPS_INDUCTOR=SMPS_INDUCTOR_10uH</state>
                     <state>NO_SMART_POWER_MANAGEMENT</state>
                     <state>BLE_STACK_CONFIGURATION=BLE_STACK_FULL_CONFIGURATION</state>
                     <state>ST_OTA_HIGHER_APPLICATION=1</state>
                     <state>RESET_MANAGER_SIZE=0x1B000</state>
+                    <state>BLUENRG2_DEVICE</state>
+                    <state>HS_SPEED_XTAL=HS_SPEED_XTAL_32MHZ</state>
+                    <state>USER_BUTTON=BUTTON_1</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -2507,7 +2509,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BlueNRG1_Periph_Driver\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Include</state>
-                    <state> $PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\Library\Bluetooth_LE\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\layers_inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\Utils\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Library\BLE_Application\OTA\inc</state>
@@ -2803,7 +2805,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>3</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -2811,7 +2813,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>BLE_SensorDemo_Static_Stack_HigherApp_OTA.bin</state>
+                    <state>BLE_SensorDemo_Static_Stack_HigherApp_OTA.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -2842,7 +2844,7 @@
             <archiveVersion>1</archiveVersion>
             <data>
                 <prebuild></prebuild>
-                <postbuild></postbuild>
+                <postbuild>ielftool.exe --bin --verbose "$TARGET_PATH$" "$TARGET_DIR$\BLE_SensorDemo_Static_Stack_HigherApp_OTA.bin"</postbuild>
             </data>
         </settings>
         <settings>
@@ -2899,8 +2901,8 @@
                 <option>
                     <name>IlinkConfigDefines</name>
                     <state>ST_OTA_HIGHER_APPLICATION=1</state>
-                    <state>RESET_MANAGER_SIZE=0x1B000</state>
-                    <state>MEMORY_RAM_APP_OFFSET=0x408</state>
+                    <state>RESET_MANAGER_SIZE=0x1B800</state>
+                    <state>MEMORY_RAM_APP_OFFSET=0x470</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -3336,7 +3338,7 @@
     <group>
         <name>Startup</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_bluenrg1.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\Library\CMSIS\Device\ST\BlueNRG1\Source\system_BlueNRG1.c</name>
         </file>
     </group>
     <group>

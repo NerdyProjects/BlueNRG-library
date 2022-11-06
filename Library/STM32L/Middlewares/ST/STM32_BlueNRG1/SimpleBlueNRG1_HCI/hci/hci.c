@@ -63,8 +63,13 @@ uint8_t BlueNRG_Stack_Initialization(void)
   BlueNRG_Activate_Select_Pin();
   
   /* Reset BlueNRG-1 */
-  BlueNRG_RST(); 
-  
+#ifdef UART_INTERFACE
+  BlueNRG_RST();
+#else
+  Disable_IRQ();
+  BlueNRG_RST();
+  Enable_IRQ();
+#endif
   return ret;
 }
 
@@ -193,6 +198,9 @@ uint16_t DTM_write_data_size = 0;
 
 uint8_t restart_rx = 0;
 
+extern uint8_t bluenrg1_rst_req ;
+extern uint8_t bluenrg1_boot_req ;
+
 void BTLE_StackTick(void)
 {
   if ((command_fifo_size > 0)) {
@@ -249,6 +257,14 @@ void BTLE_StackTick(void)
       }
       
     }
+  }
+  if(bluenrg1_rst_req) {
+    bluenrg1_rst_req=0;
+    BlueNRG_RST();
+  }
+  if(bluenrg1_boot_req) {
+    bluenrg1_boot_req=0;
+    BlueNRG_HW_Bootloader();
   }
   
 }

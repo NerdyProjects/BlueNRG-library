@@ -62,6 +62,9 @@ uint8_t repeat_flag = IDLE;         /* Reschedule the sequence */
 #define COMM_DEVICE_2           2
 uint8_t comm_token = COMM_DEVICE_1; /* Communication token */
 
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -221,13 +224,7 @@ int main(void)
     HAL_VTIMER_Tick(); 
     
     if(pkt_counter_test[comm_token-1] > (MAX_PKT_TEST-1)) {
-      printf("PER = %d%%  PCKT sent %d, ACK received %d Retry %d\r\n",((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
-      ack_counter_test[comm_token-1] = 0;
-      pkt_counter_test[comm_token-1] = 0;
-      retry_counter_test_max[comm_token-1] = 0;
-    }
-    if(pkt_counter_test[comm_token-1] > (MAX_PKT_TEST-1)) {
-      printf("PER = %d%%  PCKT sent %d, ACK received %d Retry %d\r\n",((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1]))/pkt_counter_test[comm_token-1]*100.0, pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
+      printf("PER = %d.%02d %% PCKT sent %d ACK received %d Retry %d\r\n", PRINT_INT((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1])/pkt_counter_test[comm_token-1]*100.0), PRINT_FLOAT((pkt_counter_test[comm_token-1] - ack_counter_test[comm_token-1])/pkt_counter_test[comm_token-1]*100.0), pkt_counter_test[comm_token-1], ack_counter_test[comm_token-1], retry_counter_test_max[comm_token-1]);
       ack_counter_test[comm_token-1] = 0;
       pkt_counter_test[comm_token-1] = 0;
       retry_counter_test_max[comm_token-1] = 0;

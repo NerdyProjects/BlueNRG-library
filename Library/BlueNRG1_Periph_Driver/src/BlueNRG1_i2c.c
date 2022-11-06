@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BlueNRG1_i2c.c
   * @author  VMA Application Team
-  * @version V2.1.0
-  * @date    21-March-2016
+  * @version V2.1.1
+  * @date    04-October-2021
   * @brief   This file provides all the I2C firmware functions.
   ******************************************************************************
   * @attention
@@ -53,6 +53,7 @@
 
 #define I2C_SLAVE_ADDR_EXT10_SMK  (0x03FF)
 
+#define I2C_CR_PE_MASK  		(0x00000001)
 
 /**
   * @}
@@ -175,7 +176,7 @@ void I2C_Init(I2C_Type* I2Cx, I2C_InitType* I2C_InitStruct)
   }
   
   /* Enable the selected I2C peripheral */
-  I2Cx->CR_b.PE = SET;
+  SET_BIT(I2Cx->CR, I2C_CR_PE_MASK);	/* Set PE bit */
 }
 
 
@@ -218,7 +219,7 @@ void I2C_Cmd(I2C_Type* I2Cx, FunctionalState NewState)
 
   if (NewState != DISABLE) {
     /* Enable the selected I2C peripheral */
-    I2Cx->CR_b.PE = SET;
+    SET_BIT(I2Cx->CR, I2C_CR_PE_MASK);
   }
   else {
     /* Disable the selected I2C peripheral */

@@ -4,7 +4,7 @@
   * @author  AMS - RF Application team
   * @version V1.3.0
   * @date    03-February-2020
-  * @brief   Header file for BlueNRG-1 master/central library APIs.
+  * @brief   Header file for BlueNRG-1,2 master/central library APIs.
   ******************************************************************************
   * @attention
   *

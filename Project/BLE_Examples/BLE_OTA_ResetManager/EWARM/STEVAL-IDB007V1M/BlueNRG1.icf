@@ -144,10 +144,10 @@ if( isdefinedsymbol(ST_OTA_HIGHER_APPLICATION) )
      |  NVM(4K)              |
      +-----------------------+ 0x10067000
      |                       |
-     |  User app (88K)       |
-     +-----------------------+ 0x10051000
+     |  User app (86K)       |
+     +-----------------------+ 0x10051800
      |  OTA Service          |
-     |  Manager (68K)        |
+     |  Manager (70K)        |
      +-----------------------+ 0x10040000
      |                       |
      +-----------------------| 0x100007FF
@@ -156,7 +156,7 @@ if( isdefinedsymbol(ST_OTA_HIGHER_APPLICATION) )
   */
   
   if( !isdefinedsymbol( SERVICE_MANAGER_SIZE) ) {
-    define symbol SERVICE_MANAGER_SIZE   = 0x11000; /* Including OTA firmware upgrade service manager application */
+    define symbol SERVICE_MANAGER_SIZE   = 0x11800; /* Including OTA firmware upgrade service manager application */
   }
   define symbol MEMORY_FLASH_APP_SIZE   = _MEMORY_FLASH_SIZE_ - SERVICE_MANAGER_SIZE - FLASH_NVM_DATASIZE;
   define symbol MEMORY_FLASH_APP_OFFSET = SERVICE_MANAGER_SIZE;

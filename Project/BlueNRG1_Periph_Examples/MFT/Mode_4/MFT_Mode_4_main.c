@@ -129,13 +129,17 @@ void MFT_Configuration()
   timer_init.MFT_Clock1 = MFT_PRESCALED_CLK;
   timer_init.MFT_Clock2 = MFT_PRESCALED_CLK;
   
-  timer_init.MFT_Prescaler = 16 - 1; /* 1 us if system_clock is 16 MHz */
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+	timer_init.MFT_Prescaler = 160-1;      /* 5 us clock */
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+	timer_init.MFT_Prescaler = 80-1;       /* 5 us clock */
+#endif
   
-  timer_init.MFT_CRA = 50000-1; /* 50 ms */
+  timer_init.MFT_CRA = 10000-1; /* 250 ms */
   timer_init.MFT_CRB = 0xFFFF;
   
   MFT_Init(MFT1, &timer_init);
-  MFT_SetCounter(MFT1, 50000-1, 0xFFFF);
+  MFT_SetCounter(MFT1, 10000-1, 0xFFFF);
   
   /* Enable MFT Interrupts */
   NVIC_InitStructure.NVIC_IRQChannel = MFT1A_IRQn;

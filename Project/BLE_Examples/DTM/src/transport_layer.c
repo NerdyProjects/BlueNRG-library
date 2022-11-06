@@ -23,7 +23,7 @@
 #include "bluenrg_x_device.h"
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
-#include "BlueNRG1_api.h"
+#include "bluenrg1_api.h"
 #include "transport_layer.h"
 #include "sleep.h"
 #include "hw_config.h"
@@ -169,16 +169,15 @@ SleepModes App_SleepMode_Check_SPI(SleepModes sleepMode)
 }
 
 /* Process Commands */
-uint16_t process_command(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
+uint16_t process_command(uint16_t op_code, uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t *buffer_out, uint16_t buffer_out_max_length)
 {
   uint32_t i;
-  uint16_t ret_val, opCode;
+  uint16_t ret_val;
   
-  Osal_MemCpy(&opCode, buffer_in, 2);
   for (i = 0; i < (sizeof(hci_command_table)/sizeof(hci_command_table_type)); i++) {
-    if (opCode == hci_command_table[i].opcode) {
-      ret_val = hci_command_table[i].execute(buffer_in+2, buffer_in_length-2, buffer_out, buffer_out_max_length);
-      if (opCode == 0x0c03) {
+    if (op_code == hci_command_table[i].opcode) {
+      ret_val = hci_command_table[i].execute(buffer_in, buffer_in_length, buffer_out, buffer_out_max_length);
+      if (op_code == 0x0c03) {
         // For HCI_RESET, set flag to issue a sys reset
         reset_pending = 1;
       }
@@ -194,7 +193,7 @@ uint16_t process_command(uint8_t *buffer_in, uint16_t buffer_in_length, uint8_t 
   buffer_out[2] = 0x04;
   buffer_out[3] = 0x01;
   buffer_out[4] = 0x01;
-  Osal_MemCpy(&buffer_out[5], &opCode, 2);
+  Osal_MemCpy(&buffer_out[5], &op_code, 2);
   return 7;
   
 }
@@ -368,9 +367,14 @@ void transport_layer_tick(void)
   
   /* Command FIFO */
   if ((fifo_size(&command_fifo) > 0) && (!reset_pending)) {
+    uint16_t opcode;
+    
     fifo_get_var_len_item(&command_fifo, &size, buffer);
-    /* Set user events to temporary queue */
-    len=process_command(buffer, size, buffer_out, 255);
+    
+    Osal_MemCpy(&opcode, buffer, 2);
+    
+    /* Set user events to temporary queue */    
+    len=process_command(opcode, buffer + 3, size - 3, buffer_out, 255);
     DEBUG_NOTES(COMMAND_PROCESSED);
     /* Set user events back to normal queue */
     send_event(buffer_out, len, 1);

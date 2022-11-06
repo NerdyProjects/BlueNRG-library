@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : Power_Consumption_Test.c
 * Author             : RF Application Team
 * Version            : 1.0.0
@@ -29,9 +29,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Power_Consumption\\MDK-ARM\\BlueNRG-2\\BLE_Power_Consumption.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -41,9 +41,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Power_Consumption\\EWARM\\BlueNRG-2\\BLE_Power_Consumption.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -241,7 +241,7 @@ void help(void)
   printf("\r\n");
   printf("f:   Device in Discoverable mode with fast interval 100 ms \r\n");
   printf("s:   Device in discoverable mode with slow interval 1000 ms \r\n");
-  printf("r:   Reset the BlueNRG-1\r\n");
+  printf("r:   Reset the BlueNRG-1,2\r\n");
   printf("?:   Display this help menu\r\n");
   printf("\r\n> ");
 }
@@ -336,7 +336,7 @@ int main(void)
   /* Disable the PKA peripheral clock to reduce the power consumption */
   SysCtrl_PeripheralClockCmd(CLOCK_PERIPH_PKA, DISABLE);
   
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     printf("Error during BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
@@ -456,7 +456,7 @@ void aci_hal_fw_error_event(uint8_t FW_Error_Type,
   }
 }
 
-/* ***************** BlueNRG-1 Stack Callbacks ********************************/
+/* ***************** BlueNRG-1,2 Stack Callbacks ********************************/
 
 /*******************************************************************************
  * Function Name  : hci_le_connection_complete_event.

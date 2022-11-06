@@ -37,7 +37,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "lsm6ds3.h"
-#include "lsm6ds3_hal.h"
+#include "LSM6DS3_hal.h"
 #include <math.h>
 
 

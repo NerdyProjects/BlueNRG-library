@@ -317,11 +317,13 @@ uint8_t Configure_HidPeripheral(void)
   /* Battery Service */
   battery.inReportMap = FALSE;
 
-  /* Device Information Service */
-  memcpy(devInf.manufacName, "ST Micro", 8);
-  memcpy(devInf.modelNumber, "0001", 4);
-  memcpy(devInf.fwRevision, "0630", 4);
-  memcpy(devInf.swRevision, "0001", 4);
+  /* Device Information Service: 
+     NOTE: memcpy length parameter must be equal to defined macro parameter length 
+     on hid_peripheral_config.h file */  
+  memcpy(devInf.manufacName, "ST Micro ", MANUFAC_NAME_LEN);
+  memcpy(devInf.modelNumber, "0001", MODEL_NUMB_LEN);
+  memcpy(devInf.fwRevision, "0630", FW_REV_LEN);
+  memcpy(devInf.swRevision, "0001", SW_REV_LEN);
   devInf.pnpID[0] = 0x01;
   devInf.pnpID[1] = 0x30;
   devInf.pnpID[2] = 0x00;

@@ -59,7 +59,7 @@
 /**
  * @brief Typedef for the overall crash information (stack pointer, programm counter, registers, ...)
  */
-typedef PACKED(struct) crash_infoS {
+typedef struct crash_infoS {
   uint32_t signature;
   uint32_t SP;
   uint32_t R0;

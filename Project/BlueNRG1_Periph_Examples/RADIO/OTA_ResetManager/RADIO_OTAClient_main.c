@@ -53,6 +53,8 @@ static uint32_t imageBase = APP_WITH_OTA_SERVICE_ADDRESS;
 #define MAX_RETRY       5
 
 /* Private macro -------------------------------------------------------------*/
+#define PRINT_INT(x)    ((int)(x))
+#define PRINT_FLOAT(x)  (x>0)? ((int) (((x) - PRINT_INT(x)) * 1000)) : (-1*(((int) (((x) - PRINT_INT(x)) * 1000))))
 /* Private variables ---------------------------------------------------------*/
 static uint16_t page_currently_written = 0;
 uint8_t rx_buffer[MAX_PACKET_LENGTH], tx_buffer[MAX_PACKET_LENGTH];
@@ -479,7 +481,7 @@ uint8_t OTA_Tick()
   
   else if(ota_state_machine_g == OTA_START) {
     if(app_size<=SM_APP_SIZE) { /* Check if the new application fit the Flash memory */
-      PRINTF("OK for 0x%08X %d KB max %d KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
+      PRINTF("OK for 0x%08X %d.%03d KB max %d.%03d KB\r\n", app_size, PRINT_INT(((float)app_size)/1024.0), PRINT_FLOAT(((float)app_size)/1024.0), PRINT_INT(((float)SM_APP_SIZE)/1024.0), PRINT_FLOAT(((float)SM_APP_SIZE)/1024.0));
       PRINTF("OTA_START\r\n");
       tx_buffer[0] = HEADER_START;
       tx_buffer[1] = 0;
@@ -498,7 +500,7 @@ uint8_t OTA_Tick()
     }
     /* TO BE DONE */
     else { /* If the new image does not fit the Flash memory */
-      PRINTF("NOT ok for 0x%08X %d KB max %d KB\r\n", app_size, ((float)app_size)/1024.0, ((float)SM_APP_SIZE)/1024.0);
+      PRINTF("NOT ok for 0x%08X %d.%03d KB max %d.%03d KB\r\n", app_size, PRINT_INT(((float)app_size)/1024.0), PRINT_FLOAT(((float)app_size)/1024.0), PRINT_INT(((float)SM_APP_SIZE)/1024.0), PRINT_FLOAT(((float)SM_APP_SIZE)/1024.0));
       PRINTF("OTA_NOTSTART\r\n");
       tx_buffer[0] = HEADER_NOTSTART;
       tx_buffer[1] = 0;
@@ -590,7 +592,7 @@ uint8_t OTA_Tick()
         app_size -= page_size;
       }
       page_size = 0;
-      PRINTF("app_size 0x%08X %d KB\r\n", app_size, ((float)app_size)/1024.0);
+      PRINTF("app_size 0x%08X %d.%03d KB\r\n", app_size, PRINT_INT(((float)app_size)/1024.0), PRINT_FLOAT(((float)app_size)/1024.0));
     }
     if(app_size) {
       ota_state_machine_g = OTA_DATAREQ;

@@ -125,12 +125,17 @@ void MFT_Configuration()
   
   /* MFT2 configuration */
   timer_init.MFT_Mode = MFT_MODE_1a;
-  timer_init.MFT_Prescaler = 160-1;      /* 10 us clock */
+
+#if (HS_SPEED_XTAL == HS_SPEED_XTAL_32MHZ)
+	timer_init.MFT_Prescaler = 160-1;      /* 5 us clock */
+#elif (HS_SPEED_XTAL == HS_SPEED_XTAL_16MHZ)
+	timer_init.MFT_Prescaler = 80-1;      /* 5 us clock */
+#endif
   
   timer_init.MFT_Clock1 = MFT_PRESCALED_CLK;
   timer_init.MFT_Clock2 = MFT_PRESCALED_CLK;
-  timer_init.MFT_CRA = 50000 - 1;       /* 500 ms positive duration */
-  timer_init.MFT_CRB = 25000 - 1;       /* 250 ms negative duration */
+  timer_init.MFT_CRA = 50000 - 1;       /* 250 ms positive duration */
+  timer_init.MFT_CRB = 25000 - 1;       /* 125 ms negative duration */
   MFT_Init(MFT2, &timer_init);
   
   /* Set the number of cycles */

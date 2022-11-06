@@ -45,7 +45,7 @@
                   
                   
 #define DTM_FW_VERSION_MAJOR    3 
-#define DTM_FW_VERSION_MINOR    2 //DK 3.2.0 --> 3.2
+#define DTM_FW_VERSION_MINOR    3 //SDK 3.2.2 (BLE stack v2.1e)
 #define DTM_FW_VERSION_PATCH    0 
 
                   

@@ -363,7 +363,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -534,9 +534,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -956,7 +956,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1132,9 +1132,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1554,7 +1554,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -1725,9 +1725,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2147,7 +2147,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -2318,9 +2318,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2740,7 +2740,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -2916,9 +2916,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3338,7 +3338,7 @@
           <ScatterFile>BlueNRG2.sct</ScatterFile>
           <IncludeLibs></IncludeLibs>
           <IncludeLibsPath></IncludeLibsPath>
-          <Misc>--predefine=-DMEMORY_FLASH_APP_OFFSET=0x2000 </Misc>
+          <Misc>--predefine="-DMEMORY_FLASH_APP_OFFSET=0x2000 "</Misc>
           <LinkerInputFile></LinkerInputFile>
           <DisabledWarnings>6314,6329</DisabledWarnings>
           </LDads>
@@ -3509,9 +3509,9 @@
           <GroupName>Startup</GroupName>
         <Files>
             <File>
-              <FileName>system_bluenrg1.c</FileName>
+              <FileName>system_BlueNRG1.c</FileName>
             <FileType>1</FileType>
-            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_bluenrg1.c</FilePath>
+            <FilePath>../../../../../Library/CMSIS/Device/ST/BlueNRG1/Source/system_BlueNRG1.c</FilePath>
             </File>
           </Files>
         </Group>

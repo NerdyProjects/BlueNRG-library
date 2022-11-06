@@ -158,6 +158,9 @@ void USART2_IRQHandler(void)
     
     SdkEval_IO_Receive_Data(&tmp_rx_data, 1);
   }
+  if(LL_USART_IsActiveFlag_ORE(USART2) == 1) {
+      LL_USART_ClearFlag_ORE(USART2);
+  }
 }
 
 #ifdef DTM_UART
@@ -176,6 +179,10 @@ void USART1_IRQHandler(void)
     DTM_write_data[DTM_write_data_head] = LL_USART_ReceiveData8(DTM_USART);
     DTM_write_data_size++;
     DTM_write_data_head = (DTM_write_data_head + 1)%UART_ARRAY_SIZE;
+  }
+  
+  if(LL_USART_IsActiveFlag_ORE(DTM_USART) == 1) {
+      LL_USART_ClearFlag_ORE(DTM_USART);
   }
 }
 

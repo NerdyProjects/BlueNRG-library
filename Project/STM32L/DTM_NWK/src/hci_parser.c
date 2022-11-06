@@ -178,7 +178,8 @@ void hci_input(uint8_t *buff, uint16_t len)
   }
 }
 
-
+uint8_t bluenrg1_rst_req = 0;
+uint8_t bluenrg1_boot_req = 0;
 void packet_received(void)
 { 
   uint16_t buffer_out_len=0;
@@ -225,12 +226,11 @@ uint16_t parse_cmd(uint8_t *hci_buffer, uint16_t hci_pckt_len, uint8_t *buffer_o
       break;
 
     case BLUENRG_RESET:
-      BlueNRG_RST();
+      bluenrg1_rst_req = 1;
       break;
 
     case HW_BOOTLOADER:
-      BlueNRG_HW_Bootloader();
-//        SdkEvalSpiDtmInit(); // configure the SPI mode
+      bluenrg1_boot_req = 1;
       break;
 
     default:

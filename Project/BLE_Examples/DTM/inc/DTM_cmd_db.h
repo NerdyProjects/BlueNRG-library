@@ -31,7 +31,7 @@ typedef struct hci_command_table_type_s {
   hci_command_process_and_response_type execute;
 } hci_command_table_type;
 
-extern const hci_command_table_type hci_command_table[163];
+extern const hci_command_table_type hci_command_table[164];
 extern void send_event(uint8_t *buffer_out, uint16_t buffer_out_length, int8_t overflow_index);
 extern void send_event_isr(uint8_t *buffer_out, uint16_t buffer_out_length, int8_t overflow_index);
 /* NOTE: aci_hal_updater_start() function prototype: to be implemented on DTM context */

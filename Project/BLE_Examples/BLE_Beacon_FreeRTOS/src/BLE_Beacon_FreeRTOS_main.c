@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : BLE_Beacon_FreeRTOS_main.c
 * Author             : RF Application Team
 * Version            : 1.0.0
@@ -29,9 +29,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Beacon_FreeRTOS\\EWARM\\BlueNRG-1\\BLE_Beacon_FreeRTOS.eww </tt> or
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Beacon_FreeRTOS\\EWARM\\BlueNRG-2\\BLE_Beacon_FreeRTOS.eww </tt>
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section KEIL_project KEIL project
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
@@ -41,9 +41,21 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_Beacon_FreeRTOS\\MDK-ARM\\BlueNRG-2\\BLE_Beacon_FreeRTOS.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
+
+* \section WiSE-Studio_project WiSE-Studio project
+  To use the project with WiSE-Studio , please follow the instructions below:
+  -# Open the WiSE-Studio  and select File->Import. 
+  -# Select Existing Projects into Workspace. 
+  -# Go to Project Explorer section
+  -# Select desired configuration to build from Project->Project->Build Project.
+  -# Select Project->Rebuild All. This will recompile and link the entire application
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
+
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -383,7 +395,7 @@ int main(void)
   /* System Init */
   SystemInit();
   
-  /* Identify BlueNRG-1 platform */
+  /* Identify BlueNRG-1,2 platform */
   SdkEvalIdentification();
   
   /* Init the UART peripheral */
@@ -404,7 +416,7 @@ int main(void)
     while(1);
   }
     
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     PRINTF("Error in BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
@@ -419,7 +431,7 @@ static void BLETask( void *pvParameters )
   /* To make sure no other BLE functions are called from other tasks. */
   xSemaphoreTake(BLETickSemaphoreHandle, portMAX_DELAY);	
 	
-  /* Init the BlueNRG-1 device */
+  /* Init the BlueNRG-1,2 device */
   Device_Init();
   
   /* Start Beacon Non Connectable Mode*/
@@ -523,7 +535,7 @@ void createTasks( void )
   
   xTaskCreate( testTask, "Test", 80, NULL, TEST_TASK_PRIORITY, NULL );
   
-  xTaskCreate( changeADVDataTask, "ADV", 100, NULL, TEST_TASK_PRIORITY, NULL );
+  xTaskCreate( changeADVDataTask, "ADV", 140, NULL, TEST_TASK_PRIORITY, NULL );
   
   /* Start the tasks and timer running. */
   vTaskStartScheduler();
@@ -538,7 +550,7 @@ void createTasks( void )
 /*-----------------------------------------------------------*/
 
 
-/****************** BlueNRG-1 Sleep Management Callback ********************************/
+/****************** BlueNRG-1,2 Sleep Management Callback ********************************/
 
 SleepModes App_SleepMode_Check(SleepModes sleepMode)
 {

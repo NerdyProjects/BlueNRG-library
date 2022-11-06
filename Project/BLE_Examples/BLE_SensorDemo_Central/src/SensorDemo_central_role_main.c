@@ -1,5 +1,5 @@
 
-/******************** (C) COPYRIGHT 2018 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
 * File Name          : SensorDemo_central_role_main.c
 * Author             : RF Application Team
 * Version            : 1.0.0
@@ -20,16 +20,16 @@
  * emulates the BlueNRG-1,2 Sensor Demo applications available for smartphones (iOS and android).
  * 
 
-* \section ATOLLIC_project ATOLLIC project
-  To use the project with ATOLLIC TrueSTUDIO for ARM, please follow the instructions below:
-  -# Open the ATOLLIC TrueSTUDIO for ARM and select File->Import... Project menu. 
+* \section WiSE-Studio_project WiSE-Studio project
+  To use the project with WiSE-Studio , please follow the instructions below:
+  -# Open the WiSE-Studio  and select File->Import. 
   -# Select Existing Projects into Workspace. 
-  -# Select the ATOLLIC project
-  -# Select desired configuration to build from Project->Manage Configurations
-  -# Select Project->Rebuild Project. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Go to Project Explorer section
+  -# Select desired configuration to build from Project->Project->Build Project.
+  -# Select Project->Rebuild All. This will recompile and link the entire application
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section KEIL_project KEIL project
   To use the project with KEIL uVision 5 for ARM, please follow the instructions below:
@@ -39,9 +39,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_Central\\MDK-ARM\\BlueNRG-2\\BLE_SensorDemo_Central.uvprojx </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild all target files. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
-  -# Select Project->Download to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
+  -# Download the related binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \section IAR_project IAR project
   To use the project with IAR Embedded Workbench for ARM, please follow the instructions below:
@@ -51,9 +51,9 @@
      <tt> C:\Users\{username}\ST\BlueNRG-1_2 DK x.x.x\\Project\\BLE_Examples\\BLE_SensorDemo_Central\\EWARM\\BlueNRG-2\\BLE_SensorDemo_Central.eww </tt>
   -# Select desired configuration to build
   -# Select Project->Rebuild All. This will recompile and link the entire application
-  -# To download the binary image, please connect STLink to JTAG connector in your board (if available).
+  -# To download the binary image, please connect a SWD HW programmer in your board (if available).
   -# Select Project->Download and Debug to download the related binary image.
-  -# Alternatively, open the BlueNRG1 Flasher utility and download the built binary image.
+  -# Alternatively, open the Flasher utility and download the built binary image.
 
 * \subsection Project_configurations Project configurations
 - \c Release - Release configuration
@@ -195,7 +195,7 @@ The following binary library is provided on Library\\BLE_Application\Profile_Cen
 **/
    
 /** @addtogroup BlueNRG1_demonstrations_applications
- * BlueNRG-1 SensorDemo Central \see SensorDemo_central_role_main.c for documentation.
+ * BlueNRG-1,2 SensorDemo Central \see SensorDemo_central_role_main.c for documentation.
  *
  *@{
  */
@@ -257,7 +257,7 @@ int main(void)
   /* Configure I/O communication channel  */
   SdkEvalComIOConfig(SdkEvalComIOProcessInputData);
   
-  /* BlueNRG-1 stack init */
+  /* BlueNRG-1,2 stack init */
   ret = BlueNRG_Stack_Initialization(&BlueNRG_Stack_Init_params);
   if (ret != BLE_STATUS_SUCCESS) {
     PRINTF("Error in BlueNRG_Stack_Initialization() 0x%02x\r\n", ret);
@@ -353,7 +353,7 @@ void aci_hal_fw_error_event(uint8_t FW_Error_Type,
   }
 }
 
-/****************** BlueNRG-1 Sleep Management Callback ********************************/
+/****************** BlueNRG-1,2 Sleep Management Callback ********************************/
 
 SleepModes App_SleepMode_Check(SleepModes sleepMode)
 {

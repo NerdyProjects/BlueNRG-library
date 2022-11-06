@@ -147,10 +147,10 @@ BlueNRG-1 memory map
      |  NVM(4K)              |
      +-----------------------+ 0x10067000
      |                       |
-     |  User app (88K)       |
-     +-----------------------+ 0x10051000
+     |  User app (86K)       |
+     +-----------------------+ 0x10051800
      |  OTA Service          |
-     |  Manager (68K)        |
+     |  Manager (70K)        |
      +-----------------------+ 0x10040000
      |                       |
      +-----------------------| 0x100007FF
@@ -159,7 +159,7 @@ BlueNRG-1 memory map
   */
 
  /* Including OTA firmware upgrade service manager application */
-#define SERVICE_MANAGER_SIZE     0x11000
+#define SERVICE_MANAGER_SIZE     0x11800
 
 #define MEMORY_FLASH_APP_SIZE  (_MEMORY_FLASH_SIZE_ - SERVICE_MANAGER_SIZE - FLASH_NVM_DATASIZE)
 #define MEMORY_FLASH_APP_OFFSET  (SERVICE_MANAGER_SIZE)

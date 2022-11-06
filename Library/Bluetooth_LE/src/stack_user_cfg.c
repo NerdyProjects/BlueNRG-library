@@ -336,7 +336,8 @@ tBleStatus hci_le_set_host_channel_classification_api(uint8_t LE_Channel_Map[5])
 void GAP_DiscProcTimeoutcb(void);
 uint32_t cancel_connect_master(uint8_t slaveno);
 void isr_event_handler_scan_data(void *params);
-void Reclassify_All_Channels(uint8_t slot_no);
+void LL_Set_Channel_Classification_offline_processing(void);
+
 tBleStatus LL_Start_Encryption(uint16_t connHandle, uint8_t *randNum, uint8_t *ediv, uint8_t *ltk);
 tBleStatus GAP_check_and_set_role(uint8_t *gapRole, uint8_t role);
 void GAP_discover_peer_name(void);
@@ -642,10 +643,11 @@ void isr_event_handler_scan_data_ucfg(void *params)
     isr_event_handler_scan_data(params);
 }
 
-void Reclassify_All_Channels_ucfg(uint8_t slot_no)
+void LL_Set_Channel_Classification_offline_processing_ucfg()
 {
-    Reclassify_All_Channels(slot_no);
+    LL_Set_Channel_Classification_offline_processing();
 }
+
 
 tBleStatus LL_Start_Encryption_ucfg(uint16_t connHandle, uint8_t *randNum, uint8_t *ediv, uint8_t *ltk)
 {
@@ -700,6 +702,27 @@ void       smp_Execute_Actions_wrt_Current_State_sc_MI_excerpt_phase2as2_ucfg(vo
 }
 #endif
     
+#if ((CONTROLLER_MASTER_ENABLED == 1) || (CONTROLLER_PRIVACY_ENABLED == 1))
+BOOL LL_priv_add_to_ConnIDList(uint32_t* Address);
+void LL_priv_remove_from_ConnIDList(uint32_t* Address);
+BOOL LL_priv_test_address_in_ConnIDList(uint32_t* Address);
+
+BOOL LL_priv_add_to_ConnIDList_ucfg(uint32_t* Address)
+{
+    return LL_priv_add_to_ConnIDList(Address);
+}
+                                              
+void LL_priv_remove_from_ConnIDList_ucfg(uint32_t* Address)
+{
+    LL_priv_remove_from_ConnIDList(Address);
+}
+
+BOOL LL_priv_test_address_in_ConnIDList_ucfg(uint32_t* Address)
+{
+    return LL_priv_test_address_in_ConnIDList(Address);
+}
+#endif
+
 /* ---------------------------------------------------------------------------------------------------------- */
 
 #ifdef CONTROLLER_DATA_LENGTH_EXTENSION_ENABLED

@@ -112,15 +112,16 @@
  * - v.2.1a: 6456 Bytes
  * - v.2.1b: 6480 Bytes (added 24 Bytes)
 */
-#define FIXED_BUFFER_SIZE_BYTES                 (6480)
+#define FIXED_BUFFER_SIZE_BYTES                 (6536)
 
 
 /**
  * A part of the RAM is dinamically depending on the number of links.
  * - v.2.1a: 332 Bytes
  * - v.2.1b: 336 Bytes (added 4 Bytes for new remDev structure type)
+ * - v.2.1e: 344 Bytes (added 8 Bytes peer_id for bug fix #6817)
 */
-#define VARIABLE_BUFFER_SIZE_PER_LINK_BYTES     (336)
+#define VARIABLE_BUFFER_SIZE_PER_LINK_BYTES     (344)
 
 
 /**

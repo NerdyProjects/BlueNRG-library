@@ -59,7 +59,7 @@
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 4300 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 4500 ) )
 #define configMAX_TASK_NAME_LEN			( 5 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
@@ -105,6 +105,16 @@ standard names - or at least those used in the unmodified vector table. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
+
+/*-----------------------------------------------------------*/
+
+#ifdef __GNUC__
+
+#include "portmacro.h"
+/* Tickless idle/low power functionality. */
+extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+#endif
 
 #endif /* FREERTOS_CONFIG_H */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    DTM_config.h 
   * @author  VMA RF Application Team
-  * @version V1.1.0
-  * @date    April-2018
+  * @version V1.2.0
+  * @date    September-2021
   * @brief   
   ******************************************************************************
   * @attention
@@ -74,7 +74,7 @@
 #endif
 
 /* Array size for the attribute value */
-#define ATT_VALUE_ARRAY_SIZE    (1248) //(1344)
+#define ATT_VALUE_ARRAY_SIZE    (1080) //1180
 
 /* Flash security database size */
 #define FLASH_SEC_DB_SIZE       (0x400)

@@ -6,7 +6,7 @@ Instructions to build an application that uses the BLE Static Stack project
 How to compile application
 ----------------------------
 
-- Remove bluenrg1_stack_lib.a library from the set of files to be compiled
+- Remove libbluenrg1_stack.a library from the set of files to be compiled
 - Include bluenrg1_stack_init_if.c and libbluenrg1_static_stack.a in your project
   (from Library\Bluetooth_LE\library\static_stack).
 - Define NO_SMART_POWER_MANAGEMENT symbol for C compiler.

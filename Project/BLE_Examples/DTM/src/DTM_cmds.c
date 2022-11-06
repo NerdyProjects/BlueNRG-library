@@ -24,7 +24,7 @@
 #include "bluenrg_x_device.h"
 #include "BlueNRG1_it.h"
 #include "BlueNRG1_conf.h"
-#include "BlueNRG1_api.h"
+#include "bluenrg1_api.h"
 #include "DTM_cmd_db.h"
 #include "ble_status.h"
 #include "cmd.h"
@@ -210,3 +210,4 @@ tBleStatus aci_test_report(uint32_t *TX_Packets, uint32_t *RX_Packets, uint16_t 
   
   return BLE_STATUS_SUCCESS;
 }
+ 
